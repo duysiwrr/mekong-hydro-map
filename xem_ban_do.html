@@ -46,6 +46,42 @@
   .truc_nhan { display:flex; justify-content:space-between; color:#a0aec0; font-size:10px; margin-top:1px; }
   .khong_co { color:#cbd5e0; text-align:center; }
   .ten_tram_bth { font-weight:600; white-space:nowrap; }
+
+  /* ---- Thanh tieu de + danh muc CSDL (them 28/08/2026) ---- */
+  #top_header { position:absolute; top:10px; left:50%; transform:translateX(-50%);
+    background:#fff; padding:8px 18px; border-radius:8px; box-shadow:0 1px 6px rgba(0,0,0,.25);
+    z-index:2; display:flex; align-items:center; gap:14px; font-size:13.5px; }
+  #top_header b { font-size:15px; color:#1a365d; }
+  #top_header button { border:none; background:#ebf4ff; color:#2b6cb0; border-radius:5px;
+    padding:6px 12px; font-size:12.5px; cursor:pointer; font-weight:600; }
+  #top_header button:hover { background:#bee3f8; }
+  #catalog_overlay, #notes_gate_overlay, #notes_overlay { position:absolute; inset:0;
+    background:rgba(0,0,0,.45); z-index:6; display:none; align-items:center; justify-content:center; }
+  #catalog_box, #notes_box { background:#fff; border-radius:10px; max-width:min(880px, 92vw);
+    max-height:88vh; overflow:auto; padding:22px 26px; box-shadow:0 4px 24px rgba(0,0,0,.4); }
+  #catalog_box h2, #notes_box h2 { margin:0 0 6px; font-size:19px; color:#1a365d; }
+  #catalog_box .sub, #notes_box .sub { color:#666; font-size:12.5px; margin-bottom:16px; }
+  .ds_grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:12px; }
+  .ds_card { border:1px solid #e2e8f0; border-radius:8px; padding:12px 14px; background:#f9fafb; }
+  .ds_card .n { font-size:22px; font-weight:700; color:#2b6cb0; }
+  .ds_card .ten { font-weight:600; font-size:13.5px; margin:2px 0 4px; }
+  .ds_card .mo_ta { font-size:12px; color:#555; line-height:1.4; }
+  .ds_card .nguon { font-size:11px; color:#a0aec0; margin-top:6px; }
+  .btn_dong_x { float:right; border:none; background:#e2e8f0; border-radius:4px;
+    padding:4px 10px; cursor:pointer; font-size:13px; }
+  #notes_gate_box { background:#fff; border-radius:10px; padding:20px 24px; text-align:center;
+    box-shadow:0 4px 24px rgba(0,0,0,.4); }
+  #notes_gate_box input { font-size:14px; padding:7px 10px; border:1px solid #cbd5e0;
+    border-radius:5px; width:200px; margin:10px 0; }
+  #notes_gate_box button { font-size:13px; padding:7px 14px; border:none; border-radius:5px;
+    background:#2b6cb0; color:#fff; cursor:pointer; margin-left:6px; }
+  #notes_gate_loi { color:#c53030; font-size:12px; min-height:16px; }
+  #btn_noibo { position:absolute; bottom:10px; right:10px; z-index:2; opacity:.55;
+    background:#fff; border:1px solid #e2e8f0; border-radius:5px; padding:5px 9px;
+    font-size:11px; color:#718096; cursor:pointer; }
+  #btn_noibo:hover { opacity:1; }
+  #notes_box .ghi_chu_item { margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #edf2f7;
+    font-size:12.5px; color:#444; line-height:1.5; }
 </style>
 </head>
 <body>
@@ -55,6 +91,69 @@
   <code>python3 -m RangeHTTPServer 8000</code> (KHÔNG dùng <code>http.server</code>
   thường — PMTiles cần HTTP Range) trong thư mục <code>web/</code> rồi mở
   <code>http://localhost:8000/xem_ban_do.html</code>.
+</div>
+<div id="top_header">
+  <b>🌊 Mekong Hydro DB</b>
+  <span>Danh mục dữ liệu thuỷ văn &amp; mạng lưới sông kênh ĐBSCL</span>
+  <button id="btn_catalog">📚 Giới thiệu bộ CSDL</button>
+</div>
+<div id="catalog_overlay">
+  <div id="catalog_box">
+    <button class="btn_dong_x" id="btn_dong_catalog">Đóng ✕</button>
+    <h2>Bộ cơ sở dữ liệu Mekong Hydro DB</h2>
+    <div class="sub">Tổng hợp từ nhiều nguồn khảo sát/quan trắc độc lập cho vùng
+      Đồng bằng sông Cửu Long. Trang này thể hiện PHẠM VI/QUY MÔ dữ liệu đang
+      có — không hiển thị số liệu quan trắc chi tiết (mực nước/lưu lượng theo
+      giờ). Bấm vào bản đồ để xem thêm thông tin từng đối tượng.</div>
+    <div class="ds_grid">
+      <div class="ds_card"><div class="n">47</div><div class="ten">Trạm quan trắc</div>
+        <div class="mo_ta">Mực nước &amp; lưu lượng theo giờ, một số trạm phủ tới hơn 40
+          năm dữ liệu. Bản đồ chỉ hiện vị trí &amp; độ phủ thời gian (%), không hiện trị số đo.</div>
+        <div class="nguon">nguồn: nhiều cơ quan quan trắc + tổng hợp nội bộ</div></div>
+      <div class="ds_card"><div class="n">3.009</div><div class="ten">Mạng lưới kênh mô hình (MIKE-A)</div>
+        <div class="mo_ta">Toàn bộ nhánh sông/kênh dùng làm hạ tầng mô hình hoá; 416 nhánh
+          đang thật sự chạy trong mô hình TELEMAC 1D hiện hành.</div>
+        <div class="nguon">nguồn: mô hình MIKE 11 ĐBSCL</div></div>
+      <div class="ds_card"><div class="n">35.088</div><div class="ten">Kênh rạch thật ĐBSCL</div>
+        <div class="mo_ta">Bản đồ kênh rạch chi tiết cấp tỉnh, phần lớn có tên địa phương —
+          độc lập với mạng lưới mô hình hoá.</div>
+        <div class="nguon">nguồn: khảo sát bên thứ ba (đang xác minh giấy phép sử dụng lại)</div></div>
+      <div class="ds_card"><div class="n">1.350</div><div class="ten">Sông/kênh chính ĐBSCL</div>
+        <div class="mo_ta">Trục sông/kênh lớn có tên, dùng để định hướng khi xem bản đồ.</div>
+        <div class="nguon">nguồn: khảo sát bên thứ ba</div></div>
+      <div class="ds_card"><div class="n">1.695</div><div class="ten">Mạng lưới MIKE-B (độc lập)</div>
+        <div class="mo_ta">Bộ mô hình thuỷ lực độc lập thứ 2, dùng đối chiếu chéo với mạng
+          lưới chính khi cần.</div>
+        <div class="nguon">nguồn: khảo sát của nhóm nghiên cứu khác (đang xác minh giấy phép)</div></div>
+      <div class="ds_card"><div class="n">5.199 + 57</div><div class="ten">Khảo sát địa hình CCPO 2023</div>
+        <div class="mo_ta">Điểm đo đáy sông độc lập, mới nhất — 57 mặt cắt ứng viên đã qua
+          kiểm chứng vị trí, đang chờ xét đưa vào mô hình.</div>
+        <div class="nguon">nguồn: khảo sát CCPO 2023</div></div>
+    </div>
+  </div>
+</div>
+<button id="btn_noibo" title="Chỉ dành cho quản trị">🔒 Nội bộ</button>
+<div id="notes_gate_overlay">
+  <div id="notes_gate_box">
+    <div style="font-size:14px;margin-bottom:4px;">🔒 Khu vực nội bộ</div>
+    <div style="font-size:12px;color:#888;margin-bottom:6px;">Chỉ dành cho quản trị bộ CSDL</div>
+    <input type="password" id="notes_gate_input" placeholder="Mật khẩu" autocomplete="off">
+    <div id="notes_gate_loi"></div>
+    <div>
+      <button id="btn_dong_gate" style="background:#e2e8f0;color:#333;">Đóng</button>
+      <button id="btn_xac_nhan_gate">Mở</button>
+    </div>
+  </div>
+</div>
+<div id="notes_overlay">
+  <div id="notes_box">
+    <button class="btn_dong_x" id="btn_dong_notes">Đóng ✕</button>
+    <h2>🔒 Ghi chú nội bộ</h2>
+    <div class="sub">Chỉ hiển thị sau khi nhập đúng mật khẩu — không xuất hiện trong giao
+      diện công khai. Đây KHÔNG phải cơ chế bảo mật thật (mã nguồn client-side vẫn có thể
+      bị đọc bởi người rành kỹ thuật) — chỉ tránh người xem thông thường vô tình thấy.</div>
+    <div id="notes_content"></div>
+  </div>
 </div>
 <div id="panel">
   <h3>Mekong Hydro DB</h3>
@@ -83,21 +182,7 @@
   <label><input type="checkbox" data-layers="tram_pt,tram_nhan" checked>
     <span class="swatch" style="background:#e53e3e;border-radius:50%"></span>Trạm quan trắc (47)
     <span class="swatch" style="background:#dd6b20;border-radius:50%"></span>(cam = cần kiểm lại vị trí)</label>
-  <div class="ghi_chu">
-    Click 1 đối tượng để xem thông tin. ⚠ "Sông/kênh chính" + "Kênh rạch
-    thật ĐBSCL" cùng 1 nguồn Xuân Ái (`Song_Center`/`Kenhrach_update`) nhưng
-    2 layer khác cấp — "Sông/kênh chính" là 1.350 đoạn trục lớn có tên
-    (534/1.350), "Kênh rạch thật" là 35.088 đoạn kênh nội đồng cấp tỉnh, đa
-    số không tên. Cả 2 là NGUỒN ĐỘC LẬP — CHƯA được khớp/hợp nhất toạ độ với
-    mạng MIKE-A (2 bộ khác phạm vi). Không suy diễn các lớp trùng nhau.
-    <br><br>
-    ⚠ 3 lớp "CCPO 2023" (thêm 27/08/2026): khảo sát bathymetry ĐỘC LẬP MỚI
-    NHẤT dự án, đã kiểm chứng chéo vật lý (so khớp MIKE-A lân cận) nhưng
-    <b>CHƯA build/chạy MASCARET</b> — chỉ để xem xét trước khi quyết định.
-    "Ứng viên Tiền" nằm đúng phạm vi đặc tả gốc; "EXTRA trên Hậu" là phát
-    hiện phụ (cụm gọi là "VamNao" thực ra nằm trên sông Hậu) chưa có việc
-    xử lý tiếp.
-  </div>
+  <div class="ghi_chu">Click 1 đối tượng trên bản đồ để xem thông tin.</div>
   <button id="btn_bang_tong_hop">📊 Bảng tổng hợp trạm (H/Q, giai đoạn)</button>
 </div>
 <div id="bang_tong_hop_overlay">
@@ -475,6 +560,86 @@ document.getElementById("btn_dong_bang").addEventListener("click", () => {
 });
 document.getElementById("bang_tong_hop_overlay").addEventListener("click", (e) => {
   if (e.target.id === "bang_tong_hop_overlay") e.currentTarget.style.display = "none";
+});
+
+// ==================== Danh muc CSDL (them 28/08/2026) ====================
+document.getElementById("btn_catalog").addEventListener("click", () => {
+  document.getElementById("catalog_overlay").style.display = "flex";
+});
+document.getElementById("btn_dong_catalog").addEventListener("click", () => {
+  document.getElementById("catalog_overlay").style.display = "none";
+});
+document.getElementById("catalog_overlay").addEventListener("click", (e) => {
+  if (e.target.id === "catalog_overlay") e.currentTarget.style.display = "none";
+});
+
+// ==================== Ghi chu noi bo — cong mat khau JS (them 28/08/2026) ====
+// KHONG PHAI bao mat that su (client-side, ma nguon doc duoc) — chi de tranh
+// nguoi xem thong thuong vo tinh thay. Doi mat khau: mo console trinh duyet
+// tai chinh trang nay, chay:
+//   crypto.subtle.digest("SHA-256", new TextEncoder().encode("MAT_KHAU_MOI"))
+//     .then(b=>console.log(Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')))
+// roi dan ket qua vao hang MK_HASH duoi day.
+const MK_HASH = "a07548cd1d883a3d11218459d81489c799dd22856b27adfe1e874ad73abade67";
+
+const GHI_CHU_NOI_BO = [
+  { tieu_de: "Nguồn dữ liệu chưa xác nhận giấy phép công bố lại",
+    noi_dung: "Lớp \"Kênh rạch thật ĐBSCL\" (nguồn Xuân Ái) và \"Mạng lưới " +
+      "MIKE-B\" (khảo sát của nhóm nghiên cứu khác) đang public nhưng CHƯA có " +
+      "xác nhận quyền sử dụng lại/license. Cân nhắc rút khỏi bản public nếu " +
+      "không xác nhận được nguồn gốc." },
+  { tieu_de: "3 lớp CCPO 2023 (thêm 27/08/2026)",
+    noi_dung: "Khảo sát bathymetry độc lập mới nhất dự án, đã kiểm chứng chéo " +
+      "vật lý (so khớp MIKE-A lân cận) nhưng CHƯA build/chạy mô hình thuỷ lực " +
+      "— chỉ để xem xét trước khi quyết định. \"Ứng viên Tiền\" đúng phạm vi " +
+      "đặc tả gốc; \"EXTRA trên Hậu\" là phát hiện phụ (cụm gọi là \"VamNao\" " +
+      "thực ra nằm trên sông Hậu) chưa có việc xử lý tiếp." },
+  { tieu_de: "2 nguồn kênh cùng gốc nhưng khác cấp",
+    noi_dung: "\"Sông/kênh chính\" + \"Kênh rạch thật ĐBSCL\" cùng 1 nguồn Xuân " +
+      "Ái nhưng khác cấp — 1.350 đoạn trục lớn có tên vs 35.088 đoạn kênh nội " +
+      "đồng cấp tỉnh. Cả 2 ĐỘC LẬP, CHƯA khớp toạ độ với mạng MIKE-A." },
+  { tieu_de: "Rà soát chất lượng dữ liệu đang tiến hành (28/08/2026)",
+    noi_dung: "Phát hiện ~27% bảng timeseries là dòng trùng lặp (lỗi nạp lại " +
+      "nhiều lần, không phải sai số đo), ảnh hưởng số % lấp đầy hiển thị cho " +
+      "28/47 trạm. Đang chờ đối chiếu kết quả rà soát trước khi sửa. Chi tiết " +
+      "đầy đủ nằm ở repo private mekong_telemac_v3, không lặp lại ở đây." },
+];
+
+function moGhiChuNoiBo() {
+  document.getElementById("notes_content").innerHTML = GHI_CHU_NOI_BO.map(g =>
+    `<div class="ghi_chu_item"><b>${g.tieu_de}</b><br>${g.noi_dung}</div>`).join("");
+  document.getElementById("notes_overlay").style.display = "flex";
+}
+
+document.getElementById("btn_noibo").addEventListener("click", () => {
+  document.getElementById("notes_gate_input").value = "";
+  document.getElementById("notes_gate_loi").textContent = "";
+  document.getElementById("notes_gate_overlay").style.display = "flex";
+  document.getElementById("notes_gate_input").focus();
+});
+document.getElementById("btn_dong_gate").addEventListener("click", () => {
+  document.getElementById("notes_gate_overlay").style.display = "none";
+});
+async function thuMoNoiBo() {
+  const pw = document.getElementById("notes_gate_input").value;
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw));
+  const hash = Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, "0")).join("");
+  if (hash === MK_HASH) {
+    document.getElementById("notes_gate_overlay").style.display = "none";
+    moGhiChuNoiBo();
+  } else {
+    document.getElementById("notes_gate_loi").textContent = "Sai mật khẩu.";
+  }
+}
+document.getElementById("btn_xac_nhan_gate").addEventListener("click", thuMoNoiBo);
+document.getElementById("notes_gate_input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") thuMoNoiBo();
+});
+document.getElementById("btn_dong_notes").addEventListener("click", () => {
+  document.getElementById("notes_overlay").style.display = "none";
+});
+document.getElementById("notes_overlay").addEventListener("click", (e) => {
+  if (e.target.id === "notes_overlay") e.currentTarget.style.display = "none";
 });
 </script>
 </body>
