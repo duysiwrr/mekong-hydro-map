@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Mekong Hydro DB — Bản đồ mạng lưới sông kênh + trạm quan trắc</title>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js"></script>
+<style>
+  html, body, #map { margin:0; padding:0; height:100%; width:100%; font-family: sans-serif; }
+  #panel { position:absolute; top:10px; left:10px; background:white; padding:10px 14px;
+           border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,.3); font-size:13px; z-index:1; max-width:300px; }
+  #panel h3 { margin:0 0 8px; font-size:15px; }
+  #panel label { display:flex; align-items:center; gap:6px; margin:4px 0; cursor:pointer; }
+  #panel input[type=checkbox] { margin:0; }
+  .swatch { display:inline-block; width:12px; height:12px; flex:0 0 auto; }
+  .swatch.line { height:3px; }
+  .ghi_chu { margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0; color:#666; font-size:11.5px; }
+  #canh_bao { position:absolute; top:0; left:0; right:0; background:#c53030; color:white;
+              padding:10px 14px; font-size:14px; z-index:3; display:none; }
+  #loi_box { position:absolute; bottom:10px; left:10px; right:10px; background:#742a2a; color:#fff;
+             padding:10px 14px; border-radius:6px; font-size:12px; font-family:monospace;
+             z-index:3; display:none; max-height:200px; overflow:auto; white-space:pre-wrap; }
+  .maplibregl-popup-content { font-size:13px; max-width:280px; }
+
+  #btn_bang_tong_hop { margin-top:10px; width:100%; padding:7px 10px; font-size:13px;
+    background:#2b6cb0; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+  #btn_bang_tong_hop:hover { background:#2c5282; }
+  #bang_tong_hop_overlay { position:absolute; inset:0; background:rgba(0,0,0,.4);
+    z-index:5; display:none; align-items:center; justify-content:center; }
+  #bang_tong_hop_box { background:#fff; border-radius:8px; max-width:min(1100px, 94vw);
+    max-height:88vh; overflow:auto; padding:16px 20px; box-shadow:0 4px 24px rgba(0,0,0,.4); }
+  #bang_tong_hop_box h3 { margin:0 0 4px; font-size:17px; }
+  #bang_tong_hop_box .sub { color:#666; font-size:12px; margin-bottom:10px; }
+  #btn_dong_bang { float:right; border:none; background:#e2e8f0; border-radius:4px;
+    padding:4px 10px; cursor:pointer; font-size:13px; }
+  table#bth_table { border-collapse:collapse; font-size:12.5px; width:100%; }
+  table#bth_table th { text-align:left; padding:4px 8px; border-bottom:2px solid #cbd5e0;
+    position:sticky; top:0; background:#fff; cursor:pointer; white-space:nowrap; }
+  table#bth_table th:hover { color:#2b6cb0; }
+  table#bth_table td { padding:3px 8px; border-bottom:1px solid #edf2f7; vertical-align:middle; }
+  .truc_bar { position:relative; height:14px; background:#edf2f7; border-radius:3px; width:100%; min-width:160px; }
+  .truc_bar .doan { position:absolute; top:0; bottom:0; border-radius:3px; }
+  .truc_bar .doan.h { background:#3182ce; }
+  .truc_bar .doan.q { background:#38a169; }
+  .truc_nhan { display:flex; justify-content:space-between; color:#a0aec0; font-size:10px; margin-top:1px; }
+  .khong_co { color:#cbd5e0; text-align:center; }
+  .ten_tram_bth { font-weight:600; white-space:nowrap; }
+</style>
+</head>
+<body>
+<div id="canh_bao">
+  ⚠ Trang này đang mở qua <code>file://</code> — trình duyệt SẼ CHẶN việc tải
+  file <code>.pmtiles</code> cục bộ (chính sách CORS). Chạy
+  <code>python3 -m RangeHTTPServer 8000</code> (KHÔNG dùng <code>http.server</code>
+  thường — PMTiles cần HTTP Range) trong thư mục <code>web/</code> rồi mở
+  <code>http://localhost:8000/xem_ban_do.html</code>.
+</div>
+<div id="panel">
+  <h3>Mekong Hydro DB</h3>
+  <label><input type="checkbox" data-layers="carto_basemap" checked>
+    <span class="swatch" style="background:#cbd5e0"></span>Nền bản đồ thật (đường xá, địa danh — CARTO)</label>
+  <label><input type="checkbox" data-layers="kenh" checked>
+    <span class="swatch line" style="background:#2b6cb0"></span>Mô hình MIKE-A (1847 kênh)</label>
+  <label><input type="checkbox" data-layers="kenh_telemac" checked>
+    <span class="swatch line" style="background:#1a202c"></span>Mô hình TELEMAC 1D (416 kênh)</label>
+  <label><input type="checkbox" data-layers="mikeb_full">
+    <span class="swatch line" style="background:#2f855a"></span>Mô hình MIKE-B (1695 kênh, đã lọc flood-overlay)</label>
+  <label><input type="checkbox" data-layers="kenh_survey2020">
+    <span class="swatch line" style="background:#805ad5"></span>Khảo sát 2020 (48 kênh)</label>
+  <label><input type="checkbox" data-layers="kenh_survey2017">
+    <span class="swatch line" style="background:#dd6b20"></span>Khảo sát 2017 (22 kênh)</label>
+  <label><input type="checkbox" data-layers="song_center,song_center_nhan" checked>
+    <span class="swatch line" style="background:#2c5282"></span>Sông/kênh chính ĐBSCL (1.350, có tên)</label>
+  <label><input type="checkbox" data-layers="kenh_rach_that,kenh_rach_that_nhan" checked>
+    <span class="swatch line" style="background:#a0aec0"></span>Kênh rạch thật ĐBSCL (35.088)</label>
+  <label><input type="checkbox" data-layers="ccpo2023_diem">
+    <span class="swatch" style="background:#718096;border-radius:50%"></span>CCPO 2023 — điểm đo thô (5.199)</label>
+  <label><input type="checkbox" data-layers="ccpo2023_tien" checked>
+    <span class="swatch" style="background:#3182ce;border-radius:50%"></span>CCPO 2023 — ứng viên Tiền (21, sẵn sàng xét chèn)</label>
+  <label><input type="checkbox" data-layers="ccpo2023_hauriver">
+    <span class="swatch" style="background:#b7791f;border-radius:50%"></span>CCPO 2023 — EXTRA trên Hậu (36, chưa mở việc)</label>
+  <label><input type="checkbox" data-layers="tram_pt,tram_nhan" checked>
+    <span class="swatch" style="background:#e53e3e;border-radius:50%"></span>Trạm quan trắc (47)
+    <span class="swatch" style="background:#dd6b20;border-radius:50%"></span>(cam = cần kiểm lại vị trí)</label>
+  <div class="ghi_chu">
+    Click 1 đối tượng để xem thông tin. ⚠ "Sông/kênh chính" + "Kênh rạch
+    thật ĐBSCL" cùng 1 nguồn Xuân Ái (`Song_Center`/`Kenhrach_update`) nhưng
+    2 layer khác cấp — "Sông/kênh chính" là 1.350 đoạn trục lớn có tên
+    (534/1.350), "Kênh rạch thật" là 35.088 đoạn kênh nội đồng cấp tỉnh, đa
+    số không tên. Cả 2 là NGUỒN ĐỘC LẬP — CHƯA được khớp/hợp nhất toạ độ với
+    mạng MIKE-A (2 bộ khác phạm vi). Không suy diễn các lớp trùng nhau.
+    <br><br>
+    ⚠ 3 lớp "CCPO 2023" (thêm 27/08/2026): khảo sát bathymetry ĐỘC LẬP MỚI
+    NHẤT dự án, đã kiểm chứng chéo vật lý (so khớp MIKE-A lân cận) nhưng
+    <b>CHƯA build/chạy MASCARET</b> — chỉ để xem xét trước khi quyết định.
+    "Ứng viên Tiền" nằm đúng phạm vi đặc tả gốc; "EXTRA trên Hậu" là phát
+    hiện phụ (cụm gọi là "VamNao" thực ra nằm trên sông Hậu) chưa có việc
+    xử lý tiếp.
+  </div>
+  <button id="btn_bang_tong_hop">📊 Bảng tổng hợp trạm (H/Q, giai đoạn)</button>
+</div>
+<div id="bang_tong_hop_overlay">
+  <div id="bang_tong_hop_box">
+    <button id="btn_dong_bang">Đóng ✕</button>
+    <h3>Bảng tổng hợp dữ liệu quan trắc — 47 trạm</h3>
+    <div class="sub">Thanh xanh dương = có H (mực nước) · thanh xanh lá = có Q (lưu lượng).
+      Vị trí/độ dài thanh theo đúng tỷ lệ thời gian trên 2 trục dùng chung bên dưới.
+      Bấm tiêu đề cột để sắp xếp. Di chuột vào thanh để xem ngày chính xác.</div>
+    <div id="bth_content">Đang tải…</div>
+  </div>
+</div>
+<div id="loi_box"></div>
+<div id="map"></div>
+<script>
+if (location.protocol === "file:") {
+  document.getElementById("canh_bao").style.display = "block";
+}
+
+function hienLoi(msg) {
+  const box = document.getElementById("loi_box");
+  box.style.display = "block";
+  box.textContent += msg + "\n";
+  console.error(msg);
+}
+window.addEventListener('error', (e) => hienLoi("JS error: " + e.message));
+
+let protocol = new pmtiles.Protocol();
+maplibregl.addProtocol("pmtiles", protocol.tile);
+
+const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "mikeb_full",
+                         "kenh_survey2020", "kenh_survey2017", "kenh_rach_that", "song_center", "tram_pt",
+                         "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver"];
+
+function locKenh(cot) {
+  return ["==", ["get", cot], "yes"];
+}
+
+const map = new maplibregl.Map({
+  container: 'map',
+  style: {
+    version: 8,
+    glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+    sources: {
+      "song_kenh": { type: "vector", url: "pmtiles://./song_kenh.pmtiles" },
+      "tram": { type: "vector", url: "pmtiles://./tram_quan_trac.pmtiles" },
+      "kenh_rach_that_src": { type: "vector", url: "pmtiles://./kenhrach_that.pmtiles" },
+      "song_center_src": { type: "vector", url: "pmtiles://./song_center.pmtiles" },
+      "mikeb_full_src": { type: "vector", url: "pmtiles://./mikeb_full.pmtiles" },
+      "ccpo2023_diem_src": { type: "vector", url: "pmtiles://./ccpo2023_diem.pmtiles" },
+      "ccpo2023_transect_src": { type: "vector", url: "pmtiles://./ccpo2023_transect.pmtiles" },
+      "basemap_carto": {
+        type: "raster",
+        tiles: ["https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"],
+        tileSize: 256, maxzoom: 19,
+        attribution: '© <a href="https://carto.com/attributions">CARTO</a> © OpenStreetMap contributors'
+      }
+    },
+    layers: [
+      { id: "bg", type: "background", paint: { "background-color": "#eef3f7" } },
+      // Nen that (duong xa, dia danh, ranh gioi) — nguon mien phi khong can
+      // API key. File cu cua DS (BanDo_Tram_DBSCL.html) KHONG co nen nay —
+      // da doc code xac nhan (comment "KHONG dung tile ngoai"), nguoi dung
+      // thay nen o dau khac, khong phai tu file do. Them nen THAT o day.
+      { id: "carto_basemap", type: "raster", source: "basemap_carto" },
+      {
+        id: "kenh_rach_that", type: "line", source: "kenh_rach_that_src",
+        "source-layer": "kenhrach_update", minzoom: 7,
+        paint: { "line-color": "#a0aec0", "line-width": 0.8, "line-opacity": 0.8 }
+      },
+      {
+        id: "kenh_rach_that_nhan", type: "symbol", source: "kenh_rach_that_src",
+        "source-layer": "kenhrach_update", minzoom: 11,
+        layout: {
+          "symbol-placement": "line", "text-field": ["get", "Ten"],
+          "text-size": 11, "text-font": ["Noto Sans Regular"]
+        },
+        paint: { "text-color": "#4a5568", "text-halo-color": "#eef3f7", "text-halo-width": 1.2 }
+      },
+      // Song/kenh CHINH (Song_Center, nguon Xuan Ai, them 27/08/2026) —
+      // 1.350 doan, 534 co ten that (Ten_Song) — VE TREN kenh_rach_that de
+      // noi bat, mau/do day khac han de phan biet "truc chinh" vs "kenh nho".
+      {
+        id: "song_center", type: "line", source: "song_center_src",
+        "source-layer": "song_center", minzoom: 4,
+        paint: { "line-color": "#2c5282", "line-width": 1.8, "line-opacity": 0.85 }
+      },
+      {
+        id: "song_center_nhan", type: "symbol", source: "song_center_src",
+        "source-layer": "song_center", minzoom: 9,
+        filter: ["has", "Ten_Song"],
+        layout: {
+          "symbol-placement": "line", "text-field": ["get", "Ten_Song"],
+          "text-size": 12, "text-font": ["Noto Sans Bold"]
+        },
+        paint: { "text-color": "#1a365d", "text-halo-color": "#eef3f7", "text-halo-width": 1.4 }
+      },
+      // Toan bo mang MIKE-B THAT (1695/4083 nhanh, da loai 2388 nhanh nhan
+      // 'flood' — link-channel/o ngap, phat hien 26/08/2026 — tuong tu cach
+      // MIKE-A loai link-channel). MAC DINH AN — day la mang DOC LAP, KHONG
+      // phai MIKE-A, chi bat khi can doi chieu.
+      {
+        id: "mikeb_full", type: "line", source: "mikeb_full_src",
+        "source-layer": "mikeb_channels", minzoom: 6, layout: { visibility: "none" },
+        paint: { "line-color": "#2f855a", "line-width": 1, "line-opacity": 0.75 }
+      },
+      {
+        id: "kenh", type: "line", source: "song_kenh", "source-layer": "channels",
+        paint: {
+          "line-color": ["case", [">", ["get", "so_nguon_doc_lap_xac_nhan"], 0], "#d69e2e", "#2b6cb0"],
+          "line-width": ["case", [">", ["get", "so_nguon_doc_lap_xac_nhan"], 0], 2.4, 1.4]
+        }
+      },
+      // Kenh DANG THAT SU chay trong baseline TELEMAC hien hanh (420/1847 —
+      // HEP hon nhieu so voi "kenh" o tren, von la TOAN BO kenh MIKE-A du
+      // dieu kien nhung khong nhat thiet dang dung). Vien den day de so
+      // sanh truc quan "MIKE-A co gi" vs "TELEMAC dang chay gi that".
+      {
+        id: "kenh_telemac", type: "line", source: "song_kenh", "source-layer": "channels",
+        filter: locKenh("trong_telemac_hien_hanh"),
+        paint: { "line-color": "#1a202c", "line-width": 1.2, "line-dasharray": [2, 1.5] }
+      },
+      // 2 lop HIGHLIGHT theo tung nguon rieng — mac dinh AN (visibility none),
+      // bat qua checkbox — de xem "chi kenh nao co nguon X" thay vi chi biet
+      // TONG so nguon nhu lop "kenh" o tren. (Bo lop "kenh_mikeb" 27/08/2026
+      // theo yeu cau nguoi dung — "co_mike_b" la CACH SU DUNG so lieu de
+      // xay lop TELEMAC, khong phai ban than so lieu, khong can hien tren
+      // ban do; cot co_mike_b van con trong CSDL/gpkg cho muc dich khac.)
+      {
+        id: "kenh_survey2020", type: "line", source: "song_kenh", "source-layer": "channels",
+        filter: locKenh("co_survey_2020"), layout: { visibility: "none" },
+        paint: { "line-color": "#805ad5", "line-width": 4, "line-opacity": 0.85 }
+      },
+      {
+        id: "kenh_survey2017", type: "line", source: "song_kenh", "source-layer": "channels",
+        filter: locKenh("co_survey_2017"), layout: { visibility: "none" },
+        paint: { "line-color": "#dd6b20", "line-width": 4, "line-opacity": 0.85 }
+      },
+      // CCPO 2023 (them 27/08/2026) — khao sat bathymetry doc lap moi
+      // nhat, kiem chung cheo vat ly xong nhung CHUA build/chay MASCARET.
+      {
+        id: "ccpo2023_diem", type: "circle", source: "ccpo2023_diem_src",
+        "source-layer": "diem_tho", minzoom: 8, layout: { visibility: "none" },
+        paint: { "circle-radius": 2, "circle-color": "#718096", "circle-opacity": 0.5 }
+      },
+      {
+        id: "ccpo2023_tien", type: "circle", source: "ccpo2023_transect_src",
+        "source-layer": "transect_ung_vien",
+        filter: ["==", ["get", "nhom"], "tien_chinh"],
+        paint: {
+          "circle-radius": 6, "circle-color": "#3182ce",
+          "circle-stroke-color": "#fff", "circle-stroke-width": 1.5
+        }
+      },
+      {
+        id: "ccpo2023_hauriver", type: "circle", source: "ccpo2023_transect_src",
+        "source-layer": "transect_ung_vien",
+        filter: ["==", ["get", "nhom"], "hauriver_extra"],
+        layout: { visibility: "none" },
+        paint: {
+          "circle-radius": 6, "circle-color": "#b7791f",
+          "circle-stroke-color": "#fff", "circle-stroke-width": 1.5
+        }
+      },
+      // Lop "mat_cat_georef" (SCC-03, Phase 1 DS) DA GO 27/08/2026 —
+      // nguoi dung phat hien vi tri hien tren ban do (gan Thot Not/Ba
+      // Chieu, vung TNSH) MAU THUAN voi thu muc nguon DWG (ghi "BEN TRE").
+      // Kiem chung bang khoang cach toi kenh MIKE-A that: cach 'Thot Not'
+      // 2,6km, cach 'Ba Chieu' 7,7km — DS trich SAI toa do that (chi kiem
+      // chung bang chieu dai tuyen khop 1,7%, khong kiem vi tri tuyet doi
+      // hop ly khong). Da bao lai cho DS qua DS_VIEC_DANG_CHO.md ben
+      // mekong_telemac_v3 — CHUA hien lai cho toi khi co ket qua georef
+      // dung kiem chung duoc.
+      {
+        id: "tram_pt", type: "circle", source: "tram", "source-layer": "stations",
+        paint: {
+          "circle-radius": 5,
+          // Do vang/cam neu co canh_bao_vi_tri (vd trung 26/08/2026: 3 tram
+          // "KIEM LAI", 1 tram "CHUA GAN" — xem popup de biet chi tiet).
+          "circle-color": ["case", ["has", "canh_bao_vi_tri"], "#dd6b20", "#e53e3e"],
+          "circle-stroke-color": "#fff", "circle-stroke-width": 1.5
+        }
+      },
+      {
+        id: "tram_nhan", type: "symbol", source: "tram", "source-layer": "stations",
+        layout: {
+          "text-field": ["get", "ten_hien_thi"], "text-size": 12,
+          "text-font": ["Noto Sans Bold"],
+          "text-offset": [0, 1.1], "text-anchor": "top"
+        },
+        paint: { "text-color": "#742a2a", "text-halo-color": "#fff", "text-halo-width": 1.4 }
+      }
+    ]
+  },
+  center: [105.7, 10.1],
+  zoom: 7
+});
+
+// Checkbox bat/tat lop — 1 checkbox co the dieu khien NHIEU layer id
+// (cach nhau dau phay trong data-layers, vd tram_pt,tram_nhan).
+document.querySelectorAll('#panel input[type=checkbox]').forEach((cb) => {
+  cb.addEventListener('change', () => {
+    const vis = cb.checked ? 'visible' : 'none';
+    cb.dataset.layers.split(',').forEach((id) => {
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
+    });
+  });
+});
+
+function dinhDangDoPhu(p, tien_to, nhan) {
+  const soNam = p[`${tien_to}_so_nam`];
+  if (soNam === undefined || soNam === null) return `${nhan}: không có dữ liệu`;
+  return `${nhan}: ${soNam} năm (${p[`${tien_to}_tu_ngay`]} → ${p[`${tien_to}_den_ngay`]}, ` +
+         `lấp đầy ~${p[`${tien_to}_lap_day_pct`]}%)`;
+}
+
+map.on('click', (e) => {
+  const bbox = [
+    [e.point.x - 4, e.point.y - 4],
+    [e.point.x + 4, e.point.y + 4]
+  ];
+  const feats = map.queryRenderedFeatures(bbox, { layers: LOP_CLICK_DUOC });
+  if (!feats.length) return;
+  const f = feats[0];
+  const p = f.properties;
+  let html = "";
+  if (f.layer.id.startsWith("kenh") && f.layer.id !== "kenh_rach_that") {
+    const dangChay = p.trong_telemac_hien_hanh === "yes"
+      ? "ĐANG chạy trong baseline TELEMAC hiện hành" : "có trong MIKE-A, KHÔNG có trong baseline hiện hành";
+    html = `<b>${p.id_chuan}</b> (${dangChay})<br>dài ${p.dai_km} km<br>` +
+           `MIKE-B: ${p.co_mike_b} · khảo sát 2020: ${p.co_survey_2020} · khảo sát 2017: ${p.co_survey_2017}`;
+  } else if (f.layer.id === "kenh_rach_that") {
+    html = `<b>${p.Ten || "(chưa có tên)"}</b> (kênh rạch thật ĐBSCL)<br>` +
+           `tỉnh: ${p.TenTinh || ""}<br>dài: ${p.C_Dai ? Math.round(p.C_Dai) + " m" : ""}`;
+  } else if (f.layer.id === "song_center") {
+    html = `<b>${p.Ten_Song || "(chưa có tên)"}</b> (sông/kênh chính ĐBSCL)<br>` +
+           `cấp kênh: ${p.Cap_Kenh ?? ""}<br>tỉnh: ${p.TenTinh || ""}` +
+           (p.District ? `<br>huyện: ${p.District}` : "");
+  } else if (f.layer.id === "mikeb_full") {
+    html = `<b>${p.ten_mikeb}</b> (mô hình MIKE-B, độc lập với MIKE-A)<br>` +
+           `topo: ${p.topo || ""}<br>dài ${p.dai_km} km`;
+  } else if (f.layer.id === "ccpo2023_diem") {
+    html = `<b>Điểm đo CCPO 2023</b> (vùng ${p.vung})<br>cao độ đáy: ${p.h_m} m<br>` +
+           `dự án: ${p.du_an} · năm đo: ${p.nam_do}`;
+  } else if (f.layer.id === "ccpo2023_tien" || f.layer.id === "ccpo2023_hauriver") {
+    const nhomNhan = f.layer.id === "ccpo2023_tien"
+      ? "ứng viên Tiền — sẵn sàng xét chèn" : "EXTRA trên Hậu — chưa mở việc";
+    html = `<b>Transect ứng viên CCPO 2023</b> (${nhomNhan})<br>` +
+           `vùng: ${p.vung} · nhánh: ${p.nhanh_nwk} · chainage ${p.chainage_de_xuat} m<br>` +
+           `z: ${p.z_min} → ${p.z_max} m · rộng ${p.do_rong_diem_m} m · ${p.n_diem_dung} điểm dùng<br>` +
+           `<i>Đã kiểm chứng chéo vật lý, CHƯA build/chạy MASCARET</i>`;
+  } else if (f.layer.id === "tram_pt") {
+    const kenhGan = p.id_chuan_kenh
+      ? `${p.id_chuan_kenh} (cách ${p.d_toi_kenh_gan_nhat_m ?? "?"} m)`
+      : `<i>chưa gán kênh</i>`;
+    const canhBao = p.canh_bao_vi_tri
+      ? `<br><span style="color:#c53030">⚠ ${p.canh_bao_vi_tri}</span>` : "";
+    html = `<b>${p.ten_hien_thi}</b><br>kênh gán: ${kenhGan}<br>tỉnh: ${p.tinh || ""}${canhBao}<br>` +
+           dinhDangDoPhu(p, "h", "Mực nước (H)") + "<br>" +
+           dinhDangDoPhu(p, "q", "Lưu lượng (Q)");
+  }
+  new maplibregl.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+});
+
+map.on('mousemove', (e) => {
+  const feats = map.queryRenderedFeatures(e.point, { layers: LOP_CLICK_DUOC });
+  map.getCanvas().style.cursor = feats.length ? 'pointer' : '';
+});
+
+map.on('error', (e) => hienLoi("Map error: " + (e.error ? e.error.message : JSON.stringify(e))));
+map.on('load', () => console.log("Map da load xong, layer:", map.getStyle().layers.map(l => l.id)));
+
+// ==================== Bang tong hop tram (them 27/08/2026) ====================
+// Doc rieng stations_summary.json (KHONG dung map.querySourceFeatures — chi
+// tra ve feature dang trong tile DA TAI o zoom/vi tri hien tai, khong dam
+// bao du ca 47 tram). File nay do scripts/xay_csdl.py sinh, doc thang tu
+// bang stations (da co san cot h_*/q_* tu _tinh_do_phu_tram()).
+let bthData = null, bthSortKey = "ten_hien_thi", bthSortDir = 1;
+const CAC_COT_SO = ["h_so_nam", "h_lap_day_pct", "q_so_nam", "q_lap_day_pct"];
+
+function ngayThanhSoNam(s) {
+  if (!s) return null;
+  return parseInt(s.slice(0, 4)) + (parseInt(s.slice(5, 7)) - 1) / 12;
+}
+
+function sapXepBang(rows, key, dir) {
+  const laSo = CAC_COT_SO.includes(key);
+  return [...rows].sort((a, b) => {
+    let av = a[key], bv = b[key];
+    const aRong = (av === null || av === undefined), bRong = (bv === null || bv === undefined);
+    if (aRong && bRong) return 0;
+    if (aRong) return 1;   // tram khong co du lieu luon xuong cuoi, bat ke chieu sap xep
+    if (bRong) return -1;
+    if (laSo) { av = parseFloat(av); bv = parseFloat(bv); }
+    let c;
+    if (key === "ten_hien_thi" || key === "tinh") c = String(av).localeCompare(String(bv), "vi");
+    else c = av > bv ? 1 : av < bv ? -1 : 0;
+    return c * dir;
+  });
+}
+
+function thanhTrucHtml(tu, den, mi, ma, loai) {
+  if (!tu || !den || !isFinite(mi) || !isFinite(ma) || ma <= mi) return '<span class="khong_co">—</span>';
+  const t0 = ngayThanhSoNam(tu), t1 = ngayThanhSoNam(den);
+  const trai = (t0 - mi) / (ma - mi) * 100;
+  const rong = Math.max((t1 - t0) / (ma - mi) * 100, 0.6);
+  return `<div class="truc_bar" title="${tu} → ${den}">` +
+         `<div class="doan ${loai}" style="left:${trai}%;width:${rong}%"></div></div>`;
+}
+
+function veBangTongHop() {
+  const d = bthData;
+  const hTu = d.filter(r => r.h_tu_ngay).map(r => ngayThanhSoNam(r.h_tu_ngay));
+  const hDen = d.filter(r => r.h_den_ngay).map(r => ngayThanhSoNam(r.h_den_ngay));
+  const qTu = d.filter(r => r.q_tu_ngay).map(r => ngayThanhSoNam(r.q_tu_ngay));
+  const qDen = d.filter(r => r.q_den_ngay).map(r => ngayThanhSoNam(r.q_den_ngay));
+  const hMin = Math.min(...hTu), hMax = Math.max(...hDen);
+  const qMin = Math.min(...qTu), qMax = Math.max(...qDen);
+
+  const nhanH = `H (${Math.floor(hMin)}–${Math.ceil(hMax)})`;
+  const nhanQ = isFinite(qMin) ? `Q (${Math.floor(qMin)}–${Math.ceil(qMax)})` : "Q";
+  const cotDinhNghia = [
+    ["ten_hien_thi", "Trạm"], ["tinh", "Tỉnh"],
+    ["h_tu_ngay", nhanH], ["h_so_nam", "Số năm"], ["h_lap_day_pct", "% đầy"],
+    ["q_tu_ngay", nhanQ], ["q_so_nam", "Số năm"], ["q_lap_day_pct", "% đầy"],
+  ];
+
+  const sorted = sapXepBang(d, bthSortKey, bthSortDir);
+
+  let html = '<table id="bth_table"><thead><tr>';
+  for (const [key, nhan] of cotDinhNghia) {
+    const mui = bthSortKey === key ? (bthSortDir > 0 ? " ▲" : " ▼") : "";
+    html += `<th data-key="${key}">${nhan}${mui}</th>`;
+  }
+  html += "</tr></thead><tbody>";
+  for (const r of sorted) {
+    html += "<tr>" +
+      `<td class="ten_tram_bth">${r.ten_hien_thi}</td>` +
+      `<td>${r.tinh || ""}</td>` +
+      `<td>${thanhTrucHtml(r.h_tu_ngay, r.h_den_ngay, hMin, hMax, "h")}</td>` +
+      `<td>${r.h_so_nam ? r.h_so_nam + " năm" : '<span class="khong_co">—</span>'}</td>` +
+      `<td>${r.h_lap_day_pct ? r.h_lap_day_pct + "%" : '<span class="khong_co">—</span>'}</td>` +
+      `<td>${thanhTrucHtml(r.q_tu_ngay, r.q_den_ngay, qMin, qMax, "q")}</td>` +
+      `<td>${r.q_so_nam ? r.q_so_nam + " năm" : '<span class="khong_co">—</span>'}</td>` +
+      `<td>${r.q_lap_day_pct ? r.q_lap_day_pct + "%" : '<span class="khong_co">—</span>'}</td>` +
+      "</tr>";
+  }
+  html += "</tbody></table>";
+  document.getElementById("bth_content").innerHTML = html;
+
+  document.querySelectorAll("#bth_table th").forEach((th) => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if (bthSortKey === key) bthSortDir *= -1; else { bthSortKey = key; bthSortDir = 1; }
+      veBangTongHop();
+    });
+  });
+}
+
+document.getElementById("btn_bang_tong_hop").addEventListener("click", async () => {
+  document.getElementById("bang_tong_hop_overlay").style.display = "flex";
+  if (!bthData) {
+    try {
+      const res = await fetch("./stations_summary.json");
+      bthData = await res.json();
+    } catch (e) {
+      document.getElementById("bth_content").textContent = "Lỗi tải bảng: " + e.message;
+      return;
+    }
+  }
+  veBangTongHop();
+});
+document.getElementById("btn_dong_bang").addEventListener("click", () => {
+  document.getElementById("bang_tong_hop_overlay").style.display = "none";
+});
+document.getElementById("bang_tong_hop_overlay").addEventListener("click", (e) => {
+  if (e.target.id === "bang_tong_hop_overlay") e.currentTarget.style.display = "none";
+});
+</script>
+</body>
+</html>
