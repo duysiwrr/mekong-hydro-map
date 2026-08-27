@@ -182,20 +182,6 @@
   "q_lap_day_pct": null
  },
  {
-  "station_id": "hoabinh.1",
-  "ten_hien_thi": "Hoà Bình",
-  "tinh": "Tiền Giang",
-  "song": "Cửa Tiểu",
-  "h_tu_ngay": "2020-01-01",
-  "h_den_ngay": "2022-08-31",
-  "h_so_nam": "2.7",
-  "h_lap_day_pct": "100.0",
-  "q_tu_ngay": null,
-  "q_den_ngay": null,
-  "q_so_nam": null,
-  "q_lap_day_pct": null
- },
- {
   "station_id": "longxuyen",
   "ten_hien_thi": "Long Xuyên",
   "tinh": "An Giang",
