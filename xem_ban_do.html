@@ -131,8 +131,8 @@
         <div class="nguon">nguồn: tổng hợp nội bộ</div></div>
       <div class="ds_card"><div class="n">3.009</div><div class="ten">Mạng lưới kênh mô hình (MIKE-A)</div>
         <div class="mo_ta">Toàn bộ nhánh sông/kênh trong bộ dữ liệu; 1.847 nhánh đủ điều
-          kiện hiển thị trên bản đồ (lớp "Mô hình MIKE-A"), 416 trong số đó đang thật sự
-          chạy trong mô hình TELEMAC 1D hiện hành, 2.277 có dữ liệu bề rộng/độ sâu
+          kiện hiển thị trên bản đồ (lớp "Mô hình MIKE-A"), 416 trong số đó có hình học
+          mặt cắt chi tiết (lớp "Mô hình TELEMAC 1D"), 2.277 có dữ liệu bề rộng/độ sâu
           lòng dẫn thật.</div>
         <div class="nguon">nguồn: mô hình MIKE 11 ĐBSCL</div></div>
       <div class="ds_card"><div class="n">35.088</div><div class="ten">Kênh rạch nội đồng ĐBSCL</div>
@@ -168,6 +168,7 @@
     <h3>Sông · kênh</h3>
     <label><input type="checkbox" data-layers="kenh" checked>
       <span class="swatch line" style="background:#3182ce"></span>Mô hình MIKE-A (1.847 nhánh)</label>
+    <div style="font-size:10.5px;color:#718096;margin:1px 0 3px 19px;">nét vàng = xác nhận thêm ≥2 nguồn độc lập</div>
     <label><input type="checkbox" data-layers="kenh_telemac" checked>
       <span class="swatch line" style="background:#1a202c"></span>Mô hình TELEMAC 1D (416 nhánh)</label>
     <label><input type="checkbox" data-layers="mikeb_full">
@@ -347,7 +348,7 @@ const map = new maplibregl.Map({
       },
       {
         id: "kenh_telemac", type: "line", source: "song_kenh", "source-layer": "channels",
-        filter: locKenh("trong_telemac_hien_hanh"),
+        minzoom: 6, filter: locKenh("trong_telemac_hien_hanh"),
         paint: { "line-color": "#1a202c", "line-width": 1.2, "line-dasharray": [2, 1.5] }
       },
       // Khao sat 2017 VE TRUOC 2020 trong mang layer -> 2020 luon NAM TREN
@@ -602,7 +603,13 @@ document.addEventListener("click", (e) => {
 });
 
 // ==================== Bang tong hop tram ====================
+// bthData nap NGAY khi trang mo (28/08/2026, DS phat hien C3) — truoc day
+// chi nap khi bam nut "Bang tram", nen neu tim kiem tram TRUOC roi bam vao
+// ket qua thi popup thieu thanh phu H/Q (bthData con null). File chi 46
+// dong/~14KB, nap som khong dang ke.
 let bthData = null, bthSortKey = "ten_hien_thi", bthSortDir = 1;
+fetch("./stations_summary.json").then(r => r.json()).then(d => { bthData = d; })
+  .catch(e => hienLoi("Lỗi stations_summary.json: " + e.message));
 const CAC_COT_SO = ["h_so_nam", "h_lap_day_pct", "q_so_nam", "q_lap_day_pct"];
 
 function sapXepBang(rows, key, dir) {
