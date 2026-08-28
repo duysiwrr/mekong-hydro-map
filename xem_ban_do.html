@@ -170,7 +170,7 @@
       <span class="swatch line" style="background:#3182ce"></span>Mô hình MIKE-A (1.847 nhánh)</label>
     <div style="font-size:10.5px;color:#718096;margin:1px 0 3px 19px;">nét vàng = xác nhận thêm ≥2 nguồn độc lập</div>
     <label><input type="checkbox" data-layers="kenh_telemac" checked>
-      <span class="swatch line" style="background:#1a202c"></span>Mô hình TELEMAC 1D (416 nhánh)</label>
+      <span class="swatch line" style="background:#e53e3e"></span>Mô hình TELEMAC 1D (416 nhánh)</label>
     <label><input type="checkbox" data-layers="mikeb_full">
       <span class="swatch line" style="background:#319795"></span>Mô hình MIKE-B (1.695 nhánh)</label>
     <label><input type="checkbox" data-layers="kenh_survey2017">
@@ -202,7 +202,7 @@
   <div class="nhom">
     <h3>Trạm quan trắc</h3>
     <label><input type="checkbox" data-layers="tram_pt,tram_nhan" checked>
-      <span class="swatch" style="background:#2b6cb0;border-radius:50%"></span>Trạm H/Q (46)</label>
+      <span class="swatch" style="background:#c05621;border-radius:50%"></span>Trạm H/Q (46)</label>
     <div style="font-size:11px;color:#718096;margin:2px 0 0 19px;line-height:1.7;">
       ● cả H+Q &nbsp;● chỉ H &nbsp;● chỉ Q &nbsp;● chưa rõ</div>
   </div>
@@ -273,7 +273,9 @@ const map = new maplibregl.Map({
   container: 'map',
   style: {
     version: 8,
-    glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+    // Tu host (29/08/2026, thay demotiles.maplibre.org khong SLA) — chi 3
+    // khoang du cho tieng Viet, xem fonts/README.md.
+    glyphs: "./fonts/{fontstack}/{range}.pbf",
     sources: {
       "song_kenh": { type: "vector", url: "pmtiles://./song_kenh.pmtiles" },
       "tram": { type: "vector", url: "pmtiles://./tram_quan_trac.pmtiles" },
@@ -416,19 +418,21 @@ const map = new maplibregl.Map({
       {
         id: "kenh_telemac", type: "line", source: "song_kenh", "source-layer": "channels",
         minzoom: 6, filter: locKenh("trong_telemac_hien_hanh"),
-        paint: { "line-color": "#1a202c", "line-width": 1.2, "line-dasharray": [2, 1.5] }
+        paint: { "line-color": "#e53e3e", "line-width": 1.6, "line-dasharray": [2, 1.5] }
       },
-      // Tram ma hoa theo LOAI DU LIEU CO (hoc tu demo DS) — thay cho 1 mau
-      // do duy nhat truoc day: ca H+Q (xanh dong) / chi H (teal) / chi Q
-      // (xanh la) / chua ro (xam). KHONG dung mau bao QA/canh bao vi tri.
+      // Tram ma hoa theo LOAI DU LIEU CO (hoc tu demo DS), tong mau CAM
+      // (theo yeu cau nguoi dung 29/08/2026, cho noi bat hon tong xanh cu):
+      // ca H+Q (cam dam) / chi H (cam vua) / chi Q (cam nhat) / chua ro (xam,
+      // giu nguyen — muc dich la trung tinh khong phai "noi"). KHONG dung
+      // mau bao QA/canh bao vi tri.
       {
         id: "tram_pt", type: "circle", source: "tram", "source-layer": "stations", minzoom: 4,
         paint: {
           "circle-color": ["case",
             ["all", [">", ["coalesce", ["get", "h_so_nam"], 0], 0],
-                    [">", ["coalesce", ["get", "q_so_nam"], 0], 0]], "#2b6cb0",
-            [">", ["coalesce", ["get", "h_so_nam"], 0], 0], "#319795",
-            [">", ["coalesce", ["get", "q_so_nam"], 0], 0], "#38a169",
+                    [">", ["coalesce", ["get", "q_so_nam"], 0], 0]], "#c05621",
+            [">", ["coalesce", ["get", "h_so_nam"], 0], 0], "#ed8936",
+            [">", ["coalesce", ["get", "q_so_nam"], 0], 0], "#f6ad55",
             "#a0aec0"],
           "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 4, 9, 5.5, 14, 7.5],
           "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5
