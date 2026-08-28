@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<title>Mekong Hydro DB — Bản đồ mạng lưới sông kênh + trạm quan trắc</title>
+<title>Mekong Hydro DB — Danh mục dữ liệu</title>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js"></script>
@@ -130,9 +130,10 @@
           năm dữ liệu. Bản đồ chỉ hiện vị trí &amp; độ phủ thời gian.</div>
         <div class="nguon">nguồn: tổng hợp nội bộ</div></div>
       <div class="ds_card"><div class="n">3.009</div><div class="ten">Mạng lưới kênh mô hình (MIKE-A)</div>
-        <div class="mo_ta">Toàn bộ nhánh sông/kênh dùng làm hạ tầng mô hình hoá; 416 nhánh
-          đang thật sự chạy trong mô hình TELEMAC 1D hiện hành; 2.277 nhánh có dữ liệu
-          bề rộng/độ sâu lòng dẫn thật.</div>
+        <div class="mo_ta">Toàn bộ nhánh sông/kênh trong bộ dữ liệu; 1.847 nhánh đủ điều
+          kiện hiển thị trên bản đồ (lớp "Mô hình MIKE-A"), 416 trong số đó đang thật sự
+          chạy trong mô hình TELEMAC 1D hiện hành, 2.277 có dữ liệu bề rộng/độ sâu
+          lòng dẫn thật.</div>
         <div class="nguon">nguồn: mô hình MIKE 11 ĐBSCL</div></div>
       <div class="ds_card"><div class="n">35.088</div><div class="ten">Kênh rạch nội đồng ĐBSCL</div>
         <div class="mo_ta">Bản đồ kênh rạch chi tiết cấp tỉnh, phần lớn có tên địa phương —
@@ -280,9 +281,17 @@ const map = new maplibregl.Map({
       "mikeb_full_src": { type: "vector", url: "pmtiles://./mikeb_full.pmtiles" },
       "ccpo2023_diem_src": { type: "vector", url: "pmtiles://./ccpo2023_diem.pmtiles" },
       "ccpo2023_transect_src": { type: "vector", url: "pmtiles://./ccpo2023_transect.pmtiles" },
+      // Sua 28/08/2026 (DS phat hien): "{r}" la cu phap Leaflet (retina),
+      // MapLibre GL JS KHONG ho tro token nay -> URL cu co the 404 tile,
+      // nen mien lieu tro thanh mau phang thay vi anh nen that. Dung 3
+      // subdomain + @2x truc tiep (giong demo DS da lam dung).
       "basemap_carto": {
         type: "raster",
-        tiles: ["https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"],
+        tiles: [
+          "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+          "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+          "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png"
+        ],
         tileSize: 256, maxzoom: 19,
         attribution: '© <a href="https://carto.com/attributions">CARTO</a> © OpenStreetMap contributors'
       }
@@ -292,7 +301,7 @@ const map = new maplibregl.Map({
       { id: "carto_basemap", type: "raster", source: "basemap_carto" },
       {
         id: "kenh_rach_that", type: "line", source: "kenh_rach_that_src",
-        "source-layer": "kenhrach_update", minzoom: 7,
+        "source-layer": "kenhrach_update", minzoom: 8.5,
         paint: { "line-color": "#a0aec0", "line-width": 0.8, "line-opacity": 0.8 }
       },
       {
@@ -330,6 +339,7 @@ const map = new maplibregl.Map({
       },
       {
         id: "kenh", type: "line", source: "song_kenh", "source-layer": "channels",
+        minzoom: 6,
         paint: {
           "line-color": ["case", [">", ["get", "so_nguon_doc_lap_xac_nhan"], 0], "#d69e2e", "#3182ce"],
           "line-width": ["case", [">", ["get", "so_nguon_doc_lap_xac_nhan"], 0], 2.4, 1.4]
@@ -538,7 +548,9 @@ map.on('click', (e) => {
     html = `<b>${p.ten_mikeb}</b> (mô hình MIKE-B, độc lập với MIKE-A)<br>` +
            `topo: ${p.topo || ""}<br>dài ${p.dai_km} km`;
   } else if (f.layer.id === "ccpo2023_diem") {
-    html = `<b>Điểm đo CCPO 2023</b> (vùng ${p.vung})<br>cao độ đáy: ${p.h_m} m<br>` +
+    // KHONG hien h_m (cao do day THAT — DS phat hien 28/08/2026 day la tri
+    // so do duy nhat con lo tren toan trang, di nguoc nguyen tac catalog).
+    html = `<b>Điểm đo CCPO 2023</b> (vùng ${p.vung})<br>` +
            `dự án: ${p.du_an} · năm đo: ${p.nam_do}`;
   } else if (f.layer.id === "ccpo2023_tien" || f.layer.id === "ccpo2023_hauriver") {
     const vungNhan = f.layer.id === "ccpo2023_tien" ? "Sông Tiền" : "Sông Hậu";
