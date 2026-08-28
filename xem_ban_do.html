@@ -346,11 +346,6 @@ const map = new maplibregl.Map({
           "line-width": ["case", [">", ["get", "so_nguon_doc_lap_xac_nhan"], 0], 2.4, 1.4]
         }
       },
-      {
-        id: "kenh_telemac", type: "line", source: "song_kenh", "source-layer": "channels",
-        minzoom: 6, filter: locKenh("trong_telemac_hien_hanh"),
-        paint: { "line-color": "#1a202c", "line-width": 1.2, "line-dasharray": [2, 1.5] }
-      },
       // Khao sat 2017 VE TRUOC 2020 trong mang layer -> 2020 luon NAM TREN
       // khi ca 2 cung bat (theo yeu cau nguoi dung, sua 28/08/2026).
       {
@@ -414,6 +409,14 @@ const map = new maplibregl.Map({
           "circle-radius": 6, "circle-color": "#b7791f",
           "circle-stroke-color": "#fff", "circle-stroke-width": 1.5
         }
+      },
+      // kenh_telemac dua len SAT DUOI lop tram (theo yeu cau nguoi dung
+      // 29/08/2026): khi bat, ve TREN toan bo lop khac (kenh/song_center/
+      // mikeb/kenhrach_that/CCPO...), CHI duoi lop tram H/Q.
+      {
+        id: "kenh_telemac", type: "line", source: "song_kenh", "source-layer": "channels",
+        minzoom: 6, filter: locKenh("trong_telemac_hien_hanh"),
+        paint: { "line-color": "#1a202c", "line-width": 1.2, "line-dasharray": [2, 1.5] }
       },
       // Tram ma hoa theo LOAI DU LIEU CO (hoc tu demo DS) — thay cho 1 mau
       // do duy nhat truoc day: ca H+Q (xanh dong) / chi H (teal) / chi Q
