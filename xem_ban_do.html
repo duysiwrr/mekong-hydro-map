@@ -171,6 +171,9 @@
     <div style="font-size:10.5px;color:#718096;margin:1px 0 3px 19px;">nét vàng = xác nhận thêm ≥2 nguồn độc lập</div>
     <label><input type="checkbox" data-layers="kenh_telemac" checked>
       <span class="swatch line" style="background:#e53e3e"></span>Mô hình TELEMAC 1D (416 nhánh)</label>
+    <label><input type="checkbox" data-layers="kenh_v6">
+      <span class="swatch line" style="background:#38a169"></span>TELEMAC v6 — thử nghiệm mạng dài (417 nhánh)</label>
+    <div style="font-size:10.5px;color:#718096;margin:1px 0 3px 19px;">nét xanh lá đè lên TELEMAC 1D đỏ: chỉ <b>Ba Lai</b> là nhánh mới hoàn toàn; Tiền/BASSAC/Hàm Luông/Cổ Chiên chỉ ĐƯỢC NỐI DÀI (khớp 100% MIKE-A), không phải nhánh mới</div>
     <label><input type="checkbox" data-layers="mikeb_full">
       <span class="swatch line" style="background:#319795"></span>Mô hình MIKE-B (1.695 nhánh)</label>
     <label><input type="checkbox" data-layers="kenh_survey2017">
@@ -420,6 +423,17 @@ const map = new maplibregl.Map({
         minzoom: 6, filter: locKenh("trong_telemac_hien_hanh"),
         paint: { "line-color": "#e53e3e", "line-width": 1.6, "line-dasharray": [2, 1.5] }
       },
+      // kenh_v6 (moi 08/09/2026, theo yeu cau nguoi dung): luoi TELEMAC THU
+      // NGHIEM "v6" (mang dai, dong khoang hut chieu dai Tien/BASSAC/Ham
+      // Luong/Co Chien 100% MIKE-A + them nhanh Ba Lai) — CHUA dong goi
+      // baseline san xuat, dat SAT DUOI kenh_telemac de de so sanh 2 lop
+      // (do/xanh la trung nhau tren da so nhanh, chi lech o cho THAT SU
+      // khac nhau — nhanh moi hoan toan hoac doan noi dai).
+      {
+        id: "kenh_v6", type: "line", source: "song_kenh", "source-layer": "channels",
+        minzoom: 6, filter: locKenh("trong_v6_hlcc_balai"), layout: { visibility: "none" },
+        paint: { "line-color": "#38a169", "line-width": 2.4, "line-dasharray": [1, 1] }
+      },
       // Tram ma hoa theo LOAI DU LIEU CO (hoc tu demo DS), tong mau CAM
       // (theo yeu cau nguoi dung 29/08/2026, cho noi bat hon tong xanh cu):
       // ca H+Q (cam dam) / chi H (cam vua) / chi Q (cam nhat) / chua ro (xam,
@@ -457,7 +471,7 @@ map.addControl(new maplibregl.NavigationControl(), "bottom-right");
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: "metric" }), "bottom-right");
 map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
 
-const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "mikeb_full",
+const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "kenh_v6", "mikeb_full",
                          "kenh_survey2020", "kenh_survey2017", "kenh_rach_that", "song_center",
                          "kenh_rong", "kenh_sau", "tram_pt",
                          "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver"];
@@ -544,7 +558,9 @@ map.on('click', (e) => {
     const co = (v) => v === "yes" ? "✓" : "−";
     html = `<b>${p.id_chuan}</b> · dài ${p.dai_km} km<br>` + rongSauHtml() +
            `Tồn tại trong: MIKE-A ✓ · MIKE-B ${co(p.co_mike_b)} · ` +
-           `KS 2020 ${co(p.co_survey_2020)} · KS 2017 ${co(p.co_survey_2017)}`;
+           `KS 2020 ${co(p.co_survey_2020)} · KS 2017 ${co(p.co_survey_2017)}<br>` +
+           `Đang chạy: TELEMAC sản xuất ${co(p.trong_telemac_hien_hanh)} · ` +
+           `TELEMAC v6 (thử nghiệm) ${co(p.trong_v6_hlcc_balai)}`;
   } else if (f.layer.id === "kenh_rach_that") {
     html = `<b>${p.Ten || "(chưa có tên)"}</b> (kênh rạch nội đồng ĐBSCL)<br>` +
            `tỉnh: ${p.TenTinh || ""}<br>dài: ${p.C_Dai ? Math.round(p.C_Dai) + " m" : ""}`;
