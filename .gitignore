@@ -1,1 +1,42 @@
+# ============================================================
+# CANH BAO BAO MAT (13/09/2026)
+# Day la repo CONG KHAI (GitHub Pages). TUYET DOI KHONG day
+# DU LIEU GOC (gia tri quan trac muc nuoc/luu luong) len day.
+# Chi duoc cong bo:
+#   - hinh hoc lop ban do  -> *.pmtiles
+#   - vi tri/tinh/song tram -> tram_loc.json
+#   - sieu du lieu (giai doan, so nam, % lap day) -> stations_summary.json
+# Moi dinh dang du lieu tho/do dac ben duoi deu bi chan.
+# ============================================================
+
+# Ghi chu noi bo — khong cong bo
 ghi_chu_rieng.json
+ghi_chu*.json
+
+# Du lieu do dac / du lieu tho — chan tuyet doi
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.xlsm
+*.sqlite
+*.sqlite3
+*.db
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.prj
+*.tif
+*.tiff
+*.nc
+*.dat
+*.mat
+*.parquet
+*.h5
+*.hdf5
+*.zip
+*.7z
+*.rar
+*.mbtiles
+*.hgt
