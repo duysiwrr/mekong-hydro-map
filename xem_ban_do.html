@@ -333,7 +333,10 @@ if (location.protocol === "file:") {
   document.getElementById("canh_bao").style.display = "block";
 }
 
-function hienLoi(msg) {
+// batBuoc=true: bo qua bo loc loi ben. Dung cho su co nghiem trong ma nguoi
+// xem CAN biet (vi du: toan bo lop du lieu khong tai duoc), du thong bao co
+// the chua chuoi "Failed to fetch" — xem protocol pmtiles o duoi.
+function hienLoi(msg, batBuoc = false) {
   // Loc loi BEN (khong phai loi that) — 14/09/2026. Truoc day MOI loi deu
   // do vao 1 hop do to o goc man hinh, nen nguoi xem thay "Map error: Failed
   // to fetch" chi vi mat mang nua giay hoac vi trinh duyet huy request khi
@@ -346,7 +349,7 @@ function hienLoi(msg) {
   //     ngoai pham vi du lieu KHONG co tile; khong anh huong phan con lai.
   const BEN = [/failed to fetch/i, /load failed/i, /networkerror/i,
                /abort/i, /cancelled/i, /canceled/i, /\b404\b/];
-  if (BEN.some((r) => r.test(msg))) { console.warn("[bo qua, loi ben]", msg); return; }
+  if (!batBuoc && BEN.some((r) => r.test(msg))) { console.warn("[bo qua, loi ben]", msg); return; }
   const box = document.getElementById("loi_box");
   if (box.dataset.daHien === msg) return;   // khong lap lai cung 1 loi
   box.dataset.daHien = msg;
@@ -359,27 +362,83 @@ function hienLoi(msg) {
   console.error(msg);
 }
 window.addEventListener('error', (e) => hienLoi("Lỗi trang: " + e.message));
+// Promise bi tu choi ma khong ai bat (unhandled rejection) KHONG kich hoat su
+// kien 'error' — do la ly do loi protocol pmtiles 15/09/2026 that su dien ra
+// trong im lang. Bat rieng su kien nay de khong bao gio "im lang mat lop du
+// lieu" nua; hienLoi() van loc bo cac loi vo hai (abort/cancel/mang chap chon).
+window.addEventListener('unhandledrejection', (e) => {
+  const r = e && e.reason;
+  hienLoi("Lỗi không xử lý được (Promise): " + (r && r.message ? r.message : r));
+});
 
 // ==== pmtiles protocol + TU DONG THU LAI (14/09/2026) ====
 // Protocol goc nem loi NGAY khi 1 request that bai; tren mang chap chon
 // dieu nay lam ca lop du lieu bien mat cho den khi tai lai trang. Boc them
 // 3 lan thu lai voi backoff tang dan (200ms/800ms/2000ms) — du de vuot cac
 // lan "nghen" ngan ma khong lam nguoi dung cho lau.
+//
+// !!!! LOI NGHIEM TRONG DA SUA 15/09/2026 — DOC KY TRUOC KHI SUA LAI !!!!
+// Ban 14/09/2026 goi `protocolGoc.tile({}, params, abort)`. pmtiles 3.x boc
+// ham v3compat() de ho tro CA maplibre v3 (kieu callback) LAN v4 (kieu
+// Promise); no PHAN NHANH bang tham so thu 2 — dung nhu sau:
+//     var v3compat = (v4) => (requestParameters, arg2) => {
+//       if (arg2 instanceof AbortController) return v4(requestParameters, arg2);
+//       ... v4(...).then((r) => arg2(void 0, r.data, ...)) ... return {cancel}
+//     };
+// GOI `tile({}, params, abort)` khong phai "thua 1 tham so" ma la LECH
+// THAM SO: pmtiles nhan requestParameters = {} va arg2 = params. Vi `params`
+// KHONG phai AbortController nen roi vao nhanh maplibre-v3, o do no bi goi nhu
+// mot HAM -> TypeError "arg2 is not a function", roi vao .catch() -> goi lai
+// arg2(e) -> nem tiep -> Promise REJECTION KHONG AI BAT (unhandled), con gia
+// tri tra ve cho maplibre la {cancel} chu KHONG phai Promise. maplibre thay
+// khong phai thenable nen bo qua luon -> khong bao gio co tile nao.
+// Ket qua nguoi xem thay: TOAN BO lop pmtiles (tram, song_kenh, kenh, mikeb,
+// ccpo2023...) bien mat, chi con lop nen raster (OSM/Esri) hien ra. Loi nay
+// khong hien loi do (rejection khong ai bat) nen rat kho doan.
+// Nay truyen dung (params, abort). Co kiem thu hoi quy cho dung loi nay o
+// scripts/kiem_tra_trang_web.js, nhom "protocol pmtiles" (10) — loi nay TUNG
+// LOT QUA 40 kiem thu vi harness cu bo qua handler addProtocol va gia lap
+// pmtiles.Protocol.tile qua de dai (chap nhan moi chu ky).
 const protocolGoc = new pmtiles.Protocol();
-function layTile(client, params, abort) { return protocolGoc.tile(client, params, abort); }
+function laLoiHuy(e) {
+  return !!e && (e.name === "AbortError" || /abort/i.test(String(e.message || "")));
+}
 async function thuLai(fn, soLan = 3, cho = 200) {
   let loiCuoi;
   for (let i = 0; i <= soLan; i++) {
     try { return await fn(); } catch (e) {
       loiCuoi = e;
+      // Nguoi dung pan/zoom lam maplibre huy request. Thu lai la VO NGHIA vi
+      // signal da abort -> moi lan sau huy ngay, chi ton 3s vo ich.
+      if (laLoiHuy(e)) break;
       if (i === soLan) break;
       await new Promise((r) => setTimeout(r, cho * Math.pow(4, i)));
     }
   }
   throw loiCuoi;
 }
-maplibregl.addProtocol("pmtiles", (params, abort) =>
-  thuLai(() => layTile({}, params, abort)));
+maplibregl.addProtocol("pmtiles", (params, abort) => {
+  // maplibre 4.x: handler PHAI tra ve Promise<{data, cacheControl?, expires?}>
+  // va tham so thu 2 LUON la AbortController.
+  if (abort instanceof AbortController) {
+    return thuLai(() => protocolGoc.tile(params, abort)).catch((e) => {
+      // Het luot thu lai => lop du lieu KHONG tai duoc. Day la su co nghiem
+      // trong (mat hang loat lop), KHONG phai loi ben, nen phai bao cho nguoi
+      // xem biet thay vi de ho ngoi nhin ban do trong ma khong hieu vi sao.
+      // batBuoc=true de khong bi loc o hienLoi() (thong bao se co chuoi
+      // "Failed to fetch" — von nam trong danh sach loc).
+      // Rieng loi HUY (nguoi dung pan/zoom) thi im lang: binh thuong, khong
+      // phai su co.
+      if (!laLoiHuy(e)) {
+        hienLoi("Không tải được lớp dữ liệu bản đồ (đã thử lại 3 lần): " +
+          (e && e.message ? e.message : e), true);
+      }
+      throw e;
+    });
+  }
+  // maplibre 2/3 (kieu callback): pmtiles tu goi callback, KHONG thu lai.
+  return protocolGoc.tile(params, abort);
+});
 
 function locKenh(cot) {
   return ["==", ["get", cot], "yes"];
@@ -634,7 +693,17 @@ function chuyenSangOSM(viSao) {
   if (dangDungOSM) return;
   dangDungOSM = true;
   if (map.getLayer("nen_esri")) map.setLayoutProperty("nen_esri", "visibility", "none");
-  if (map.getLayer("nen_osm")) map.setLayoutProperty("nen_osm", "visibility", "visible");
+  if (map.getLayer("nen_osm")) {
+    map.setLayoutProperty("nen_osm", "visibility", "visible");
+    // OSM la ban do DAY DU mau (xanh cay, xanh nuoc, vang duong). Neu de nguyen
+    // lam nen thi cac lop du lieu mau dam (xanh/do/cam) bi chim, kho doc — ly do
+    // 14/09/2026 chon Esri lam nen CHINH. Khi buoc phai dung OSM, keo no ve gan
+    // nhu xam: bo gan het do bao hoa + giam tuong phan + keo sang. Khong them
+    // nguon ban do moi, chi doi thuoc tinh paint (15/09/2026).
+    map.setPaintProperty("nen_osm", "raster-saturation", -0.9);
+    map.setPaintProperty("nen_osm", "raster-contrast", -0.2);
+    map.setPaintProperty("nen_osm", "raster-brightness-max", 0.95);
+  }
   quanLyNen();
   console.warn("[nen] chuyển sang OpenStreetMap:", viSao);
 }
@@ -655,7 +724,12 @@ document.querySelectorAll('#panel input[type=checkbox]').forEach((cb) => {
     const ids = cb.dataset.layers.split(',').flatMap((id) =>
       id === "nen_ban_do" ? NHOM_NEN : [id]);
     ids.forEach((id) => {
-      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
+      if (!map.getLayer(id)) return;
+      // Da failover sang OSM thi lop Esri PHAI giu an du checkbox duoc tich lai.
+      // Neu khong, nguoi xem tat/mo lai "Nen ban do" se lam tile Esri thieu
+      // (mang xam/trong) de len OSM -> ban do nhu bi mo. Xem chuyenSangOSM().
+      const v = (id === "nen_esri" && dangDungOSM) ? 'none' : vis;
+      map.setLayoutProperty(id, 'visibility', v);
     });
     if (cb.dataset.layers.includes("kenh_rong") || cb.dataset.layers.includes("kenh_sau")) capNhatChuGiai();
   });
