@@ -120,8 +120,8 @@
   <div id="catalog_box">
     <button class="btn_dong_x" id="btn_dong_catalog">Đóng ✕</button>
     <h2>Bộ cơ sở dữ liệu Mekong Hydro DB</h2>
-    <div class="sub"><b style="color:#2b6cb0">8,84 triệu bản ghi đo theo giờ · 46 trạm ·
-      1979 → 2024</b> — tổng hợp từ nhiều nguồn khảo sát/quan trắc độc lập cho Đồng bằng
+    <div class="sub"><b style="color:#2b6cb0">9,93 triệu bản ghi đo theo giờ (mực nước H +
+      lưu lượng Q) · 46 trạm · 1979 → 2024</b> — tổng hợp từ nhiều nguồn khảo sát/quan trắc độc lập cho Đồng bằng
       sông Cửu Long. Trang này thể hiện PHẠM VI, QUY MÔ và GIAI ĐOẠN PHỦ của dữ liệu —
       không hiển thị trị số đo. Bấm vào bất kỳ đối tượng trên bản đồ để xem mô tả.</div>
     <div class="ds_grid">
@@ -132,7 +132,8 @@
       <div class="ds_card"><div class="n">3.009</div><div class="ten">Mạng lưới kênh mô hình (MIKE-A)</div>
         <div class="mo_ta">Toàn bộ nhánh sông/kênh trong bộ dữ liệu; 1.847 nhánh đủ điều
           kiện hiển thị trên bản đồ (lớp "Mô hình MIKE-A"), 416 trong số đó có hình học
-          mặt cắt chi tiết (lớp "Mô hình TELEMAC 1D"), 2.277 có dữ liệu bề rộng/độ sâu
+          mặt cắt chi tiết (lớp "Mô hình TELEMAC 1D"), và 2.277 nhánh trên TOÀN mạng
+          (gồm cả nhánh chưa đủ điều kiện hiển thị) có dữ liệu bề rộng/độ sâu
           lòng dẫn thật.</div>
         <div class="nguon">nguồn: mô hình MIKE 11 ĐBSCL</div></div>
       <div class="ds_card"><div class="n">35.088</div><div class="ten">Kênh rạch nội đồng ĐBSCL</div>
@@ -168,7 +169,7 @@
     <h3>Sông · kênh</h3>
     <label><input type="checkbox" data-layers="kenh" checked>
       <span class="swatch line" style="background:#3182ce"></span>Mô hình MIKE-A (1.847 nhánh)</label>
-    <div style="font-size:10.5px;color:#718096;margin:1px 0 3px 19px;">nét vàng = xác nhận thêm ≥2 nguồn độc lập</div>
+    <div style="font-size:10.5px;color:#718096;margin:1px 0 3px 19px;">nét vàng = có thêm ≥1 nguồn độc lập xác nhận (50 nhánh)</div>
     <label><input type="checkbox" data-layers="kenh_telemac" checked>
       <span class="swatch line" style="background:#e53e3e"></span>Mô hình TELEMAC 1D (416 nhánh)</label>
     <label><input type="checkbox" data-layers="kenh_v6">
@@ -179,14 +180,14 @@
     <label><input type="checkbox" data-layers="kenh_survey2017">
       <span class="swatch line" style="background:#dd6b20"></span>Khảo sát 2017 (22 nhánh)</label>
     <label><input type="checkbox" data-layers="kenh_survey2020">
-      <span class="swatch line" style="background:#805ad5"></span>Khảo sát 2020 (48 nhánh)</label>
+      <span class="swatch line" style="background:#805ad5"></span>Khảo sát 2020 (46 nhánh)</label>
     <label><input type="checkbox" data-layers="song_center,song_center_nhan" checked>
       <span class="swatch line" style="background:#1a365d"></span>Sông/kênh chính ĐBSCL (1.350 nhánh)</label>
     <label><input type="checkbox" data-layers="kenh_rach_that,kenh_rach_that_nhan" checked>
       <span class="swatch line" style="background:#a0aec0"></span>Kênh rạch nội đồng ĐBSCL (35.088 nhánh)</label>
   </div>
   <div class="nhom">
-    <h3>Lòng dẫn thật (2.277 nhánh có dữ liệu)</h3>
+    <h3>Lòng dẫn thật (1.847 nhánh hiển thị · 2.277 có dữ liệu)</h3>
     <label><input type="checkbox" data-layers="kenh_rong_case,kenh_rong">
       <span class="swatch line" style="background:#2171b5"></span>Bề rộng lòng dẫn (9 cấp)</label>
     <label><input type="checkbox" data-layers="kenh_sau_case,kenh_sau">
@@ -206,8 +207,11 @@
     <h3>Trạm quan trắc</h3>
     <label><input type="checkbox" data-layers="tram_pt,tram_nhan" checked>
       <span class="swatch" style="background:#c05621;border-radius:50%"></span>Trạm H/Q (46)</label>
-    <div style="font-size:11px;color:#718096;margin:2px 0 0 19px;line-height:1.7;">
-      ● cả H+Q &nbsp;● chỉ H &nbsp;● chỉ Q &nbsp;● chưa rõ</div>
+    <div style="font-size:11px;color:#4a5568;margin:2px 0 0 19px;line-height:1.9;">
+      <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#c05621;margin-right:4px;vertical-align:middle;"></span>cả H+Q
+      <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ed8936;margin:0 4px 0 10px;vertical-align:middle;"></span>chỉ H
+      <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f6ad55;margin:0 4px 0 10px;vertical-align:middle;"></span>chỉ Q
+      <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#a0aec0;margin:0 4px 0 10px;vertical-align:middle;"></span>chưa rõ</div>
   </div>
   <div class="nhom">
     <h3>Nền</h3>
@@ -517,6 +521,19 @@ function ngayThanhSoNam(s) {
   if (!s) return null;
   return parseInt(s.slice(0, 4)) + (parseInt(s.slice(5, 7)) - 1) / 12;
 }
+// Truc thoi gian DUNG CHUNG cho popup tram + bang tong hop. Tinh NGAY khi
+// stations_summary.json nap xong (sua 13/09/2026): truoc day chi tinh trong
+// veBangTongHop, nen truoc khi bam nut "Bang tram" popup dung DP mac dinh
+// 1979-2024, con sau khi mo bang lai thanh max=2025 (vi Q co du lieu toi
+// 31/12/2024) => thanh do phu trong popup bi lech doi chut tuy vao viec
+// nguoi dung da mo bang hay chua. Nay 1 nguon su that duy nhat.
+function tinhDP(d) {
+  const soNam = (cot) => d.filter(r => r[cot]).map(r => ngayThanhSoNam(r[cot]));
+  const hMin = Math.min(...soNam("h_tu_ngay")), hMax = Math.max(...soNam("h_den_ngay"));
+  const qMin = Math.min(...soNam("q_tu_ngay")), qMax = Math.max(...soNam("q_den_ngay"));
+  DP = { min: Math.floor(Math.min(hMin, isFinite(qMin) ? qMin : hMin)),
+         max: Math.ceil(Math.max(hMax, isFinite(qMax) ? qMax : hMax)) };
+}
 function dinhDangDoPhuThanh(p, tienTo, nhan) {
   const tu = p[`${tienTo}_tu_ngay`], den = p[`${tienTo}_den_ngay`];
   if (!tu) return `<div class="popup_do_phu"><div class="nhan"><span>${nhan}</span><span>không có</span></div></div>`;
@@ -631,7 +648,7 @@ document.addEventListener("click", (e) => {
 // ket qua thi popup thieu thanh phu H/Q (bthData con null). File chi 46
 // dong/~14KB, nap som khong dang ke.
 let bthData = null, bthSortKey = "ten_hien_thi", bthSortDir = 1;
-fetch("./stations_summary.json").then(r => r.json()).then(d => { bthData = d; })
+fetch("./stations_summary.json").then(r => r.json()).then(d => { bthData = d; tinhDP(d); })
   .catch(e => hienLoi("Lỗi stations_summary.json: " + e.message));
 const CAC_COT_SO = ["h_so_nam", "h_lap_day_pct", "q_so_nam", "q_lap_day_pct"];
 
@@ -668,8 +685,7 @@ function veBangTongHop() {
   const qDen = d.filter(r => r.q_den_ngay).map(r => ngayThanhSoNam(r.q_den_ngay));
   const hMin = Math.min(...hTu), hMax = Math.max(...hDen);
   const qMin = Math.min(...qTu), qMax = Math.max(...qDen);
-  DP = { min: Math.floor(Math.min(hMin, isFinite(qMin) ? qMin : hMin)),
-         max: Math.ceil(Math.max(hMax, isFinite(qMax) ? qMax : hMax)) };
+  tinhDP(d);  // cung 1 ham voi luc nap trang -> thanh do phu luon khop
 
   const nhanH = `H (${Math.floor(hMin)}–${Math.ceil(hMax)})`;
   const nhanQ = isFinite(qMin) ? `Q (${Math.floor(qMin)}–${Math.ceil(qMax)})` : "Q";
