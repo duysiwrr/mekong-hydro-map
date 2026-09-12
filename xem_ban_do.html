@@ -3,9 +3,33 @@
 <head>
 <meta charset="utf-8">
 <title>Mekong Hydro DB — Danh mục dữ liệu</title>
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
-<script src="https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Thu vien PHUC VU TU CHINH THU MUC web/vendor/ (14/09/2026) thay vi
+     unpkg.com. Ly do: CDN ben ngoai la nguon loi "Failed to fetch" thuong
+     gap nhat khi mang chap chon / bi chan, va phu thuoc vao 1 dich vu khong
+     do minh kiem soat. File tai ve giu nguyen ban phat hanh:
+       maplibre-gl 4.7.1 (BSD-3)  ·  pmtiles 3.0.7 (BSD-3)
+     Neu file noi bo thieu thi tu dong lui ve CDN (xem khoi ngay duoi). -->
+<script src="./vendor/maplibre-gl.js"></script>
+<link href="./vendor/maplibre-gl.css" rel="stylesheet">
+<script src="./vendor/pmtiles.js"></script>
+<script>
+// Lui ve CDN CHI khi thieu file noi bo. Kiem tra truc tiep (khong dung
+// onerror) vi <script> o day la dong bo: chay den day la chac chan da xong.
+// document.write giu DUNG THU TU nap — pmtiles phai co truoc khi khoi tao
+// Protocol o cuoi trang.
+(function () {
+  if (typeof maplibregl !== "undefined" && typeof pmtiles !== "undefined") return;
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css";
+  document.head.appendChild(css);
+  document.write(
+    '<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"><\/script>' +
+    '<script src="https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js"><\/script>');
+  window._dungCDN = true;
+})();
+</script>
 <style>
   html, body, #map { margin:0; padding:0; height:100%; width:100%; font-family: 'Segoe UI', sans-serif; }
   #panel { position:absolute; top:60px; left:10px; background:white; padding:10px 14px;
@@ -21,10 +45,44 @@
   .ghi_chu { margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0; color:#666; font-size:11.5px; }
   #canh_bao { position:absolute; top:0; left:0; right:0; background:#c53030; color:white;
               padding:10px 14px; font-size:14px; z-index:3; display:none; }
-  #loi_box { position:absolute; bottom:28px; left:10px; right:10px; background:#742a2a; color:#fff;
-             padding:10px 14px; border-radius:6px; font-size:12px; font-family:monospace;
-             z-index:3; display:none; max-height:200px; overflow:auto; white-space:pre-wrap; }
+  /* Thong bao loi KI THUAT — doi tu hop do to che goc man hinh thanh "toast"
+     gon o goc duoi (14/09/2026). Chi hien khi co loi THAT SU nghiem trong;
+     loi ben (tile mang chap chon, request bi huy) duoc loc bo hoan toan —
+     xem hienLoi(). Co nut dong de nguoi xem khong bi lam phien. */
+  #loi_box { position:absolute; bottom:34px; left:10px; background:#742a2a; color:#fff;
+             padding:8px 30px 8px 12px; border-radius:6px; font-size:11.5px;
+             font-family:monospace; z-index:3; display:none; max-width:min(520px, 60vw);
+             max-height:120px; overflow:auto; white-space:pre-wrap; opacity:.94; }
+  #loi_dong { position:absolute; top:5px; right:6px; border:none; background:transparent;
+              color:#feb2b2; cursor:pointer; font-size:13px; line-height:1; padding:2px 4px; }
   .maplibregl-popup-content { font-size:13px; max-width:280px; line-height:1.45; }
+
+  /* ===== Thanh tim kiem nang cap (14/09/2026): tim theo ten tram / tinh /
+     song, khong phan biet dau, dieu huong bang ban phim. ===== */
+  #timkiem_kq div.dang_chon { background:#ebf8ff; }
+  #timkiem_kq .song_ten { color:#2b6cb0; font-size:11px; }
+  #timkiem_kq .goi_y { color:#a0aec0; font-size:11px; }
+
+  /* ===== Panel thu gon duoc (nut ▾ o goc) ===== */
+  #btn_thu_panel { position:absolute; top:6px; right:8px; border:none; background:#edf2f7;
+    color:#4a5568; border-radius:4px; cursor:pointer; font-size:11px; padding:2px 7px; }
+  #panel.thu_gon > *:not(#panel_dau) { display:none; }
+  #panel.thu_gon { width:auto; }
+  #panel_dau { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  #panel_dau .tieu { font-size:11px; font-weight:700; letter-spacing:.06em;
+    color:#718096; text-transform:uppercase; }
+
+  /* ===== Nut tai CSV + lien ket "Nguon du lieu" trong hop Bo CSDL ===== */
+  .nut_phu { border:1px solid #cbd5e0; background:#fff; color:#2b6cb0; padding:6px 12px;
+    border-radius:6px; cursor:pointer; font-size:12.5px; font-weight:600; margin-right:8px; }
+  .nut_phu:hover { background:#ebf8ff; }
+  table#nguon_table { border-collapse:collapse; font-size:12px; width:100%; }
+  table#nguon_table th { text-align:left; padding:4px 8px; border-bottom:2px solid #cbd5e0;
+    position:sticky; top:0; background:#fff; white-space:nowrap; }
+  table#nguon_table td { padding:3px 8px; border-bottom:1px solid #edf2f7; vertical-align:top; }
+  .the_nho { display:inline-block; font-size:10.5px; padding:1px 6px; border-radius:8px;
+    background:#e6fffa; color:#285e61; margin-left:4px; }
+  .the_nho.le { background:#fffaf0; color:#975a16; }
 
   #btn_bang_tong_hop { border:none; background:#edf2f7; color:#2d3748; padding:6px 12px;
     border-radius:6px; cursor:pointer; font-size:12.5px; white-space:nowrap; }
@@ -63,12 +121,13 @@
   #timkiem_kq div:hover { background:#ebf8ff; }
   #timkiem_kq .tinh { color:#a0aec0; font-size:11px; }
 
-  #catalog_overlay, #notes_overlay { position:absolute; inset:0;
+  #catalog_overlay, #notes_overlay, #nguon_overlay { position:absolute; inset:0;
     background:rgba(0,0,0,.45); z-index:6; display:none; align-items:center; justify-content:center; }
-  #catalog_box, #notes_box { background:#fff; border-radius:10px; max-width:min(880px, 92vw);
+  #catalog_box, #notes_box, #nguon_box { background:#fff; border-radius:10px; max-width:min(880px, 92vw);
     max-height:88vh; overflow:auto; padding:22px 26px; box-shadow:0 4px 24px rgba(0,0,0,.4); }
-  #catalog_box h2, #notes_box h2 { margin:0 0 6px; font-size:19px; color:#1a365d; }
-  #catalog_box .sub, #notes_box .sub { color:#666; font-size:12.5px; margin-bottom:16px; line-height:1.5; }
+  #nguon_box { max-width:min(1000px, 94vw); }
+  #catalog_box h2, #notes_box h2, #nguon_box h2 { margin:0 0 6px; font-size:19px; color:#1a365d; }
+  #catalog_box .sub, #notes_box .sub, #nguon_box .sub { color:#666; font-size:12.5px; margin-bottom:16px; line-height:1.5; }
   .ds_grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:12px; }
   .ds_card { border:1px solid #e2e8f0; border-radius:8px; padding:12px 14px; background:#f9fafb; }
   .ds_card .n { font-size:22px; font-weight:700; color:#2b6cb0; }
@@ -90,6 +149,10 @@
 
   #chugiai_rongsau { margin-top:10px; padding-top:8px; border-top:1px solid #e2e8f0; }
   .cg_tieu { font-size:10.5px; font-weight:700; color:#718096; text-transform:uppercase; margin:6px 0 5px; }
+  /* Ghi chu ngan duoi mot lop — thay cac cau giai thich dai dong truoc day
+     (14/09/2026): thong tin phai de hieu voi nguoi xem ben ngoai, khong
+     dua chi tiet ky thuat noi bo (ten nhanh mo hinh, ty le khop...). */
+  .cg_hint { font-size:10.5px; color:#718096; margin:1px 0 5px 19px; line-height:1.45; }
   .cg_hang { display:flex; align-items:center; gap:7px; font-size:11px; color:#4a5568; margin:2.5px 0; }
   .cg_swatch { width:16px; height:6px; border-radius:2px; flex:0 0 auto; }
   .popup_do_phu { margin:4px 0; }
@@ -110,8 +173,9 @@
 <div id="top_header">
   <b>🌊 Mekong Hydro DB</b>
   <div id="timkiem_box">
-    <input id="timkiem" placeholder="🔍 Tìm trạm quan trắc…" autocomplete="off">
-    <div id="timkiem_kq"></div>
+    <input id="timkiem" placeholder="🔍 Tìm trạm / tỉnh / sông…" autocomplete="off"
+           aria-label="Tìm trạm quan trắc theo tên, tỉnh hoặc sông">
+    <div id="timkiem_kq" role="listbox"></div>
   </div>
   <button id="btn_catalog">📚 Bộ CSDL</button>
   <button id="btn_bang_tong_hop">📊 Bảng trạm</button>
@@ -120,10 +184,18 @@
   <div id="catalog_box">
     <button class="btn_dong_x" id="btn_dong_catalog">Đóng ✕</button>
     <h2>Bộ cơ sở dữ liệu Mekong Hydro DB</h2>
-    <div class="sub"><b style="color:#2b6cb0">9,93 triệu bản ghi đo theo giờ (mực nước H +
-      lưu lượng Q) · 46 trạm · 1979 → 2024</b> — tổng hợp từ nhiều nguồn khảo sát/quan trắc độc lập cho Đồng bằng
-      sông Cửu Long. Trang này thể hiện PHẠM VI, QUY MÔ và GIAI ĐOẠN PHỦ của dữ liệu —
-      không hiển thị trị số đo. Bấm vào bất kỳ đối tượng trên bản đồ để xem mô tả.</div>
+    <div class="sub"><b style="color:#2b6cb0">9,93 triệu bản ghi đo theo giờ · 46 trạm</b> —
+      tổng hợp từ nhiều nguồn khảo sát/quan trắc độc lập cho Đồng bằng sông Cửu Long.
+      Trang này thể hiện <b>phạm vi, quy mô và giai đoạn phủ</b> của dữ liệu —
+      <b>không hiển thị trị số đo</b>. Bấm vào bất kỳ đối tượng trên bản đồ để xem mô tả.</div>
+    <div class="sub" style="background:#f7fafc;border-radius:6px;padding:8px 12px;">
+      <b>Mực nước (H)</b> 8.841.385 bản ghi · 46 trạm · <b>05/1979 → 12/2023</b><br>
+      <b>Lưu lượng (Q)</b> 1.086.975 bản ghi · 5 trạm trục chính · <b>2000 → 2024</b>
+    </div>
+    <div style="margin:4px 0 14px;">
+      <button class="nut_phu" id="btn_tai_csv">⬇ Tải danh mục 46 trạm (CSV)</button>
+      <button class="nut_phu" id="btn_nguon">🗂 Nguồn dữ liệu (76 đợt)</button>
+    </div>
     <div class="ds_grid">
       <div class="ds_card"><div class="n">46</div><div class="ten">Trạm quan trắc</div>
         <div class="mo_ta">Mực nước &amp; lưu lượng theo giờ, một số trạm phủ tới hơn 40
@@ -154,6 +226,16 @@
     </div>
   </div>
 </div>
+<div id="nguon_overlay">
+  <div id="nguon_box">
+    <button class="btn_dong_x" id="btn_dong_nguon">Đóng ✕</button>
+    <h2>🗂 Nguồn dữ liệu theo từng đợt bổ sung</h2>
+    <div class="sub">Mỗi dòng là một <b>đợt dữ liệu</b> đưa vào CSDL cho một trạm: khoảng
+      thời gian, khối lượng bản ghi theo giờ và <b>tệp nguồn gốc</b>. Cột cuối cho biết
+      đợt đó đã được <b>đối chiếu độc lập</b> với một nguồn khác hay chỉ có một nguồn duy nhất.</div>
+    <div id="nguon_content">Đang tải…</div>
+  </div>
+</div>
 <button id="btn_noibo" title="Chỉ dành cho quản trị">🔒 Nội bộ</button>
 <div id="notes_overlay">
   <div id="notes_box">
@@ -165,16 +247,21 @@
   </div>
 </div>
 <div id="panel">
+  <div id="panel_dau">
+    <span class="tieu">Lớp dữ liệu</span>
+    <button id="btn_thu_panel" title="Thu gọn / mở danh sách lớp">▾</button>
+  </div>
   <div class="nhom">
     <h3>Sông · kênh</h3>
     <label><input type="checkbox" data-layers="kenh" checked>
       <span class="swatch line" style="background:#3182ce"></span>Mô hình MIKE-A (1.847 nhánh)</label>
-    <div style="font-size:10.5px;color:#718096;margin:1px 0 3px 19px;">nét vàng = có thêm ≥1 nguồn độc lập xác nhận (50 nhánh)</div>
+    <div class="cg_hint">nhánh <b>màu vàng</b> = còn được ít nhất một nguồn khác xác nhận (50 nhánh)</div>
     <label><input type="checkbox" data-layers="kenh_telemac" checked>
       <span class="swatch line" style="background:#e53e3e"></span>Mô hình TELEMAC 1D (416 nhánh)</label>
     <label><input type="checkbox" data-layers="kenh_v6">
       <span class="swatch line" style="background:#38a169"></span>TELEMAC v6 — thử nghiệm mạng dài (417 nhánh)</label>
-    <div style="font-size:10.5px;color:#718096;margin:1px 0 3px 19px;">nét xanh lá đè lên TELEMAC 1D đỏ: chỉ <b>Ba Lai</b> là nhánh mới hoàn toàn; Tiền/BASSAC/Hàm Luông/Cổ Chiên chỉ ĐƯỢC NỐI DÀI (khớp 100% MIKE-A), không phải nhánh mới</div>
+    <div class="cg_hint">bật lớp này để so với TELEMAC 1D: <b>Ba Lai</b> là nhánh mới,
+      các nhánh còn lại chỉ là đoạn kéo dài thêm.</div>
     <label><input type="checkbox" data-layers="mikeb_full">
       <span class="swatch line" style="background:#319795"></span>Mô hình MIKE-B (1.695 nhánh)</label>
     <label><input type="checkbox" data-layers="kenh_survey2017">
@@ -183,11 +270,15 @@
       <span class="swatch line" style="background:#805ad5"></span>Khảo sát 2020 (46 nhánh)</label>
     <label><input type="checkbox" data-layers="song_center,song_center_nhan" checked>
       <span class="swatch line" style="background:#1a365d"></span>Sông/kênh chính ĐBSCL (1.350 nhánh)</label>
-    <label><input type="checkbox" data-layers="kenh_rach_that,kenh_rach_that_nhan" checked>
+    <label><input type="checkbox" data-layers="kenh_rach_that,kenh_rach_that_nhan">
       <span class="swatch line" style="background:#a0aec0"></span>Kênh rạch nội đồng ĐBSCL (35.088 nhánh)</label>
+    <div class="cg_hint">lớp rất nặng — chỉ hiện khi phóng to đến mức <b>zoom ≥ 8,5</b>
+      (mặc định tắt để bản đồ mở nhanh).</div>
   </div>
   <div class="nhom">
-    <h3>Lòng dẫn thật (1.847 nhánh hiển thị · 2.277 có dữ liệu)</h3>
+    <h3>Lòng dẫn thật</h3>
+    <div class="cg_hint" style="margin:0 0 4px;">Bản đồ vẽ được <b>1.847</b> nhánh;
+      <b>2.277</b> nhánh trong toàn mạng có dữ liệu bề rộng/độ sâu.</div>
     <label><input type="checkbox" data-layers="kenh_rong_case,kenh_rong">
       <span class="swatch line" style="background:#2171b5"></span>Bề rộng lòng dẫn (9 cấp)</label>
     <label><input type="checkbox" data-layers="kenh_sau_case,kenh_sau">
@@ -215,10 +306,12 @@
   </div>
   <div class="nhom">
     <h3>Nền</h3>
-    <label><input type="checkbox" data-layers="carto_basemap" checked>
-      <span class="swatch" style="background:#cbd5e0"></span>Nền bản đồ (CARTO)</label>
+    <label><input type="checkbox" data-layers="nen_ban_do" checked>
+      <span class="swatch" style="background:#cbd5e0"></span>Nền bản đồ</label>
+    <div class="cg_hint" id="ghi_chu_nen"></div>
   </div>
-  <div class="ghi_chu">Click 1 đối tượng trên bản đồ để xem thông tin.</div>
+  <div class="ghi_chu">Bấm vào một đối tượng trên bản đồ để xem thông tin.
+    Ô <b>🔍</b> phía trên tìm được theo <b>tên trạm, tỉnh hoặc sông</b> (gõ không dấu vẫn ra).</div>
 </div>
 <div id="bang_tong_hop_overlay">
   <div id="bang_tong_hop_box">
@@ -232,7 +325,7 @@
 </div>
 <div id="footer">Bộ CSDL mekong_hydro_db — tổng hợp đa nguồn cho ĐBSCL ·
   Trang chỉ thể hiện phạm vi, quy mô và giai đoạn phủ của dữ liệu, KHÔNG công bố trị số đo ·
-  dữ liệu nền © OpenStreetMap · CARTO</div>
+  nền bản đồ: <span id="nen_nguon">…</span></div>
 <div id="loi_box"></div>
 <div id="map"></div>
 <script>
@@ -241,15 +334,52 @@ if (location.protocol === "file:") {
 }
 
 function hienLoi(msg) {
+  // Loc loi BEN (khong phai loi that) — 14/09/2026. Truoc day MOI loi deu
+  // do vao 1 hop do to o goc man hinh, nen nguoi xem thay "Map error: Failed
+  // to fetch" chi vi mat mang nua giay hoac vi trinh duyet huy request khi
+  // nguoi dung pan/zoom nhanh. Cac truong hop duoi day la VO HAI:
+  //   - "Failed to fetch"/"Load failed"/"NetworkError": mang chap chon; lop
+  //     du lieu se tu thu lai, ban do van dung duoc.
+  //   - "AbortError"/"signal is aborted": maplibre huy request khi tile ra
+  //     khoi man hinh — hoan toan binh thuong.
+  //   - 404 mot tile le: pmtiles duoc sinh theo minzoom cua tung lop, vung
+  //     ngoai pham vi du lieu KHONG co tile; khong anh huong phan con lai.
+  const BEN = [/failed to fetch/i, /load failed/i, /networkerror/i,
+               /abort/i, /cancelled/i, /canceled/i, /\b404\b/];
+  if (BEN.some((r) => r.test(msg))) { console.warn("[bo qua, loi ben]", msg); return; }
   const box = document.getElementById("loi_box");
+  if (box.dataset.daHien === msg) return;   // khong lap lai cung 1 loi
+  box.dataset.daHien = msg;
+  box.innerHTML = '<button id="loi_dong" title="Đóng">✕</button>';
+  box.appendChild(document.createTextNode(msg));
   box.style.display = "block";
-  box.textContent += msg + "\n";
+  document.getElementById("loi_dong").addEventListener("click", () => {
+    box.style.display = "none";
+  });
   console.error(msg);
 }
-window.addEventListener('error', (e) => hienLoi("JS error: " + e.message));
+window.addEventListener('error', (e) => hienLoi("Lỗi trang: " + e.message));
 
-let protocol = new pmtiles.Protocol();
-maplibregl.addProtocol("pmtiles", protocol.tile);
+// ==== pmtiles protocol + TU DONG THU LAI (14/09/2026) ====
+// Protocol goc nem loi NGAY khi 1 request that bai; tren mang chap chon
+// dieu nay lam ca lop du lieu bien mat cho den khi tai lai trang. Boc them
+// 3 lan thu lai voi backoff tang dan (200ms/800ms/2000ms) — du de vuot cac
+// lan "nghen" ngan ma khong lam nguoi dung cho lau.
+const protocolGoc = new pmtiles.Protocol();
+function layTile(client, params, abort) { return protocolGoc.tile(client, params, abort); }
+async function thuLai(fn, soLan = 3, cho = 200) {
+  let loiCuoi;
+  for (let i = 0; i <= soLan; i++) {
+    try { return await fn(); } catch (e) {
+      loiCuoi = e;
+      if (i === soLan) break;
+      await new Promise((r) => setTimeout(r, cho * Math.pow(4, i)));
+    }
+  }
+  throw loiCuoi;
+}
+maplibregl.addProtocol("pmtiles", (params, abort) =>
+  thuLai(() => layTile({}, params, abort)));
 
 function locKenh(cot) {
   return ["==", ["get", cot], "yes"];
@@ -291,24 +421,32 @@ const map = new maplibregl.Map({
       "mikeb_full_src": { type: "vector", url: "pmtiles://./mikeb_full.pmtiles" },
       "ccpo2023_diem_src": { type: "vector", url: "pmtiles://./ccpo2023_diem.pmtiles" },
       "ccpo2023_transect_src": { type: "vector", url: "pmtiles://./ccpo2023_transect.pmtiles" },
-      // Sua 28/08/2026 (DS phat hien): "{r}" la cu phap Leaflet (retina),
-      // MapLibre GL JS KHONG ho tro token nay -> URL cu co the 404 tile,
-      // nen mien lieu tro thanh mau phang thay vi anh nen that. Dung 3
-      // subdomain + @2x truc tiep (giong demo DS da lam dung).
-      "basemap_carto": {
+      // ==== NEN BAN DO — THAY CARTO 14/09/2026 ====
+      // CARTO basemaps nay doi API key: khong co key thi tra ve anh trong/loi
+      // -> ban do chi con mau nen phang. Thay bang 2 nguon MIEN PHI, KHONG CAN
+      // KEY, da kiem chung tra ve 200:
+      //   - Esri "World_Light_Gray_Base": nen xam nhat, giong CARTO light cu,
+      //     phu hop de lop du lieu mau dam noi len.
+      //   - OpenStreetMap chuan: nguon du phong khi Esri khong tai duoc.
+      // 2 layer xep chong (OSM duoi, Esri tren). Esri che het OSM khi chay
+      // binh thuong; khi tile Esri loi thi tile do trong suot -> OSM lo ra.
+      // Failover TU DONG, khong can nguoi dung lam gi (xem quanLyNen()).
+      "basemap_esri": {
         type: "raster",
-        tiles: [
-          "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-          "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-          "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png"
-        ],
+        tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"],
+        tileSize: 256, maxzoom: 16, attribution: "" 
+      },
+      "basemap_osm": {
+        type: "raster",
+        tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
         tileSize: 256, maxzoom: 19,
-        attribution: '© <a href="https://carto.com/attributions">CARTO</a> © OpenStreetMap contributors'
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }
     },
     layers: [
       { id: "bg", type: "background", paint: { "background-color": "#eef3f7" } },
-      { id: "carto_basemap", type: "raster", source: "basemap_carto" },
+      { id: "nen_osm", type: "raster", source: "basemap_osm" },
+      { id: "nen_esri", type: "raster", source: "basemap_esri" },
       {
         id: "kenh_rach_that", type: "line", source: "kenh_rach_that_src",
         "source-layer": "kenhrach_update", minzoom: 8.5,
@@ -475,16 +613,48 @@ map.addControl(new maplibregl.NavigationControl(), "bottom-right");
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: "metric" }), "bottom-right");
 map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
 
+// ==== QUAN LY NEN BAN DO + FAILOVER TU DONG (14/09/2026) ====
+// Dem so tile nen Esri tai that bai. Vuot nguong thi AN han lop Esri de nguoi
+// xem thay lop OSM ben duoi thay vi mang trong, va ghi ro dang dung nguon nao
+// o footer + trong panel de khong gay hieu nham ve du lieu nen.
+let soLoiNenEsri = 0, dangDungOSM = false;
+const NGUONG_LOI_NEN = 6;
+const NGUON_NEN = {
+  esri: { ghiChu: "nền xám nhạt của Esri — không cần khoá API",
+          footer: '© <a href="https://www.esri.com/">Esri</a> · World Light Gray Base' },
+  osm:  { ghiChu: "OpenStreetMap — nguồn dự phòng (Esri không tải được)",
+          footer: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' },
+};
+function quanLyNen() {
+  const n = dangDungOSM ? NGUON_NEN.osm : NGUON_NEN.esri;
+  document.getElementById("ghi_chu_nen").textContent = n.ghiChu;
+  document.getElementById("nen_nguon").innerHTML = n.footer;
+}
+function chuyenSangOSM(viSao) {
+  if (dangDungOSM) return;
+  dangDungOSM = true;
+  if (map.getLayer("nen_esri")) map.setLayoutProperty("nen_esri", "visibility", "none");
+  if (map.getLayer("nen_osm")) map.setLayoutProperty("nen_osm", "visibility", "visible");
+  quanLyNen();
+  console.warn("[nen] chuyển sang OpenStreetMap:", viSao);
+}
+quanLyNen();
+
 const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "kenh_v6", "mikeb_full",
                          "kenh_survey2020", "kenh_survey2017", "kenh_rach_that", "song_center",
                          "kenh_rong", "kenh_sau", "tram_pt",
                          "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver"];
 
 // Checkbox bat/tat lop — 1 checkbox co the dieu khien NHIEU layer id.
+// "nen_ban_do" la NHOM DAC BIET: no khong phai 1 layer ma la cap 2 layer nen
+// (Esri + OSM du phong), nen phai liet ke tuong minh o day.
+const NHOM_NEN = ["nen_esri", "nen_osm"];
 document.querySelectorAll('#panel input[type=checkbox]').forEach((cb) => {
   cb.addEventListener('change', () => {
     const vis = cb.checked ? 'visible' : 'none';
-    cb.dataset.layers.split(',').forEach((id) => {
+    const ids = cb.dataset.layers.split(',').flatMap((id) =>
+      id === "nen_ban_do" ? NHOM_NEN : [id]);
+    ids.forEach((id) => {
       if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
     });
     if (cb.dataset.layers.includes("kenh_rong") || cb.dataset.layers.includes("kenh_sau")) capNhatChuGiai();
@@ -608,39 +778,277 @@ map.on('mousemove', (e) => {
   map.getCanvas().style.cursor = feats.length ? 'pointer' : '';
 });
 
-map.on('error', (e) => hienLoi("Map error: " + (e.error ? e.error.message : JSON.stringify(e))));
-map.on('load', () => console.log("Map da load xong, layer:", map.getStyle().layers.map(l => l.id)));
+map.on('error', (e) => {
+  // Loi tile NEN rieng: dem + chuyen nguon du phong, KHONG hien cho nguoi xem
+  // (nen ban do doi nguon la chuyen binh thuong, khong phai loi cua du lieu).
+  if (e && e.sourceId === "basemap_esri") {
+    // Da doi sang nguon du phong thi thoi dem — neu khong, bo dem chay vo han
+    // va nguy hiem lai goi chuyenSangOSM() mai o moi tile loi (no-op nhung
+    // lam ban console moi lan pan/zoom ra vung khong co tile).
+    if (dangDungOSM) return;
+    if (++soLoiNenEsri >= NGUONG_LOI_NEN) chuyenSangOSM(`${soLoiNenEsri} tile lỗi`);
+    return;
+  }
+  hienLoi("Lỗi bản đồ: " + (e.error ? e.error.message : JSON.stringify(e)));
+});
+map.on('load', () => {
+  console.log("Bản đồ đã sẵn sàng:", map.getStyle().layers.map(l => l.id).join(", "));
+  apHash();   // mo lai dung vi tri / dung tram neu URL co #...
+});
 
-// ==================== Tim kiem tram (hoc tu demo cua DS, them 28/08/2026) ====
+// ============ TÌM KIẾM TRẠM — nâng cấp 14/09/2026 =========================
+// Trước đây chỉ khớp "chứa chuỗi" trên tên trạm + tỉnh, PHÂN BIỆT DẤU, nên gõ
+// "cao lanh" hay "song hau" đều không ra kết quả. Nay:
+//   - Tìm trên CẢ 3 trường: tên trạm · tỉnh · sông.
+//   - Bỏ dấu cả hai phía (nội dung gõ vào và dữ liệu) → gõ không dấu vẫn ra.
+//   - Xếp hạng: khớp ĐẦU chuỗi trước, rồi mới khớp giữa chuỗi; ưu tiên theo
+//     thứ tự trường tên trạm > tỉnh > sông.
+//   - Bàn phím: ↑ ↓ di chuyển, Enter chọn, Esc đóng.
+//   - Trạm đang chọn được khoanh vòng nhấp nháy trên bản đồ để thấy ngay.
+const BO_DAU_CACHE = new Map();
+function boDau(s) {
+  s = String(s == null ? "" : s);
+  if (BO_DAU_CACHE.has(s)) return BO_DAU_CACHE.get(s);
+  const v = s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d").replace(/Đ/g, "d").toLowerCase()
+    .replace(/\s+/g, " ").trim();
+  BO_DAU_CACHE.set(s, v);
+  return v;
+}
+
 let tramLoc = [];
-fetch("./tram_loc.json").then(r => r.json()).then(d => { tramLoc = d; })
-  .catch(e => hienLoi("Lỗi tram_loc.json: " + e.message));
+let kqHienTai = [];        // danh sach ket qua dang hien
+let chiSoChon = -1;        // dong dang chon bang ban phim
+let markerTim = null;      // vong tron danh dau tram vua chon
+
+fetch("./tram_loc.json").then(r => r.json())
+  .then(d => { tramLoc = d; apHash(); })
+  .catch(e => hienLoi("Không tải được danh mục trạm: " + e.message));
+
 const inpTim = document.getElementById("timkiem");
 const kqTim = document.getElementById("timkiem_kq");
-inpTim.addEventListener("input", () => {
-  const q = inpTim.value.trim().toLowerCase();
-  if (q.length < 2) { kqTim.style.display = "none"; return; }
-  const hits = tramLoc.filter(t =>
-    t.ten.toLowerCase().includes(q) || (t.tinh || "").toLowerCase().includes(q)).slice(0, 8);
-  kqTim.innerHTML = hits.map((t) =>
-    `<div data-i="${tramLoc.indexOf(t)}"><b>${t.ten}</b> <span class="tinh">— ${t.tinh || ""}</span></div>`
-  ).join("") || `<div class="tinh">Không có trạm khớp</div>`;
+
+function diemKhop(t, q) {
+  // Tra ve diem cang THAP cang tot, hoac null neu khong khop.
+  const truong = [[boDau(t.ten), 0], [boDau(t.tinh), 1], [boDau(t.song), 2]];
+  let tot = null;
+  for (const [goc, hang] of truong) {
+    if (!goc) continue;
+    const i = goc.indexOf(q);
+    if (i < 0) continue;
+    // 0 = khop ngay dau chuoi, 1 = khop giua chuoi
+    const diem = hang * 2 + (i === 0 ? 0 : 1);
+    if (tot === null || diem < tot) tot = diem;
+  }
+  return tot;
+}
+
+function timTram(qRaw) {
+  const q = boDau(qRaw);
+  if (q.length < 1) return [];
+  return tramLoc
+    .map((t) => ({ t, d: diemKhop(t, q) }))
+    .filter((x) => x.d !== null)
+    .sort((a, b) => a.d - b.d || boDau(a.t.ten).localeCompare(boDau(b.t.ten), "vi"))
+    .slice(0, 10)
+    .map((x) => x.t);
+}
+
+function veKetQuaTim() {
+  if (!kqHienTai.length) {
+    kqTim.innerHTML = `<div class="goi_y">Không có trạm / tỉnh / sông nào khớp</div>`;
+    kqTim.style.display = "block";
+    return;
+  }
+  kqTim.innerHTML = kqHienTai.map((t, i) => {
+    const phu = [t.tinh, t.song ? `<span class="song_ten">sông ${t.song}</span>` : ""]
+      .filter(Boolean).join(" · ");
+    return `<div data-i="${i}" role="option"${i === chiSoChon ? ' class="dang_chon"' : ""}>` +
+      `<b>${t.ten}</b> <span class="tinh">— ${phu}</span></div>`;
+  }).join("");
   kqTim.style.display = "block";
-  kqTim.querySelectorAll("div[data-i]").forEach(div => {
-    div.addEventListener("click", () => {
-      const t = tramLoc[+div.dataset.i];
-      map.flyTo({ center: [t.lon, t.lat], zoom: 11.5, speed: 1.4 });
-      kqTim.style.display = "none";
-      inpTim.value = t.ten;
-      const st = bthData ? bthData.find(r => r.station_id === t.id) : null;
-      const html = st ? popupTramHtml(st) : `<b>${t.ten}</b><br>${t.tinh || ""}`;
-      new maplibregl.Popup().setLngLat([t.lon, t.lat]).setHTML(html).addTo(map);
+  kqTim.querySelectorAll("div[data-i]").forEach((div) => {
+    div.addEventListener("click", () => chonTram(kqHienTai[+div.dataset.i]));
+    div.addEventListener("mousemove", () => {
+      if (chiSoChon !== +div.dataset.i) { chiSoChon = +div.dataset.i; veKetQuaTim(); }
     });
   });
+}
+
+function chonTram(t) {
+  kqTim.style.display = "none";
+  inpTim.value = t.ten;
+  chiSoChon = -1;
+  map.flyTo({ center: [t.lon, t.lat], zoom: Math.max(map.getZoom(), 11.5), speed: 1.4 });
+  if (markerTim) markerTim.remove();
+  markerTim = new maplibregl.Marker({ color: "#c05621" }).setLngLat([t.lon, t.lat]).addTo(map);
+  const st = bthData ? bthData.find((r) => r.station_id === t.id) : null;
+  const html = st ? popupTramHtml(st)
+    : `<b>${t.ten}</b><br>${[t.tinh, t.song].filter(Boolean).join(" · ")}`;
+  new maplibregl.Popup().setLngLat([t.lon, t.lat]).setHTML(html).addTo(map);
+  datHash({ tram: t.id });
+}
+
+inpTim.addEventListener("input", () => {
+  chiSoChon = -1;
+  kqHienTai = timTram(inpTim.value);
+  if (boDau(inpTim.value).length < 1) { kqTim.style.display = "none"; return; }
+  veKetQuaTim();
+});
+inpTim.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") { kqTim.style.display = "none"; inpTim.blur(); return; }
+  if (!kqHienTai.length) return;
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    chiSoChon = e.key === "ArrowDown"
+      ? (chiSoChon + 1) % kqHienTai.length
+      : (chiSoChon - 1 + kqHienTai.length) % kqHienTai.length;
+    veKetQuaTim();
+    kqTim.querySelector(".dang_chon")?.scrollIntoView({ block: "nearest" });
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    chonTram(kqHienTai[chiSoChon >= 0 ? chiSoChon : 0]);
+  }
 });
 document.addEventListener("click", (e) => {
   if (!e.target.closest("#timkiem_box")) kqTim.style.display = "none";
 });
+
+// ==================== CHIA SẺ URL (hash) — mới 14/09/2026 ==================
+// Ghi vị trí bản đồ + trạm đang chọn vào phần # của URL để gửi link cho người
+// khác mở đúng chỗ đang xem. Dùng hash (không phải query) vì GitHub Pages
+// phục vụ file tĩnh — hash không gửi lên máy chủ nên không cần cấu hình gì.
+// Định dạng: #z=9.5&lat=10.24&lon=106.35&tram=CaiLay
+let hashDangGhi = false;
+function datHash(them) {
+  const c = map.getCenter();
+  const p = new URLSearchParams({
+    z: map.getZoom().toFixed(2), lat: c.lat.toFixed(5), lon: c.lng.toFixed(5),
+    ...(them || {}),
+  });
+  hashDangGhi = true;
+  location.replace("#" + p.toString());
+  hashDangGhi = false;
+}
+let henGhiHash = null;
+map.on("moveend", () => {
+  if (hashDangGhi) return;
+  clearTimeout(henGhiHash);
+  henGhiHash = setTimeout(() => datHash(), 600);
+});
+function docHash() {
+  if (!location.hash || location.hash.length < 2) return null;
+  const p = new URLSearchParams(location.hash.slice(1));
+  const z = parseFloat(p.get("z")), lat = parseFloat(p.get("lat")), lon = parseFloat(p.get("lon"));
+  if (![z, lat, lon].every(Number.isFinite)) return null;
+  return { z, lat, lon, tram: p.get("tram") };
+}
+// Hai phan doc lap: vi tri ban do (can map da san sang) va tram dang chon (can
+// danh muc tram da tai). Tach co rieng vi hai nguon nay ve theo thu tu khac
+// nhau tuy mang — gop lam 1 co se lam mat phan tram khi map xong truoc.
+let daApViTri = false, daApTram = false;
+function apHash() {
+  const h = docHash();
+  if (!h) { daApViTri = daApTram = true; return; }
+  if (!daApViTri) {
+    daApViTri = true;
+    map.jumpTo({ center: [h.lon, h.lat], zoom: h.z });
+  }
+  if (h.tram && !daApTram && tramLoc.length) {
+    daApTram = true;
+    const t = tramLoc.find((x) => x.id === h.tram);
+    if (t) setTimeout(() => chonTram(t), 300);
+  }
+}
+
+// ==================== TẢI CSV DANH MỤC TRẠM — mới 14/09/2026 ==============
+// Chỉ xuất thông tin CATALOG (vị trí, tỉnh, sông, giai đoạn phủ, số năm, %
+// đầy) — KHÔNG có trị số đo, đúng nguyên tắc của trang. Xuất từ
+// stations_summary.json đã tải sẵn nên không cần thêm file nào.
+function taiCsvTram() {
+  if (!bthData) { hienLoi("Danh mục trạm chưa tải xong, thử lại sau vài giây."); return; }
+  const cot = [
+    ["ten_hien_thi", "Tram"], ["tinh", "Tinh"], ["song", "Song"],
+    ["h_tu_ngay", "H_tu_ngay"], ["h_den_ngay", "H_den_ngay"],
+    ["h_so_nam", "H_so_nam"], ["h_lap_day_pct", "H_day_pct"],
+    ["q_tu_ngay", "Q_tu_ngay"], ["q_den_ngay", "Q_den_ngay"],
+    ["q_so_nam", "Q_so_nam"], ["q_lap_day_pct", "Q_day_pct"],
+  ];
+  const o = (v) => {
+    const s = v == null ? "" : String(v);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const dong = [cot.map((c) => c[1]).join(",")];
+  for (const r of bthData) dong.push(cot.map((c) => o(r[c[0]])).join(","));
+  const blob = new Blob(["\ufeff" + dong.join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "mekong_hydro_db_46_tram.csv";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+document.getElementById("btn_tai_csv").addEventListener("click", taiCsvTram);
+
+// ==================== BẢNG "NGUỒN DỮ LIỆU" — mới 14/09/2026 ===============
+// Đọc provenance_summary.json do xay_csdl.py sinh ra. File đó ĐÃ BỎ HOÀN TOÀN
+// cột đường dẫn thư mục gốc và các ghi chú QA kỹ thuật (xem
+// _build_provenance_summary_json trong scripts/xay_csdl.py) — chỉ còn tên tệp
+// nguồn, giai đoạn, số bản ghi. Trên trang công khai không được lộ bất kỳ
+// đường dẫn nội bộ nào.
+let nguonData = null;
+function veBangNguon(rows) {
+  nguonData = rows;
+  let html = '<table id="nguon_table"><thead><tr>' +
+    ["Trạm", "Tỉnh", "Giai đoạn", "Số bản ghi/giờ", "Tệp nguồn gốc", "Mức độ tin cậy"]
+      .map((h) => `<th>${h}</th>`).join("") + "</tr></thead><tbody>";
+  for (const r of rows) {
+    const gd = r.tu_nam && r.den_nam
+      ? (r.tu_nam === r.den_nam ? `${r.tu_nam}` : `${r.tu_nam} → ${r.den_nam}`) : "—";
+    const the = r.do_chieu ? '<span class="the_nho">đã đối chiếu độc lập</span>'
+      : (r.uni_nguon ? '<span class="the_nho le">một nguồn duy nhất</span>' : "");
+    html += `<tr><td><b>${r.ten_hien_thi}</b></td><td>${r.tinh || ""}</td>` +
+      `<td title="${r.nams || ""}">${gd}</td>` +
+      `<td>${r.so_gio ? r.so_gio.toLocaleString("vi") : "—"}</td>` +
+      `<td>${r.file_nguon || ""}</td><td>${the}</td></tr>`;
+  }
+  document.getElementById("nguon_content").innerHTML = html + "</tbody></table>";
+}
+function moBangNguon() {
+  document.getElementById("nguon_overlay").style.display = "flex";
+  if (nguonData) return;
+  fetch("./provenance_summary.json").then((r) => r.json()).then(veBangNguon)
+    .catch((e) => {
+      document.getElementById("nguon_content").textContent =
+        "Không tải được danh mục nguồn dữ liệu: " + e.message;
+    });
+}
+document.getElementById("btn_nguon").addEventListener("click", moBangNguon);
+document.getElementById("btn_dong_nguon").addEventListener("click", () => {
+  document.getElementById("nguon_overlay").style.display = "none";
+});
+document.getElementById("nguon_overlay").addEventListener("click", (e) => {
+  if (e.target.id === "nguon_overlay") e.currentTarget.style.display = "none";
+});
+
+// ==================== THU GỌN PANEL — mới 14/09/2026 ======================
+// Màn hình nhỏ hoặc khi đang xem bản đồ, panel che mất một phần bản đồ. Nút ▾
+// thu gọn panel còn đúng thanh tiêu đề. Trạng thái nhớ trong sessionStorage
+// để không phải bấm lại sau khi F5.
+(function () {
+  const panel = document.getElementById("panel");
+  const nut = document.getElementById("btn_thu_panel");
+  const ap = (thu) => {
+    panel.classList.toggle("thu_gon", thu);
+    nut.textContent = thu ? "▸" : "▾";
+    nut.title = thu ? "Mở danh sách lớp" : "Thu gọn danh sách lớp";
+    try { sessionStorage.setItem("thu_panel", thu ? "1" : "0"); } catch (e) { /* riêng tư */ }
+  };
+  let daLuu = null;
+  try { daLuu = sessionStorage.getItem("thu_panel"); } catch (e) { /* riêng tư */ }
+  // Tự thu gọn lần đầu trên màn hình hẹp (điện thoại) cho đỡ che bản đồ.
+  ap(daLuu === "1" || (daLuu === null && window.innerWidth < 640));
+  nut.addEventListener("click", () => ap(!panel.classList.contains("thu_gon")));
+})();
 
 // ==================== Bang tong hop tram ====================
 // bthData nap NGAY khi trang mo (28/08/2026, DS phat hien C3) — truoc day
