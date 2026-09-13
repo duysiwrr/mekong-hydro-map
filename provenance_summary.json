@@ -15,6 +15,18 @@
   "station_id": "GoDauHa",
   "ten_hien_thi": "Gò Dầu Hạ",
   "tinh": "Tây Ninh",
+  "tu_nam": 2000,
+  "den_nam": 2000,
+  "nams": "2000-01-01 00:00..2000-12-31 23:00",
+  "so_gio": 8784,
+  "file_nguon": "Hgio_GoDauHa 00-07.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "GoDauHa",
+  "ten_hien_thi": "Gò Dầu Hạ",
+  "tinh": "Tây Ninh",
   "tu_nam": 2001,
   "den_nam": 2007,
   "nams": "2001-01-01..2007-12-31",
@@ -159,6 +171,78 @@
   "station_id": "MocHoa",
   "ten_hien_thi": "Mộc Hóa",
   "tinh": "Long An",
+  "tu_nam": 2000,
+  "den_nam": 2000,
+  "nams": "2000-01-01 00:00..2000-12-31 23:00",
+  "so_gio": 8784,
+  "file_nguon": "Hmochoa2000.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "MocHoa",
+  "ten_hien_thi": "Mộc Hóa",
+  "tinh": "Long An",
+  "tu_nam": 2001,
+  "den_nam": 2001,
+  "nams": "2001-01-01 00:00..2001-12-31 23:00",
+  "so_gio": 8760,
+  "file_nguon": "Hmochoa2001.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "MocHoa",
+  "ten_hien_thi": "Mộc Hóa",
+  "tinh": "Long An",
+  "tu_nam": 2002,
+  "den_nam": 2002,
+  "nams": "2002-01-01 00:00..2002-12-31 23:00",
+  "so_gio": 8760,
+  "file_nguon": "Hmochoa2002.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "MocHoa",
+  "ten_hien_thi": "Mộc Hóa",
+  "tinh": "Long An",
+  "tu_nam": 2003,
+  "den_nam": 2003,
+  "nams": "2003-01-01 00:00..2003-12-31 23:00",
+  "so_gio": 8760,
+  "file_nguon": "Hmochoa2003.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "MocHoa",
+  "ten_hien_thi": "Mộc Hóa",
+  "tinh": "Long An",
+  "tu_nam": 2004,
+  "den_nam": 2004,
+  "nams": "2004-01-01 00:00..2004-12-31 23:00",
+  "so_gio": 8784,
+  "file_nguon": "Hmochoa2004.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "MocHoa",
+  "ten_hien_thi": "Mộc Hóa",
+  "tinh": "Long An",
+  "tu_nam": 2005,
+  "den_nam": 2005,
+  "nams": "2005-01-01 00:00..2005-12-31 23:00",
+  "so_gio": 8760,
+  "file_nguon": "Hmochoa2005.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "MocHoa",
+  "ten_hien_thi": "Mộc Hóa",
+  "tinh": "Long An",
   "tu_nam": 2011,
   "den_nam": 2013,
   "nams": "2011-07-01..2013-12-31",
@@ -177,6 +261,18 @@
   "so_gio": 8760,
   "file_nguon": "Hgio_nhieutram2016-2017.xls",
   "do_chieu": true,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "PhungHiep",
+  "ten_hien_thi": "Phụng Hiệp",
+  "tinh": "Hậu Giang",
+  "tu_nam": 2000,
+  "den_nam": 2000,
+  "nams": "2000-06-01 00:00..2000-10-10 23:00",
+  "so_gio": 3168,
+  "file_nguon": "H06-11-2000(Mekong).XLS",
+  "do_chieu": false,
   "uni_nguon": false
  },
  {
@@ -255,6 +351,66 @@
   "station_id": "TriTon",
   "ten_hien_thi": "Tri Tôn",
   "tinh": "An Giang",
+  "tu_nam": 2000,
+  "den_nam": 2000,
+  "nams": "2000-06-01 00:00..2000-10-10 23:00",
+  "so_gio": 3168,
+  "file_nguon": "H06-11-2000(Mekong).XLS",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "TriTon",
+  "ten_hien_thi": "Tri Tôn",
+  "tinh": "An Giang",
+  "tu_nam": 2001,
+  "den_nam": 2001,
+  "nams": "2001-07-01 00:00..2001-12-31 23:00",
+  "so_gio": 4355,
+  "file_nguon": "HTriTon2001.XLS",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "TriTon",
+  "ten_hien_thi": "Tri Tôn",
+  "tinh": "An Giang",
+  "tu_nam": 2002,
+  "den_nam": 2002,
+  "nams": "2002-01-01 00:00..2002-12-31 23:00",
+  "so_gio": 8760,
+  "file_nguon": "MN Triton02.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "TriTon",
+  "ten_hien_thi": "Tri Tôn",
+  "tinh": "An Giang",
+  "tu_nam": 2003,
+  "den_nam": 2003,
+  "nams": "2003-01-01 00:00..2003-06-30 23:00",
+  "so_gio": 4344,
+  "file_nguon": "HTriton2003.XLS",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "TriTon",
+  "ten_hien_thi": "Tri Tôn",
+  "tinh": "An Giang",
+  "tu_nam": 2005,
+  "den_nam": 2005,
+  "nams": "2005-06-01 00:00..2005-12-31 23:00",
+  "so_gio": 5136,
+  "file_nguon": "HTriton2005.XLS",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "TriTon",
+  "ten_hien_thi": "Tri Tôn",
+  "tinh": "An Giang",
   "tu_nam": 2007,
   "den_nam": 2007,
   "nams": "2007-01-01..2007-12-31",
@@ -309,6 +465,18 @@
   "so_gio": 8760,
   "file_nguon": "Hgio_nhieutram2016-2017.xls",
   "do_chieu": true,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "TuyenNhon",
+  "ten_hien_thi": "Tuyên Nhơn",
+  "tinh": "Long An",
+  "tu_nam": 2000,
+  "den_nam": 2000,
+  "nams": "2000-06-01 00:00..2000-10-10 23:00",
+  "so_gio": 3168,
+  "file_nguon": "H06-11-2000(Mekong).XLS",
+  "do_chieu": false,
   "uni_nguon": false
  },
  {
@@ -732,6 +900,30 @@
   "uni_nguon": true
  },
  {
+  "station_id": "phuoclong",
+  "ten_hien_thi": "Phước Long",
+  "tinh": "Bạc Liêu",
+  "tu_nam": 2007,
+  "den_nam": 2007,
+  "nams": "2007-01-01 00:00..2007-12-31 23:00",
+  "so_gio": 8760,
+  "file_nguon": "Hgio NamBo3.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "rachgia",
+  "ten_hien_thi": "Rạch Giá",
+  "tinh": "Kiên Giang",
+  "tu_nam": 2003,
+  "den_nam": 2006,
+  "nams": "2003;2005;2006",
+  "so_gio": 13054,
+  "file_nguon": "HRachGia.dfs0",
+  "do_chieu": true,
+  "uni_nguon": false
+ },
+ {
   "station_id": "rachgia",
   "ten_hien_thi": "Rạch Giá",
   "tinh": "Kiên Giang",
@@ -754,6 +946,30 @@
   "file_nguon": "Htanan8007+WL-Obs+Hgio1617+Tanan2017",
   "do_chieu": true,
   "uni_nguon": true
+ },
+ {
+  "station_id": "tanan",
+  "ten_hien_thi": "Tân An",
+  "tinh": "Long An",
+  "tu_nam": 2008,
+  "den_nam": 2008,
+  "nams": "2008-01-01 01:00..2008-06-30 23:00",
+  "so_gio": 4367,
+  "file_nguon": "H2008.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "tanan",
+  "ten_hien_thi": "Tân An",
+  "tinh": "Long An",
+  "tu_nam": 2009,
+  "den_nam": 2009,
+  "nams": "2009-01-01 00:00..2009-06-30 23:00",
+  "so_gio": 4344,
+  "file_nguon": "H2009.xls",
+  "do_chieu": false,
+  "uni_nguon": false
  },
  {
   "station_id": "tanchau",
@@ -897,6 +1113,18 @@
   "so_gio": 210384,
   "file_nguon": "All_data_2.csv",
   "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "vamnao",
+  "ten_hien_thi": "Vàm Nao",
+  "tinh": "An Giang",
+  "tu_nam": 2014,
+  "den_nam": 2014,
+  "nams": "2014",
+  "so_gio": 8760,
+  "file_nguon": "Q_VamNao_2014-2022.dfs0",
+  "do_chieu": true,
   "uni_nguon": false
  },
  {
