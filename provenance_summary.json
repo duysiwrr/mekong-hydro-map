@@ -1023,6 +1023,18 @@
   "station_id": "tanhiep",
   "ten_hien_thi": "Tân Hiệp",
   "tinh": "Kiên Giang",
+  "tu_nam": 2012,
+  "den_nam": 2012,
+  "nams": "2012-09-01 00:00..2012-10-31 23:00",
+  "so_gio": 1464,
+  "file_nguon": "Hgio2012_2.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "tanhiep",
+  "ten_hien_thi": "Tân Hiệp",
+  "tinh": "Kiên Giang",
   "tu_nam": 2018,
   "den_nam": 2018,
   "nams": "2018",
