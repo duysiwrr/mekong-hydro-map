@@ -184,7 +184,7 @@
   <div id="catalog_box">
     <button class="btn_dong_x" id="btn_dong_catalog">Đóng ✕</button>
     <h2>Bộ cơ sở dữ liệu Mekong Hydro DB</h2>
-    <div class="sub"><b style="color:#2b6cb0">9,93 triệu bản ghi đo theo giờ · 46 trạm</b> —
+    <div class="sub"><b style="color:#2b6cb0">10,03 triệu bản ghi đo theo giờ · 46 trạm</b> —
       tổng hợp từ nhiều nguồn khảo sát/quan trắc độc lập cho Đồng bằng sông Cửu Long.
       Trang này thể hiện <b>phạm vi, quy mô và giai đoạn phủ</b> của dữ liệu —
       <b>không hiển thị trị số đo</b>. Bấm vào bất kỳ đối tượng trên bản đồ để xem mô tả.</div>
@@ -798,12 +798,23 @@ function popupTramHtml(p) {
     dinhDangDoPhuThanh(p, "q", "Lưu lượng (Q)");
 }
 
+  // CHONG LOI GIA khi hover/click TRUOC KHI style tai xong: queryRenderedFeatures
+  // nem "The layer 'kenh' does not exist in the map's style..." (bao id dau
+  // tien trong LOP_CLICK_DUOC) cho MOI id — map.on('error') se hien toast
+  // "Loi ban do" gia lam nguoi dung hoang mang (thay that 15/09/2026). Truoc
+  // khi style san sang va voi bat ky exception nao, tra [] (khong co feature).
+  const layFeats = (geom, opts) => {
+    if (!map.isStyleLoaded()) return [];
+    try { return map.queryRenderedFeatures(geom, opts); }
+    catch { return []; }
+  };
+
 map.on('click', (e) => {
   const bbox = [
     [e.point.x - 4, e.point.y - 4],
     [e.point.x + 4, e.point.y + 4]
   ];
-  const feats = map.queryRenderedFeatures(bbox, { layers: LOP_CLICK_DUOC });
+  const feats = layFeats(bbox, { layers: LOP_CLICK_DUOC });
   if (!feats.length) return;
   const f = feats[0];
   const p = f.properties;
@@ -848,7 +859,7 @@ map.on('click', (e) => {
 });
 
 map.on('mousemove', (e) => {
-  const feats = map.queryRenderedFeatures(e.point, { layers: LOP_CLICK_DUOC });
+  const feats = layFeats(e.point, { layers: LOP_CLICK_DUOC });
   map.getCanvas().style.cursor = feats.length ? 'pointer' : '';
 });
 
