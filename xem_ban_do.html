@@ -184,20 +184,20 @@
   <div id="catalog_box">
     <button class="btn_dong_x" id="btn_dong_catalog">Đóng ✕</button>
     <h2>Bộ cơ sở dữ liệu Mekong Hydro DB</h2>
-    <div class="sub"><b style="color:#2b6cb0">10,03 triệu bản ghi đo theo giờ · 46 trạm</b> —
+    <div class="sub"><b style="color:#2b6cb0">17,78 triệu bản ghi đo theo giờ · 47 trạm</b> —
       tổng hợp từ nhiều nguồn khảo sát/quan trắc độc lập cho Đồng bằng sông Cửu Long.
       Trang này thể hiện <b>phạm vi, quy mô và giai đoạn phủ</b> của dữ liệu —
       <b>không hiển thị trị số đo</b>. Bấm vào bất kỳ đối tượng trên bản đồ để xem mô tả.</div>
     <div class="sub" style="background:#f7fafc;border-radius:6px;padding:8px 12px;">
-      <b>Mực nước (H)</b> 8.841.385 bản ghi · 46 trạm · <b>05/1979 → 12/2023</b><br>
+      <b>Mực nước (H)</b> 16.690.183 bản ghi · 47 trạm · <b>01/1977 → 12/2024</b><br>
       <b>Lưu lượng (Q)</b> 1.086.975 bản ghi · 5 trạm trục chính · <b>2000 → 2024</b>
     </div>
     <div style="margin:4px 0 14px;">
-      <button class="nut_phu" id="btn_tai_csv">⬇ Tải danh mục 46 trạm (CSV)</button>
-      <button class="nut_phu" id="btn_nguon">🗂 Nguồn dữ liệu (76 đợt)</button>
+      <button class="nut_phu" id="btn_tai_csv">⬇ Tải danh mục 47 trạm (CSV)</button>
+      <button class="nut_phu" id="btn_nguon">🗂 Nguồn dữ liệu</button>
     </div>
     <div class="ds_grid">
-      <div class="ds_card"><div class="n">46</div><div class="ten">Trạm quan trắc</div>
+      <div class="ds_card"><div class="n">47</div><div class="ten">Trạm quan trắc</div>
         <div class="mo_ta">Mực nước &amp; lưu lượng theo giờ, một số trạm phủ tới hơn 40
           năm dữ liệu. Bản đồ chỉ hiện vị trí &amp; độ phủ thời gian.</div>
         <div class="nguon">nguồn: tổng hợp nội bộ</div></div>
@@ -297,7 +297,7 @@
   <div class="nhom">
     <h3>Trạm quan trắc</h3>
     <label><input type="checkbox" data-layers="tram_pt,tram_nhan" checked>
-      <span class="swatch" style="background:#c05621;border-radius:50%"></span>Trạm H/Q (46)</label>
+      <span class="swatch" style="background:#c05621;border-radius:50%"></span>Trạm H/Q (47)</label>
     <div style="font-size:11px;color:#4a5568;margin:2px 0 0 19px;line-height:1.9;">
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#c05621;margin-right:4px;vertical-align:middle;"></span>cả H+Q
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ed8936;margin:0 4px 0 10px;vertical-align:middle;"></span>chỉ H
@@ -316,7 +316,7 @@
 <div id="bang_tong_hop_overlay">
   <div id="bang_tong_hop_box">
     <button id="btn_dong_bang">Đóng ✕</button>
-    <h3>Bảng tổng hợp dữ liệu quan trắc — 46 trạm</h3>
+    <h3>Bảng tổng hợp dữ liệu quan trắc — 47 trạm</h3>
     <div class="sub">Thanh xanh dương = có H (mực nước) · thanh xanh lá = có Q (lưu lượng).
       Vị trí/độ dài thanh theo đúng tỷ lệ thời gian trên 2 trục dùng chung bên dưới.
       Bấm tiêu đề cột để sắp xếp. Di chuột vào thanh để xem ngày chính xác.</div>
@@ -1068,7 +1068,7 @@ function taiCsvTram() {
   const blob = new Blob(["\ufeff" + dong.join("\r\n")], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "mekong_hydro_db_46_tram.csv";
+  a.download = `mekong_hydro_db_${bthData.length}_tram.csv`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
@@ -1083,6 +1083,12 @@ document.getElementById("btn_tai_csv").addEventListener("click", taiCsvTram);
 let nguonData = null;
 function veBangNguon(rows) {
   nguonData = rows;
+  // 18/09/2026: nhan nut dem so dot LAY TU CHINH FILE (truoc day hardcode
+  // "(76 đợt)" trong HTML va da bi lech so voi du lieu that khi DB duoc
+  // bo sung sau do — xem commit 15/09/2026: da bo hardcode o test nhung
+  // con sot o nhan nut nay).
+  const nutNguon = document.getElementById("btn_nguon");
+  if (nutNguon) nutNguon.textContent = `🗂 Nguồn dữ liệu (${rows.length} đợt)`;
   let html = '<table id="nguon_table"><thead><tr>' +
     ["Trạm", "Tỉnh", "Giai đoạn", "Số bản ghi/giờ", "Tệp nguồn gốc", "Mức độ tin cậy"]
       .map((h) => `<th>${h}</th>`).join("") + "</tr></thead><tbody>";
@@ -1101,12 +1107,18 @@ function veBangNguon(rows) {
 function moBangNguon() {
   document.getElementById("nguon_overlay").style.display = "flex";
   if (nguonData) return;
-  fetch("./provenance_summary.json").then((r) => r.json()).then(veBangNguon)
+  taiNguon();
+}
+function taiNguon() {
+  return fetch("./provenance_summary.json").then((r) => r.json()).then(veBangNguon)
     .catch((e) => {
       document.getElementById("nguon_content").textContent =
         "Không tải được danh mục nguồn dữ liệu: " + e.message;
     });
 }
+// 18/09/2026: nap NGAY khi mo trang (khong doi bam) de nhan nut hien dung so
+// dot; bang van nam trong overlay an nen khong anh huong toc do hien ban do.
+taiNguon();
 document.getElementById("btn_nguon").addEventListener("click", moBangNguon);
 document.getElementById("btn_dong_nguon").addEventListener("click", () => {
   document.getElementById("nguon_overlay").style.display = "none";
@@ -1138,8 +1150,8 @@ document.getElementById("nguon_overlay").addEventListener("click", (e) => {
 // ==================== Bang tong hop tram ====================
 // bthData nap NGAY khi trang mo (28/08/2026, DS phat hien C3) — truoc day
 // chi nap khi bam nut "Bang tram", nen neu tim kiem tram TRUOC roi bam vao
-// ket qua thi popup thieu thanh phu H/Q (bthData con null). File chi 46
-// dong/~14KB, nap som khong dang ke.
+// ket qua thi popup thieu thanh phu H/Q (bthData con null). File chi 47
+// dong/~15KB, nap som khong dang ke.
 let bthData = null, bthSortKey = "ten_hien_thi", bthSortDir = 1;
 fetch("./stations_summary.json").then(r => r.json()).then(d => { bthData = d; tinhDP(d); })
   .catch(e => hienLoi("Lỗi stations_summary.json: " + e.message));
