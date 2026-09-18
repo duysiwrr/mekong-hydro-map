@@ -30,7 +30,7 @@
   "tu_nam": 1977,
   "den_nam": 2024,
   "nams": "1977-01-01 00:00..2024-12-31 23:00",
-  "so_gio": 319627,
+  "so_gio": 319636,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -90,7 +90,7 @@
   "tu_nam": 1982,
   "den_nam": 2017,
   "nams": "1982-01-01 00:00..2017-12-31 23:00",
-  "so_gio": 241020,
+  "so_gio": 241022,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -186,7 +186,7 @@
   "tu_nam": 1981,
   "den_nam": 2024,
   "nams": "1981-01-01 00:00..2024-01-01 23:00",
-  "so_gio": 281951,
+  "so_gio": 289091,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -234,7 +234,7 @@
   "tu_nam": 1977,
   "den_nam": 2023,
   "nams": "1977-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 328656,
+  "so_gio": 328683,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -342,7 +342,7 @@
   "tu_nam": 1977,
   "den_nam": 2023,
   "nams": "1977-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 359561,
+  "so_gio": 359865,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -426,7 +426,7 @@
   "tu_nam": 1990,
   "den_nam": 2023,
   "nams": "1990-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 185293,
+  "so_gio": 185300,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -546,7 +546,7 @@
   "tu_nam": 1982,
   "den_nam": 2023,
   "nams": "1982-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 319884,
+  "so_gio": 319889,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -582,7 +582,7 @@
   "tu_nam": 1981,
   "den_nam": 2023,
   "nams": "1981-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 334272,
+  "so_gio": 334282,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -654,7 +654,7 @@
   "tu_nam": 2023,
   "den_nam": 2023,
   "nams": "2023-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 8760,
+  "so_gio": 8761,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -678,7 +678,7 @@
   "tu_nam": 1980,
   "den_nam": 2024,
   "nams": "1980-01-01 00:00..2024-12-30 23:00",
-  "so_gio": 341880,
+  "so_gio": 347682,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -738,7 +738,7 @@
   "tu_nam": 1979,
   "den_nam": 2024,
   "nams": "1979-01-01 00:00..2024-12-31 23:00",
-  "so_gio": 353592,
+  "so_gio": 353593,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -786,7 +786,7 @@
   "tu_nam": 1978,
   "den_nam": 2024,
   "nams": "1978-01-01 00:00..2024-12-31 23:00",
-  "so_gio": 302400,
+  "so_gio": 307960,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -810,7 +810,7 @@
   "tu_nam": 1977,
   "den_nam": 1983,
   "nams": "1977-01-01 00:00..1983-12-31 23:00",
-  "so_gio": 52552,
+  "so_gio": 126095,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -834,7 +834,7 @@
   "tu_nam": 1978,
   "den_nam": 1983,
   "nams": "1978-01-01 00:00..1983-12-31 23:00",
-  "so_gio": 51691,
+  "so_gio": 51692,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -930,7 +930,7 @@
   "tu_nam": 1977,
   "den_nam": 2023,
   "nams": "1977-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 402889,
+  "so_gio": 403045,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -954,7 +954,7 @@
   "tu_nam": 1977,
   "den_nam": 2024,
   "nams": "1977-01-01 00:00..2024-12-31 23:00",
-  "so_gio": 359424,
+  "so_gio": 363773,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -1044,13 +1044,25 @@
   "uni_nguon": false
  },
  {
+  "station_id": "longxuyen",
+  "ten_hien_thi": "Long Xuyên",
+  "tinh": "An Giang",
+  "tu_nam": 2011,
+  "den_nam": 2014,
+  "nams": "2011-11-06 05:00..2014-12-31 23:00",
+  "so_gio": 2,
+  "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
   "station_id": "myhoa",
   "ten_hien_thi": "Mỹ Hóa",
   "tinh": "Bến Tre",
   "tu_nam": 1980,
   "den_nam": 2023,
   "nams": "1980-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 343280,
+  "so_gio": 343659,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -1122,7 +1134,7 @@
   "tu_nam": 1978,
   "den_nam": 2023,
   "nams": "1978-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 52457,
+  "so_gio": 60990,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -1134,7 +1146,7 @@
   "tu_nam": 1978,
   "den_nam": 1983,
   "nams": "1978-01-01 00:00..1983-12-31 23:00",
-  "so_gio": 51289,
+  "so_gio": 60630,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -1146,7 +1158,7 @@
   "tu_nam": 1980,
   "den_nam": 2024,
   "nams": "1980-01-01 00:00..2024-12-31 23:00",
-  "so_gio": 143184,
+  "so_gio": 143985,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -1182,7 +1194,7 @@
   "tu_nam": 2024,
   "den_nam": 2024,
   "nams": "2024-01-01 00:00..2024-12-30 23:00",
-  "so_gio": 8760,
+  "so_gio": 8764,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -1194,7 +1206,7 @@
   "tu_nam": 1978,
   "den_nam": 2024,
   "nams": "1978-01-01 00:00..2024-12-31 23:00",
-  "so_gio": 26305,
+  "so_gio": 28851,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -1230,7 +1242,7 @@
   "tu_nam": 1985,
   "den_nam": 2023,
   "nams": "1985-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 115416,
+  "so_gio": 115481,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -1278,7 +1290,7 @@
   "tu_nam": 1977,
   "den_nam": 2023,
   "nams": "1977-01-01 00:00..2023-12-31 23:00",
-  "so_gio": 255027,
+  "so_gio": 272231,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -1386,7 +1398,7 @@
   "tu_nam": 1984,
   "den_nam": 2022,
   "nams": "1984-01-01 00:00..2022-12-31 23:00",
-  "so_gio": 314112,
+  "so_gio": 314357,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
@@ -1434,7 +1446,7 @@
   "tu_nam": 1983,
   "den_nam": 2024,
   "nams": "1983-01-01 00:00..2024-12-31 23:00",
-  "so_gio": 315600,
+  "so_gio": 317293,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -1494,7 +1506,7 @@
   "tu_nam": 2024,
   "den_nam": 2024,
   "nams": "2024-01-01 00:00..2024-12-31 23:00",
-  "so_gio": 8784,
+  "so_gio": 17537,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": false,
   "uni_nguon": false
@@ -1554,7 +1566,7 @@
   "tu_nam": 1980,
   "den_nam": 2024,
   "nams": "1980-07-31 09:00..2024-12-31 23:00",
-  "so_gio": 364551,
+  "so_gio": 364620,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
   "uni_nguon": false
