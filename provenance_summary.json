@@ -1431,6 +1431,18 @@
   "station_id": "thudau1",
   "ten_hien_thi": "Thủ Dầu Một",
   "tinh": "Bình Dương",
+  "tu_nam": 1983,
+  "den_nam": 2024,
+  "nams": "1983-01-01 00:00..2024-12-31 23:00",
+  "so_gio": 315600,
+  "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "thudau1",
+  "ten_hien_thi": "Thủ Dầu Một",
+  "tinh": "Bình Dương",
   "tu_nam": 2019,
   "den_nam": 2019,
   "nams": "2019",
@@ -1449,18 +1461,6 @@
   "so_gio": 8760,
   "file_nguon": "Hgio_22tram2019_Du12thang.xlsx",
   "do_chieu": false,
-  "uni_nguon": false
- },
- {
-  "station_id": "thudau1",
-  "ten_hien_thi": "Thủ Dầu Một",
-  "tinh": "Bình Dương",
-  "tu_nam": 2022,
-  "den_nam": 2022,
-  "nams": "2022-09-01 00:00..2022-12-31 23:00",
-  "so_gio": 2928,
-  "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
-  "do_chieu": true,
   "uni_nguon": false
  },
  {
