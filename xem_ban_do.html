@@ -104,6 +104,8 @@
   .truc_bar .doan.h { background:#3182ce; }
   .truc_bar .doan.q { background:#38a169; }
   .truc_bar .doan.s { background:#b7791f; }
+  .truc_bar .lo, .popup_do_phu .ke .lo { position:absolute; top:-1px; bottom:-1px; background:#e53e3e; border-radius:1px; }
+  .lo_txt { font-size:10.5px; color:#c53030; margin-top:1px; }
   .khong_co { color:#cbd5e0; text-align:center; }
   .ten_tram_bth { font-weight:600; white-space:nowrap; }
 
@@ -779,6 +781,25 @@ function tinhDP(d) {
   DP = { min: Math.floor(Math.min(hMin, isFinite(qMin) ? qMin : hMin)),
          max: Math.ceil(Math.max(hMax, isFinite(qMax) ? qMax : hMax)) };
 }
+// LO TRONG (06/10/2026): doan KHONG co so lieu > 30 ngay (stations_summary.json: h_lo_trong / q_lo_trong = [[tu, den], ...]).
+// Truoc day chi hien ngay dau–cuoi + % day ca chuoi => lo 3–4 thang (vd An Thuan 09–12/2022) bi an sau con so 99 %.
+function layLoTrong(p, tienTo) {
+  let lo = p[`${tienTo}_lo_trong`];
+  if (lo === undefined && bthData) { const r = bthData.find((x) => x.station_id === p.station_id); lo = r ? r[`${tienTo}_lo_trong`] : null; }
+  if (typeof lo === "string") { try { lo = JSON.parse(lo); } catch { lo = null; } }
+  return Array.isArray(lo) ? lo : [];
+}
+function thangNam(ngay) { return ngay.slice(5, 7) + "/" + ngay.slice(0, 4); }
+function moTaLoTrong(lo) {
+  return lo.map(([a, b]) => thangNam(a) === thangNam(b) ? thangNam(a) : `${thangNam(a)}–${thangNam(b)}`).join(", ");
+}
+function vachLoTrong(lo, mi, ma) {
+  return lo.map(([a, b]) => {
+    const t0 = ngayThanhSoNam(a), t1 = ngayThanhSoNam(b) + 1 / 12;
+    const trai = (t0 - mi) / (ma - mi) * 100, rong = Math.max((t1 - t0) / (ma - mi) * 100, 0.7);
+    return `<div class="lo" style="left:${trai}%;width:${rong}%" title="thiếu ${a} → ${b}"></div>`;
+  }).join("");
+}
 function dinhDangDoPhuThanh(p, tienTo, nhan) {
   const tu = p[`${tienTo}_tu_ngay`], den = p[`${tienTo}_den_ngay`];
   if (!tu) return `<div class="popup_do_phu"><div class="nhan"><span>${nhan}</span><span>không có</span></div></div>`;
@@ -786,10 +807,12 @@ function dinhDangDoPhuThanh(p, tienTo, nhan) {
   const trai = (t0 - DP.min) / (DP.max - DP.min) * 100;
   const rong = Math.max((t1 - t0) / (DP.max - DP.min) * 100, 0.8);
   const mau = tienTo === "h" ? "#3182ce" : "#38a169";
+  const lo = layLoTrong(p, tienTo);
   return `<div class="popup_do_phu"><div class="nhan"><span>${nhan}</span>` +
     `<span>${p[`${tienTo}_so_nam`]} năm · đầy ~${p[`${tienTo}_lap_day_pct`]}%</span></div>` +
-    `<div class="ke"><div class="doan" style="left:${trai}%;width:${rong}%;background:${mau}"></div></div>` +
-    `<div class="nhan" style="justify-content:space-between"><span>${tu}</span><span>${den}</span></div></div>`;
+    `<div class="ke"><div class="doan" style="left:${trai}%;width:${rong}%;background:${mau}"></div>${vachLoTrong(lo, DP.min, DP.max)}</div>` +
+    `<div class="nhan" style="justify-content:space-between"><span>${tu}</span><span>${den}</span></div>` +
+    (lo.length ? `<div class="lo_txt">⚠ thiếu số liệu: ${moTaLoTrong(lo)}</div>` : "") + `</div>`;
 }
 function popupTramHtml(p) {
   return `<b>${p.ten_hien_thi}</b> — trạm quan trắc<br>` +
@@ -1075,8 +1098,10 @@ function taiCsvTram() {
     ["q_so_nam", "Q_so_nam"], ["q_lap_day_pct", "Q_day_pct"],
     ["ssc_tu_ngay", "SSC_tu_ngay"], ["ssc_den_ngay", "SSC_den_ngay"],
     ["ssc_so_mau", "SSC_so_mau"], ["ssc_nguon", "SSC_nguon"],
+    ["h_lo_trong", "H_thieu_tren_30_ngay"], ["q_lo_trong", "Q_thieu_tren_30_ngay"],
   ];
   const o = (v) => {
+    if (Array.isArray(v)) v = v.map(([a, b]) => `${a}→${b}`).join(" | ");   // lo trong: khong dung dau phay
     const s = v == null ? "" : String(v);
     return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
   };
@@ -1190,13 +1215,15 @@ function sapXepBang(rows, key, dir) {
   });
 }
 
-function thanhTrucHtml(tu, den, mi, ma, loai) {
+function thanhTrucHtml(tu, den, mi, ma, loai, lo) {
   if (!tu || !den || !isFinite(mi) || !isFinite(ma) || ma <= mi) return '<span class="khong_co">—</span>';
   const t0 = ngayThanhSoNam(tu), t1 = ngayThanhSoNam(den);
   const trai = (t0 - mi) / (ma - mi) * 100;
   const rong = Math.max((t1 - t0) / (ma - mi) * 100, 0.6);
-  return `<div class="truc_bar" title="${tu} → ${den}">` +
-         `<div class="doan ${loai}" style="left:${trai}%;width:${rong}%"></div></div>`;
+  lo = lo || [];
+  return `<div class="truc_bar" title="${tu} → ${den}${lo.length ? " · thiếu " + moTaLoTrong(lo) : ""}">` +
+         `<div class="doan ${loai}" style="left:${trai}%;width:${rong}%"></div>${vachLoTrong(lo, mi, ma)}</div>` +
+         (lo.length ? `<div class="lo_txt">thiếu ${moTaLoTrong(lo)}</div>` : "");
 }
 
 function veBangTongHop() {
@@ -1235,10 +1262,10 @@ function veBangTongHop() {
       `<td class="ten_tram_bth">${r.ten_hien_thi}</td>` +
       `<td>${r.tinh || ""}</td>` +
       `<td>${r.song || ""}</td>` +
-      `<td>${thanhTrucHtml(r.h_tu_ngay, r.h_den_ngay, hMin, hMax, "h")}</td>` +
+      `<td>${thanhTrucHtml(r.h_tu_ngay, r.h_den_ngay, hMin, hMax, "h", r.h_lo_trong)}</td>` +
       `<td>${r.h_so_nam ? r.h_so_nam + " năm" : '<span class="khong_co">—</span>'}</td>` +
       `<td>${r.h_lap_day_pct ? r.h_lap_day_pct + "%" : '<span class="khong_co">—</span>'}</td>` +
-      `<td>${thanhTrucHtml(r.q_tu_ngay, r.q_den_ngay, qMin, qMax, "q")}</td>` +
+      `<td>${thanhTrucHtml(r.q_tu_ngay, r.q_den_ngay, qMin, qMax, "q", r.q_lo_trong)}</td>` +
       `<td>${r.q_so_nam ? r.q_so_nam + " năm" : '<span class="khong_co">—</span>'}</td>` +
       `<td>${r.q_lap_day_pct ? r.q_lap_day_pct + "%" : '<span class="khong_co">—</span>'}</td>` +
       `<td>${thanhTrucHtml(r.ssc_tu_ngay, r.ssc_den_ngay, sMin, sMax, "s")}</td>` +
