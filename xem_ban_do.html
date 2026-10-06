@@ -103,6 +103,7 @@
   .truc_bar .doan { position:absolute; top:0; bottom:0; border-radius:3px; }
   .truc_bar .doan.h { background:#3182ce; }
   .truc_bar .doan.q { background:#38a169; }
+  .truc_bar .doan.s { background:#b7791f; }
   .khong_co { color:#cbd5e0; text-align:center; }
   .ten_tram_bth { font-weight:600; white-space:nowrap; }
 
@@ -795,7 +796,21 @@ function popupTramHtml(p) {
     `${p.tinh || ""}${p.song ? " · " + p.song : ""}<br>` +
     `<span style="color:#718096;font-size:11px">Giai đoạn có dữ liệu:</span>` +
     dinhDangDoPhuThanh(p, "h", "Mực nước (H)") +
-    dinhDangDoPhuThanh(p, "q", "Lưu lượng (Q)");
+    dinhDangDoPhuThanh(p, "q", "Lưu lượng (Q)") +
+    dinhDangDoPhuSsc(p);
+}
+// SSC (06/10/2026): mau roi theo pha trieu, khong phai chuoi gio -> hien SO MAU, khong "% day". Lay tu stations_summary.json
+// (tile tram_quan_trac.pmtiles chua co truong ssc_*); chi do phu, KHONG tri so do.
+function dinhDangDoPhuSsc(p) {
+  const s = (p.ssc_tu_ngay !== undefined) ? p : (bthData ? bthData.find((r) => r.station_id === p.station_id) : null);
+  if (!s || !s.ssc_tu_ngay) return "";
+  const t0 = ngayThanhSoNam(s.ssc_tu_ngay), t1 = ngayThanhSoNam(s.ssc_den_ngay);
+  const trai = (t0 - DP.min) / (DP.max - DP.min) * 100;
+  const rong = Math.max((t1 - t0) / (DP.max - DP.min) * 100, 0.8);
+  return `<div class="popup_do_phu"><div class="nhan"><span>Bùn cát lơ lửng (SSC)</span>` +
+    `<span>${s.ssc_so_mau.toLocaleString("vi")} mẫu · nguồn: ${s.ssc_nguon}</span></div>` +
+    `<div class="ke"><div class="doan" style="left:${trai}%;width:${rong}%;background:#b7791f"></div></div>` +
+    `<div class="nhan" style="justify-content:space-between"><span>${s.ssc_tu_ngay}</span><span>${s.ssc_den_ngay}</span></div></div>`;
 }
 
   // CHONG LOI GIA khi hover/click TRUOC KHI style tai xong: queryRenderedFeatures
@@ -1058,6 +1073,8 @@ function taiCsvTram() {
     ["h_so_nam", "H_so_nam"], ["h_lap_day_pct", "H_day_pct"],
     ["q_tu_ngay", "Q_tu_ngay"], ["q_den_ngay", "Q_den_ngay"],
     ["q_so_nam", "Q_so_nam"], ["q_lap_day_pct", "Q_day_pct"],
+    ["ssc_tu_ngay", "SSC_tu_ngay"], ["ssc_den_ngay", "SSC_den_ngay"],
+    ["ssc_so_mau", "SSC_so_mau"], ["ssc_nguon", "SSC_nguon"],
   ];
   const o = (v) => {
     const s = v == null ? "" : String(v);
@@ -1155,7 +1172,7 @@ document.getElementById("nguon_overlay").addEventListener("click", (e) => {
 let bthData = null, bthSortKey = "ten_hien_thi", bthSortDir = 1;
 fetch("./stations_summary.json").then(r => r.json()).then(d => { bthData = d; tinhDP(d); })
   .catch(e => hienLoi("Lỗi stations_summary.json: " + e.message));
-const CAC_COT_SO = ["h_so_nam", "h_lap_day_pct", "q_so_nam", "q_lap_day_pct"];
+const CAC_COT_SO = ["h_so_nam", "h_lap_day_pct", "q_so_nam", "q_lap_day_pct", "ssc_so_mau"];
 
 function sapXepBang(rows, key, dir) {
   const laSo = CAC_COT_SO.includes(key);
@@ -1190,14 +1207,19 @@ function veBangTongHop() {
   const qDen = d.filter(r => r.q_den_ngay).map(r => ngayThanhSoNam(r.q_den_ngay));
   const hMin = Math.min(...hTu), hMax = Math.max(...hDen);
   const qMin = Math.min(...qTu), qMax = Math.max(...qDen);
+  const sTu = d.filter(r => r.ssc_tu_ngay).map(r => ngayThanhSoNam(r.ssc_tu_ngay));
+  const sDen = d.filter(r => r.ssc_den_ngay).map(r => ngayThanhSoNam(r.ssc_den_ngay));
+  const sMin = Math.min(...sTu), sMax = Math.max(...sDen);
   tinhDP(d);  // cung 1 ham voi luc nap trang -> thanh do phu luon khop
 
   const nhanH = `H (${Math.floor(hMin)}–${Math.ceil(hMax)})`;
   const nhanQ = isFinite(qMin) ? `Q (${Math.floor(qMin)}–${Math.ceil(qMax)})` : "Q";
+  const nhanS = isFinite(sMin) ? `SSC (${Math.floor(sMin)}–${Math.ceil(sMax)})` : "SSC";
   const cotDinhNghia = [
     ["ten_hien_thi", "Trạm"], ["tinh", "Tỉnh"], ["song", "Sông"],
     ["h_tu_ngay", nhanH], ["h_so_nam", "Số năm"], ["h_lap_day_pct", "% đầy"],
     ["q_tu_ngay", nhanQ], ["q_so_nam", "Số năm"], ["q_lap_day_pct", "% đầy"],
+    ["ssc_tu_ngay", nhanS], ["ssc_so_mau", "Số mẫu"], ["ssc_nguon", "Nguồn SSC"],
   ];
 
   const sorted = sapXepBang(d, bthSortKey, bthSortDir);
@@ -1219,6 +1241,9 @@ function veBangTongHop() {
       `<td>${thanhTrucHtml(r.q_tu_ngay, r.q_den_ngay, qMin, qMax, "q")}</td>` +
       `<td>${r.q_so_nam ? r.q_so_nam + " năm" : '<span class="khong_co">—</span>'}</td>` +
       `<td>${r.q_lap_day_pct ? r.q_lap_day_pct + "%" : '<span class="khong_co">—</span>'}</td>` +
+      `<td>${thanhTrucHtml(r.ssc_tu_ngay, r.ssc_den_ngay, sMin, sMax, "s")}</td>` +
+      `<td>${r.ssc_so_mau ? r.ssc_so_mau.toLocaleString("vi") : '<span class="khong_co">—</span>'}</td>` +
+      `<td>${r.ssc_nguon || '<span class="khong_co">—</span>'}</td>` +
       "</tr>";
   }
   html += "</tbody></table>";

@@ -11,7 +11,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "benluc",
@@ -25,7 +29,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "bentrai",
@@ -39,7 +47,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "bienhoa",
@@ -53,7 +65,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "binhdai",
@@ -67,7 +83,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "camau",
@@ -81,7 +101,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "cantho",
@@ -95,7 +119,11 @@
   "q_tu_ngay": "2000-01-01",
   "q_den_ngay": "2024-12-31",
   "q_so_nam": "25.0",
-  "q_lap_day_pct": "100.0"
+  "q_lap_day_pct": "100.0",
+  "ssc_tu_ngay": "2009-01-01",
+  "ssc_den_ngay": "2022-12-31",
+  "ssc_so_mau": 9172,
+  "ssc_nguon": "trạm quan trắc"
  },
  {
   "station_id": "caolanh",
@@ -109,7 +137,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "chaudoc",
@@ -123,7 +155,11 @@
   "q_tu_ngay": "2000-01-01",
   "q_den_ngay": "2024-12-31",
   "q_so_nam": "25.0",
-  "q_lap_day_pct": "100.0"
+  "q_lap_day_pct": "100.0",
+  "ssc_tu_ngay": "2008-01-01",
+  "ssc_den_ngay": "2022-12-31",
+  "ssc_so_mau": 9519,
+  "ssc_nguon": "MRC; trạm quan trắc"
  },
  {
   "station_id": "cholach",
@@ -137,7 +173,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "daingai",
@@ -151,7 +191,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "ganhhao",
@@ -165,7 +209,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "hoabinh",
@@ -179,7 +227,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "longxuyen",
@@ -193,7 +245,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "myhoa",
@@ -207,7 +263,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "mythanh",
@@ -221,7 +281,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "mytho",
@@ -235,7 +299,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "mythuan",
@@ -249,7 +317,11 @@
   "q_tu_ngay": "2000-01-01",
   "q_den_ngay": "2024-12-31",
   "q_so_nam": "25.0",
-  "q_lap_day_pct": "100.0"
+  "q_lap_day_pct": "100.0",
+  "ssc_tu_ngay": "2009-01-01",
+  "ssc_den_ngay": "2022-12-31",
+  "ssc_so_mau": 9425,
+  "ssc_nguon": "trạm quan trắc"
  },
  {
   "station_id": "namcan",
@@ -263,7 +335,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "nhabe",
@@ -277,7 +353,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "phuan",
@@ -291,7 +371,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "phuoclong",
@@ -305,7 +389,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "rachgia",
@@ -319,7 +407,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "songdoc",
@@ -333,7 +425,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "tanan",
@@ -347,7 +443,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "tanchau",
@@ -361,7 +461,11 @@
   "q_tu_ngay": "2000-01-01",
   "q_den_ngay": "2024-12-31",
   "q_so_nam": "25.0",
-  "q_lap_day_pct": "100.0"
+  "q_lap_day_pct": "100.0",
+  "ssc_tu_ngay": "2008-01-01",
+  "ssc_den_ngay": "2022-12-31",
+  "ssc_so_mau": 9020,
+  "ssc_nguon": "MRC; trạm quan trắc"
  },
  {
   "station_id": "tanhiep",
@@ -375,7 +479,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "thudau1",
@@ -389,7 +497,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "trande",
@@ -403,7 +515,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "travinh",
@@ -417,7 +533,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "vamkenh",
@@ -431,7 +551,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "vamnao",
@@ -445,7 +569,11 @@
   "q_tu_ngay": "2000-01-01",
   "q_den_ngay": "2023-12-31",
   "q_so_nam": "24.0",
-  "q_lap_day_pct": "100.0"
+  "q_lap_day_pct": "100.0",
+  "ssc_tu_ngay": "2008-01-01",
+  "ssc_den_ngay": "2022-12-31",
+  "ssc_so_mau": 7373,
+  "ssc_nguon": "trạm quan trắc"
  },
  {
   "station_id": "vithanh",
@@ -459,7 +587,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "vungtau",
@@ -473,7 +605,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "xeoro",
@@ -487,7 +623,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "XuanTo",
@@ -501,7 +641,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "TriTon",
@@ -515,7 +659,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "PhungHiep",
@@ -529,7 +677,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "MocHoa",
@@ -543,7 +695,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "TruongXuan",
@@ -557,7 +713,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "KienBinh",
@@ -571,7 +731,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "TuyenNhon",
@@ -585,7 +749,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "CaiLay",
@@ -599,7 +767,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "LongDinh",
@@ -613,7 +785,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "GoDauHa",
@@ -627,7 +803,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "HungThanh",
@@ -641,7 +821,11 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  },
  {
   "station_id": "chomoi",
@@ -655,6 +839,10 @@
   "q_tu_ngay": null,
   "q_den_ngay": null,
   "q_so_nam": null,
-  "q_lap_day_pct": null
+  "q_lap_day_pct": null,
+  "ssc_tu_ngay": null,
+  "ssc_den_ngay": null,
+  "ssc_so_mau": null,
+  "ssc_nguon": null
  }
 ]
