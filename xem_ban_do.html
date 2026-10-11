@@ -652,11 +652,11 @@ const map = new maplibregl.Map({
       // mau bao QA/canh bao vi tri.
       {
         id: "ngam_pt", type: "symbol", source: "nuoc_ngam_src",
-        layout: { "icon-image": ["get", "icon"], "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-size": ["interpolate", ["linear"], ["zoom"], 6, 0.75, 11, 1.1] }
+        layout: { "icon-image": ["get", "icon"], "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-size": ["interpolate", ["linear"], ["zoom"], 6, 0.85, 11, 1.25] }
       },
       {
         id: "ngam_nhan", type: "symbol", source: "nuoc_ngam_src", minzoom: 9,
-        layout: { "text-field": ["get", "xa"], "text-size": 11, "text-font": ["Noto Sans Bold"], "text-offset": [0, 2.3], "text-anchor": "top" },
+        layout: { "text-field": ["get", "xa"], "text-size": 11, "text-font": ["Noto Sans Bold"], "text-offset": [0, 1.3], "text-anchor": "top" },
         paint: { "text-color": "#2d3748", "text-halo-color": "#ffffff", "text-halo-width": 1.5 }
       },
       {
@@ -870,7 +870,7 @@ map.on('click', (e) => {
   ];
   const feats = layFeats(bbox, { layers: LOP_CLICK_DUOC });
   if (!feats.length) return;
-  const f = feats[0];
+  const f = feats.find((x) => x.layer.id === "ngam_pt") || feats[0];
   const p = f.properties;
   let html = "";
   const rongSauHtml = () => {
@@ -925,14 +925,14 @@ function ngamPhuTheoTang(lo) {            // tang -> phu % lon nhat trong cac lo
 }
 // Bieu tuong cot mini 8 o: moi cot 1 tang (nong -> sau); co so = mau tang, cao theo % phu; khong co = xam thap.
 function veIconNuocNgam(lo) {
-  const dpr = 2, W = 64, H = 38, c = document.createElement("canvas"); c.width = W * dpr; c.height = H * dpr;
+  const dpr = 2, W = 30, H = 19, c = document.createElement("canvas"); c.width = W * dpr; c.height = H * dpr;
   const g = c.getContext("2d"); g.scale(dpr, dpr);
-  g.fillStyle = "rgba(255,255,255,0.96)"; g.strokeStyle = "#6b7a8c"; g.lineWidth = 1;
-  g.beginPath(); g.roundRect ? g.roundRect(1, 1, W - 2, H - 2, 5) : g.rect(1, 1, W - 2, H - 2); g.fill(); g.stroke();
-  const ph = ngamPhuTheoTang(lo), bw = 5.2, gap = 1.4, x0 = (W - (8 * bw + 7 * gap)) / 2, yb = H - 5, hMax = H - 11;
+  g.fillStyle = "rgba(255,255,255,0.88)"; g.strokeStyle = "rgba(60,72,88,0.75)"; g.lineWidth = 0.8;
+  g.beginPath(); g.roundRect ? g.roundRect(0.5, 0.5, W - 1, H - 1, 3) : g.rect(0.5, 0.5, W - 1, H - 1); g.fill(); g.stroke();
+  const ph = ngamPhuTheoTang(lo), bw = 2.5, gap = 0.8, x0 = (W - (8 * bw + 7 * gap)) / 2, yb = H - 2.5, hMax = H - 5;
   NGAM_TANG.forEach(([k, mau], i) => {
-    const co = ph[k] !== undefined, h = co ? Math.max(5, hMax * Math.min(ph[k], 100) / 100) : 2.5;
-    g.fillStyle = co ? mau : "#d5dbe3"; g.fillRect(x0 + i * (bw + gap), yb - h, bw, h);
+    const co = ph[k] !== undefined, h = co ? Math.max(3, hMax * Math.min(ph[k], 100) / 100) : 1.5;
+    g.fillStyle = co ? mau : "#cbd2dc"; g.fillRect(x0 + i * (bw + gap), yb - h, bw, h);
   });
   return g.getImageData(0, 0, W * dpr, H * dpr);
 }
@@ -950,14 +950,14 @@ function popupNuocNgamHtml(p) {
     const trai = (t0 - n0) / rong * 100, w = Math.max((t1 - t0) / rong * 100, 1);
     const lt = (x.lo_trong || []).map(([a, b]) => { const u = (ngayThanhSoNam(a) - n0) / rong * 100, v = (ngayThanhSoNam(b) - ngayThanhSoNam(a)) / rong * 100; return `<i style="position:absolute;left:${u}%;width:${Math.max(v, 0.6)}%;top:0;bottom:0;background:#fff"></i>`; }).join("");
     return `<tr><td style="white-space:nowrap"><span style="display:inline-block;width:9px;height:9px;background:${mau};margin-right:3px"></span><b>${x.tang}</b></td>` +
-      `<td style="color:#4a5568;white-space:nowrap">${x.ma}</td><td style="white-space:nowrap">${x.sau_tu}–${x.sau_den} m</td>` +
+      `<td style="color:#1a202c;font-weight:600;white-space:nowrap">${x.ma}</td><td style="white-space:nowrap">${x.sau_tu}–${x.sau_den} m</td>` +
       `<td style="width:120px"><div style="position:relative;height:8px;background:#edf2f7"><i style="position:absolute;left:${trai}%;width:${w}%;top:0;bottom:0;background:${mau};opacity:${Math.max(0.35, Math.min(1, x.phu_pct / 100 + 0.25))}"></i>${lt}</div></td>` +
       `<td style="color:#718096;white-space:nowrap">${x.tu.slice(2, 4)}–${x.den.slice(2, 4)} · ${NGAM_PG[x.pg] || x.pg}</td></tr>`;
   }).join("");
   const co = new Set(lo.map((x) => x.tang)), thieu = NGAM_TANG.filter(([k]) => !co.has(k)).map(([k]) => `<span style="background:#e2e8f0;color:#718096;padding:0 4px;margin-right:2px">${k}</span>`).join("");
   return `<b>${p.xa}</b> · ${p.huyen} · ${p.tinh} <span style="color:#a0aec0;font-size:10px">${p.id}</span>` +
     `<table style="font-size:11px;border-collapse:collapse;margin-top:4px" cellpadding="2">${hang}` +
-    `<tr style="font-size:9.5px;color:#a0aec0"><td colspan="3"></td><td><div style="display:flex;justify-content:space-between"><span>${n0}</span><span>2005</span><span>${n1 - 1}</span></div></td><td></td></tr></table>` +
+    `<tr style="font-size:9.5px;color:#a0aec0"><td colspan="3"></td><td><div style="display:flex;justify-content:space-between;width:120px"><span>${n0}</span><span>2005</span><span>${n1 - 1}</span></div></td><td></td></tr></table>` +
     (thieu ? `<div style="font-size:10.5px;margin-top:3px;color:#718096">Không có số: ${thieu}</div>` : "");
 }
 fetch("./nuoc_ngam_cum.json").then((r) => (r.ok ? r.json() : null)).then((d) => {
@@ -968,8 +968,11 @@ fetch("./nuoc_ngam_cum.json").then((r) => (r.ok ? r.json() : null)).then((d) => 
     return { type: "Feature", geometry: { type: "Point", coordinates: [c.lon, c.lat] },
       properties: { id: c.id, xa: c.xa, huyen: c.huyen, tinh: c.tinh, n_lo: c.n_lo, tang_nong_nhat: c.tang_nong_nhat, icon: icon, lo: c.lo } };
   });
+  window.moNuocNgam = (id) => { const f = feats.find((x) => x.properties.id === id); if (!f) return false; map.jumpTo({ center: f.geometry.coordinates, zoom: 10.5 });
+    new maplibregl.Popup({ maxWidth: "440px" }).setLngLat(f.geometry.coordinates).setHTML(popupNuocNgamHtml(f.properties)).addTo(map); return true; };
   const dat = () => { const sr = map.getSource("nuoc_ngam_src"); if (sr && sr.setData) sr.setData({ type: "FeatureCollection", features: feats }); };
   if (map.getSource && map.getSource("nuoc_ngam_src")) dat(); else map.on("load", dat);
+  const mh = /[#&]ngam=(NN\d+)/.exec(location.hash || ""); if (mh) setTimeout(() => window.moNuocNgam(mh[1]), 1500);
 }).catch(() => {});
 
 map.on('mousemove', (e) => {
