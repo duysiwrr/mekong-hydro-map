@@ -308,6 +308,12 @@
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#a0aec0;margin:0 4px 0 10px;vertical-align:middle;"></span>chưa rõ</div>
   </div>
   <div class="nhom">
+    <h3>Nước ngầm</h3>
+    <label><input type="checkbox" data-layers="ngam_pt,ngam_nhan" checked>
+      <span class="swatch" style="background:#0f766e;border-radius:50%"></span>Cụm giếng nước ngầm QTQG (27 cụm · 88 lỗ khoan)</label>
+    <div style="font-size:11px;color:#4a5568;margin:2px 0 0 19px;line-height:1.5;">Chỉ vị trí và độ phủ — không có trị số mực nước. Chấm to = nhiều tầng chứa nước.</div>
+  </div>
+  <div class="nhom">
     <h3>Nền</h3>
     <label><input type="checkbox" data-layers="nen_ban_do" checked>
       <span class="swatch" style="background:#cbd5e0"></span>Nền bản đồ</label>
@@ -478,6 +484,7 @@ const map = new maplibregl.Map({
     sources: {
       "song_kenh": { type: "vector", url: "pmtiles://./song_kenh.pmtiles" },
       "tram": { type: "vector", url: "pmtiles://./tram_quan_trac.pmtiles" },
+      "nuoc_ngam_src": { type: "geojson", data: { type: "FeatureCollection", features: [] } },
       "kenh_rach_that_src": { type: "vector", url: "pmtiles://./kenhrach_that.pmtiles" },
       "song_center_src": { type: "vector", url: "pmtiles://./song_center.pmtiles" },
       "mikeb_full_src": { type: "vector", url: "pmtiles://./mikeb_full.pmtiles" },
@@ -644,6 +651,19 @@ const map = new maplibregl.Map({
       // giu nguyen — muc dich la trung tinh khong phai "noi"). KHONG dung
       // mau bao QA/canh bao vi tri.
       {
+        id: "ngam_pt", type: "circle", source: "nuoc_ngam_src",
+        paint: {
+          "circle-color": "#0f766e",
+          "circle-radius": ["interpolate", ["linear"], ["get", "n_lo"], 1, 5, 6, 10],
+          "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5, "circle-opacity": 0.9
+        }
+      },
+      {
+        id: "ngam_nhan", type: "symbol", source: "nuoc_ngam_src", minzoom: 9,
+        layout: { "text-field": ["get", "xa"], "text-size": 11, "text-font": ["Noto Sans Bold"], "text-offset": [0, 1.2], "text-anchor": "top" },
+        paint: { "text-color": "#0f766e", "text-halo-color": "#ffffff", "text-halo-width": 1.5 }
+      },
+      {
         id: "tram_pt", type: "circle", source: "tram", "source-layer": "stations", minzoom: 4,
         paint: {
           "circle-color": ["case",
@@ -714,7 +734,7 @@ quanLyNen();
 
 const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "kenh_v6", "mikeb_full",
                          "kenh_survey2020", "kenh_survey2017", "kenh_rach_that", "song_center",
-                         "kenh_rong", "kenh_sau", "tram_pt",
+                         "kenh_rong", "kenh_sau", "tram_pt", "ngam_pt",
                          "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver"];
 
 // Checkbox bat/tat lop — 1 checkbox co the dieu khien NHIEU layer id.
@@ -892,9 +912,32 @@ map.on('click', (e) => {
            `vùng: ${p.vung} · rộng ${p.do_rong_diem_m} m · ${p.n_diem_dung} điểm đo`;
   } else if (f.layer.id === "tram_pt") {
     html = popupTramHtml(p);
+  } else if (f.layer.id === "ngam_pt") {
+    html = popupNuocNgamHtml(p);
   }
   new maplibregl.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
 });
+
+// ===== NUOC NGAM (12/10/2026) — CHI vi tri + do phu (nuoc_ngam_cum.json), KHONG co tri so muc nuoc =====
+function popupNuocNgamHtml(p) {
+  let lo = p.lo; if (typeof lo === "string") { try { lo = JSON.parse(lo); } catch { lo = []; } }
+  const hang = (lo || []).map((x) => {
+    const lt = (x.lo_trong || []).length;
+    return `<tr><td><b>${x.ma}</b></td><td>${x.tang_ten}</td><td>${x.sau_tu}–${x.sau_den} m</td><td>${x.tu.slice(0, 4)}–${x.den.slice(0, 4)}</td>` +
+      `<td>${x.pg}</td><td>${x.phu_pct}%${x.so_lo_trong ? ` · ${x.so_lo_trong} lỗ trống` : ""}</td></tr>`;
+  }).join("");
+  return `<b>Cụm giếng nước ngầm ${p.id}</b><br>${p.xa}, ${p.huyen}, ${p.tinh}<br>` +
+    `<span style="color:#718096;font-size:11px">${p.n_lo} lỗ khoan quan trắc quốc gia (theo tầng chứa nước, từ nông đến sâu) — chỉ độ phủ, không có trị số</span>` +
+    `<table style="font-size:11px;border-collapse:collapse;margin-top:4px" cellpadding="2"><tr style="color:#718096"><td>Mã</td><td>Tầng</td><td>Đoạn lọc</td><td>Năm</td><td>Số liệu</td><td>Phủ</td></tr>${hang}</table>` +
+    `<div style="color:#718096;font-size:10.5px;margin-top:3px">Phủ = số giá trị / số kỳ lý thuyết giữa ngày đầu và cuối. Chuỗi "tháng" là số theo tháng (ngày 15), không phải số ngày.</div>`;
+}
+fetch("./nuoc_ngam_cum.json").then((r) => (r.ok ? r.json() : null)).then((d) => {
+  if (!d || !d.cum) return;
+  const feats = d.cum.map((c) => ({ type: "Feature", geometry: { type: "Point", coordinates: [c.lon, c.lat] },
+    properties: { id: c.id, xa: c.xa, huyen: c.huyen, tinh: c.tinh, n_lo: c.n_lo, tang_nong_nhat: c.tang_nong_nhat, lo: c.lo } }));
+  const dat = () => { const sr = map.getSource("nuoc_ngam_src"); if (sr && sr.setData) sr.setData({ type: "FeatureCollection", features: feats }); };
+  if (map.getSource && map.getSource("nuoc_ngam_src")) dat(); else map.on("load", dat);
+}).catch(() => {});
 
 map.on('mousemove', (e) => {
   const feats = layFeats(e.point, { layers: LOP_CLICK_DUOC });
