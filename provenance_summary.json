@@ -1224,6 +1224,18 @@
   "uni_nguon": false
  },
  {
+  "station_id": "cantho",
+  "ten_hien_thi": "Cần Thơ",
+  "tinh": "Cần Thơ",
+  "tu_nam": 2022,
+  "den_nam": 2022,
+  "nams": "2022",
+  "so_gio": 8760,
+  "file_nguon": "Qgio_CanTho_2022_giao.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
   "station_id": "caolanh",
   "ten_hien_thi": "Cao Lãnh",
   "tinh": "Đồng Tháp",
@@ -1352,6 +1364,30 @@
   "nams": "2018",
   "so_gio": 8760,
   "file_nguon": "WL_Chaudoc78-2018.xlsx",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "chaudoc",
+  "ten_hien_thi": "Châu Đốc",
+  "tinh": "An Giang",
+  "tu_nam": 2022,
+  "den_nam": 2022,
+  "nams": "2022",
+  "so_gio": 8760,
+  "file_nguon": "Qgio_chaudoc2020-2024.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "chaudoc",
+  "ten_hien_thi": "Châu Đốc",
+  "tinh": "An Giang",
+  "tu_nam": 2023,
+  "den_nam": 2023,
+  "nams": "2023",
+  "so_gio": 8760,
+  "file_nguon": "Qgio_chaudoc2020-2024.xls",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -1916,6 +1952,18 @@
   "nams": "1979-2003",
   "so_gio": 218399,
   "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "mythuan",
+  "ten_hien_thi": "Mỹ Thuận 1",
+  "tinh": "Vĩnh Long",
+  "tu_nam": 2022,
+  "den_nam": 2022,
+  "nams": "2022",
+  "so_gio": 8760,
+  "file_nguon": "Qgio_MyThuan_2022_giao.xls",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -2580,6 +2628,18 @@
   "uni_nguon": false
  },
  {
+  "station_id": "tanchau",
+  "ten_hien_thi": "Tân Châu",
+  "tinh": "An Giang",
+  "tu_nam": 2022,
+  "den_nam": 2022,
+  "nams": "2022",
+  "so_gio": 8760,
+  "file_nguon": "Qgio_TanChau_2022_Giao.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
   "station_id": "tanhiep",
   "ten_hien_thi": "Tân Hiệp",
   "tinh": "Kiên Giang",
@@ -2853,6 +2913,30 @@
   "so_gio": 8760,
   "file_nguon": "Q_VamNao_2014-2022.dfs0",
   "do_chieu": true,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "vamnao",
+  "ten_hien_thi": "Vàm Nao",
+  "tinh": "An Giang",
+  "tu_nam": 2022,
+  "den_nam": 2022,
+  "nams": "2022",
+  "so_gio": 8760,
+  "file_nguon": "Qgio_vamnao2020-2024.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "vamnao",
+  "ten_hien_thi": "Vàm Nao",
+  "tinh": "An Giang",
+  "tu_nam": 2023,
+  "den_nam": 2023,
+  "nams": "2023",
+  "so_gio": 8760,
+  "file_nguon": "Qgio_vamnao2020-2024.xls",
+  "do_chieu": false,
   "uni_nguon": false
  },
  {
