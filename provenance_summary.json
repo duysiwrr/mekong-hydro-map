@@ -15,6 +15,18 @@
   "station_id": "CaiLay",
   "ten_hien_thi": "Cái Lậy",
   "tinh": "Tiền Giang",
+  "tu_nam": 1990,
+  "den_nam": 2003,
+  "nams": "1990-2003",
+  "so_gio": 122711,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "CaiLay",
+  "ten_hien_thi": "Cái Lậy",
+  "tinh": "Tiền Giang",
   "tu_nam": 2011,
   "den_nam": 2013,
   "nams": "2011-07-01..2013-12-31",
@@ -33,6 +45,18 @@
   "so_gio": 319636,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "GoDauHa",
+  "ten_hien_thi": "Gò Dầu Hạ",
+  "tinh": "Tây Ninh",
+  "tu_nam": 1978,
+  "den_nam": 2003,
+  "nams": "1978-2003",
+  "so_gio": 210124,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
   "uni_nguon": false
  },
  {
@@ -188,6 +212,18 @@
   "nams": "1981-01-01 00:00..2024-01-01 23:00",
   "so_gio": 289091,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "LongDinh",
+  "ten_hien_thi": "Long Định",
+  "tinh": "Tiền Giang",
+  "tu_nam": 1981,
+  "den_nam": 2003,
+  "nams": "1981-2003",
+  "so_gio": 201574,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -357,6 +393,18 @@
   "so_gio": 359865,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "PhungHiep",
+  "ten_hien_thi": "Phụng Hiệp",
+  "tinh": "Hậu Giang",
+  "tu_nam": 1977,
+  "den_nam": 2003,
+  "nams": "1977-2003",
+  "so_gio": 236392,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
   "uni_nguon": false
  },
  {
@@ -603,6 +651,18 @@
   "station_id": "TuyenNhon",
   "ten_hien_thi": "Tuyên Nhơn",
   "tinh": "Long An",
+  "tu_nam": 1981,
+  "den_nam": 2003,
+  "nams": "1981-2003",
+  "so_gio": 201599,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "TuyenNhon",
+  "ten_hien_thi": "Tuyên Nhơn",
+  "tinh": "Long An",
   "tu_nam": 2000,
   "den_nam": 2000,
   "nams": "2000-06-01 00:00..2000-10-10 23:00",
@@ -680,6 +740,18 @@
   "nams": "1984",
   "so_gio": 8784,
   "file_nguon": "HANTHUAN.XLS (aDuy); AnThuan_Timeseries_1984-2002",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "anthuan",
+  "ten_hien_thi": "An Thuận",
+  "tinh": "Bến Tre",
+  "tu_nam": 1984,
+  "den_nam": 2003,
+  "nams": "1984-2003",
+  "so_gio": 175319,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -855,6 +927,18 @@
   "station_id": "benluc",
   "ten_hien_thi": "Bến Lức",
   "tinh": "Long An",
+  "tu_nam": 1980,
+  "den_nam": 2003,
+  "nams": "1980-2003",
+  "so_gio": 210383,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "benluc",
+  "ten_hien_thi": "Bến Lức",
+  "tinh": "Long An",
   "tu_nam": 2018,
   "den_nam": 2018,
   "nams": "2018",
@@ -908,6 +992,18 @@
   "nams": "1982",
   "so_gio": 8691,
   "file_nguon": "HBENTRAI(1982-2016).XLS",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "bentrai",
+  "ten_hien_thi": "Bến Trại",
+  "tinh": "Bến Tre",
+  "tu_nam": 1982,
+  "den_nam": 2003,
+  "nams": "1982-2003",
+  "so_gio": 192769,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -975,6 +1071,18 @@
   "station_id": "bienhoa",
   "ten_hien_thi": "Biên Hòa",
   "tinh": "Đồng Nai",
+  "tu_nam": 1997,
+  "den_nam": 2003,
+  "nams": "1997-2003",
+  "so_gio": 61343,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "bienhoa",
+  "ten_hien_thi": "Biên Hòa",
+  "tinh": "Đồng Nai",
   "tu_nam": 2018,
   "den_nam": 2018,
   "nams": "2018",
@@ -992,6 +1100,18 @@
   "nams": "2023",
   "so_gio": 8760,
   "file_nguon": "timeseries_bienhoa.xlsx",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "binhdai",
+  "ten_hien_thi": "Bình Đại",
+  "tinh": "Bến Tre",
+  "tu_nam": 1984,
+  "den_nam": 2002,
+  "nams": "1984-2002",
+  "so_gio": 166183,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -1035,6 +1155,18 @@
   "station_id": "camau",
   "ten_hien_thi": "Cà Mau",
   "tinh": "Cà Mau",
+  "tu_nam": 1978,
+  "den_nam": 2003,
+  "nams": "1978-2003",
+  "so_gio": 227902,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "camau",
+  "ten_hien_thi": "Cà Mau",
+  "tinh": "Cà Mau",
   "tu_nam": 2014,
   "den_nam": 2022,
   "nams": "2014;2022",
@@ -1071,6 +1203,18 @@
   "station_id": "cantho",
   "ten_hien_thi": "Cần Thơ",
   "tinh": "Cần Thơ",
+  "tu_nam": 1977,
+  "den_nam": 2003,
+  "nams": "1977-2003",
+  "so_gio": 210349,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "cantho",
+  "ten_hien_thi": "Cần Thơ",
+  "tinh": "Cần Thơ",
   "tu_nam": 2020,
   "den_nam": 2020,
   "nams": "2020",
@@ -1092,6 +1236,18 @@
   "uni_nguon": false
  },
  {
+  "station_id": "caolanh",
+  "ten_hien_thi": "Cao Lãnh",
+  "tinh": "Đồng Tháp",
+  "tu_nam": 1978,
+  "den_nam": 2003,
+  "nams": "1978-2003",
+  "so_gio": 227903,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
   "station_id": "chaudoc",
   "ten_hien_thi": "Châu Đốc",
   "tinh": "An Giang",
@@ -1101,6 +1257,18 @@
   "so_gio": 51692,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "chaudoc",
+  "ten_hien_thi": "Châu Đốc",
+  "tinh": "An Giang",
+  "tu_nam": 1985,
+  "den_nam": 2003,
+  "nams": "1985-2003",
+  "so_gio": 148270,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
   "uni_nguon": false
  },
  {
@@ -1200,6 +1368,18 @@
   "uni_nguon": false
  },
  {
+  "station_id": "cholach",
+  "ten_hien_thi": "Chợ Lách",
+  "tinh": "Bến Tre",
+  "tu_nam": 1977,
+  "den_nam": 2003,
+  "nams": "1977-2003",
+  "so_gio": 236352,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
   "station_id": "chomoi",
   "ten_hien_thi": "Chợ Mới",
   "tinh": "An Giang",
@@ -1212,6 +1392,18 @@
   "uni_nguon": true
  },
  {
+  "station_id": "chomoi",
+  "ten_hien_thi": "Chợ Mới",
+  "tinh": "An Giang",
+  "tu_nam": 1984,
+  "den_nam": 2003,
+  "nams": "1984-2003",
+  "so_gio": 122572,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
   "station_id": "daingai",
   "ten_hien_thi": "Đại Ngãi",
   "tinh": "Sóc Trăng",
@@ -1220,6 +1412,18 @@
   "nams": "1977-01-01 00:00..2024-12-31 23:00",
   "so_gio": 363773,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "daingai",
+  "ten_hien_thi": "Đại Ngãi",
+  "tinh": "Sóc Trăng",
+  "tu_nam": 1977,
+  "den_nam": 2003,
+  "nams": "1977-2003",
+  "so_gio": 227903,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -1280,6 +1484,18 @@
   "nams": "1984",
   "so_gio": 8784,
   "file_nguon": "HGANHHAO.XLS (aDuy); GH.yyyy.xlsx",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "ganhhao",
+  "ten_hien_thi": "Gành Hào",
+  "tinh": "Bạc Liêu",
+  "tu_nam": 1984,
+  "den_nam": 2003,
+  "nams": "1984-2003",
+  "so_gio": 175319,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -1467,6 +1683,18 @@
   "station_id": "hoabinh",
   "ten_hien_thi": "Hòa Bình",
   "tinh": "Tiền Giang",
+  "tu_nam": 1979,
+  "den_nam": 2003,
+  "nams": "1979-2003",
+  "so_gio": 200028,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "hoabinh",
+  "ten_hien_thi": "Hòa Bình",
+  "tinh": "Tiền Giang",
   "tu_nam": 2018,
   "den_nam": 2018,
   "nams": "2018",
@@ -1496,6 +1724,18 @@
   "nams": "2023",
   "so_gio": 8760,
   "file_nguon": "timeseries_hoabinh.xlsx",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "longxuyen",
+  "ten_hien_thi": "Long Xuyên",
+  "tinh": "An Giang",
+  "tu_nam": 1984,
+  "den_nam": 2003,
+  "nams": "1984-2003",
+  "so_gio": 175218,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -1545,6 +1785,18 @@
   "so_gio": 343659,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
   "do_chieu": true,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "myhoa",
+  "ten_hien_thi": "Mỹ Hóa",
+  "tinh": "Bến Tre",
+  "tu_nam": 1980,
+  "den_nam": 2003,
+  "nams": "1980-2003",
+  "so_gio": 210343,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
   "uni_nguon": false
  },
  {
@@ -1608,6 +1860,18 @@
   "uni_nguon": false
  },
  {
+  "station_id": "mythanh",
+  "ten_hien_thi": "Mỹ Thanh",
+  "tinh": "Sóc Trăng",
+  "tu_nam": 1983,
+  "den_nam": 2003,
+  "nams": "1983-2003",
+  "so_gio": 157774,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
   "station_id": "mytho",
   "ten_hien_thi": "Mỹ Tho",
   "tinh": "Tiền Giang",
@@ -1620,6 +1884,18 @@
   "uni_nguon": false
  },
  {
+  "station_id": "mytho",
+  "ten_hien_thi": "Mỹ Tho",
+  "tinh": "Tiền Giang",
+  "tu_nam": 1978,
+  "den_nam": 2003,
+  "nams": "1978-2003",
+  "so_gio": 227753,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
   "station_id": "mythuan",
   "ten_hien_thi": "Mỹ Thuận 1",
   "tinh": "Vĩnh Long",
@@ -1628,6 +1904,18 @@
   "nams": "1978-01-01 00:00..1983-12-31 23:00",
   "so_gio": 60630,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "mythuan",
+  "ten_hien_thi": "Mỹ Thuận 1",
+  "tinh": "Vĩnh Long",
+  "tu_nam": 1979,
+  "den_nam": 2003,
+  "nams": "1979-2003",
+  "so_gio": 218399,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -1647,11 +1935,35 @@
   "station_id": "namcan",
   "ten_hien_thi": "Năm Căn",
   "tinh": "Cà Mau",
+  "tu_nam": 1980,
+  "den_nam": 2003,
+  "nams": "1980-2003",
+  "so_gio": 210359,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "namcan",
+  "ten_hien_thi": "Năm Căn",
+  "tinh": "Cà Mau",
   "tu_nam": 2023,
   "den_nam": 2023,
   "nams": "2023",
   "so_gio": 8760,
   "file_nguon": "timeseries_namcan.xlsx",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "nhabe",
+  "ten_hien_thi": "Nhà Bè",
+  "tinh": "TP. Hồ Chí Minh",
+  "tu_nam": 1984,
+  "den_nam": 2003,
+  "nams": "1984-2003",
+  "so_gio": 175319,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -1712,6 +2024,18 @@
   "nams": "1978-01-01 00:00..2024-12-31 23:00",
   "so_gio": 28851,
   "file_nguon": "MIKE11_MNKiemDinh_DBSCL.dfs0",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "phuan",
+  "ten_hien_thi": "Phú An",
+  "tinh": "TP. Hồ Chí Minh",
+  "tu_nam": 1978,
+  "den_nam": 2003,
+  "nams": "1978-2003",
+  "so_gio": 227854,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -1784,6 +2108,30 @@
   "nams": "2007-01-01 00:00..2007-12-31 23:00",
   "so_gio": 8760,
   "file_nguon": "Hgio NamBo3.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "phuoclong",
+  "ten_hien_thi": "Phước Long",
+  "tinh": "Bạc Liêu",
+  "tu_nam": 2024,
+  "den_nam": 2024,
+  "nams": "2024",
+  "so_gio": 8730,
+  "file_nguon": "Hgio_phuoclong2024.xls",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "rachgia",
+  "ten_hien_thi": "Rạch Giá",
+  "tinh": "Kiên Giang",
+  "tu_nam": 1978,
+  "den_nam": 1978,
+  "nams": "1978",
+  "so_gio": 8759,
+  "file_nguon": "HRACHGIA_1978-2000.XLS; H851yyyy.xlsx",
   "do_chieu": false,
   "uni_nguon": false
  },
@@ -2043,6 +2391,18 @@
   "station_id": "songdoc",
   "ten_hien_thi": "Sông Đốc",
   "tinh": "Cà Mau",
+  "tu_nam": 1996,
+  "den_nam": 2003,
+  "nams": "1996-2003",
+  "so_gio": 70127,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "songdoc",
+  "ten_hien_thi": "Sông Đốc",
+  "tinh": "Cà Mau",
   "tu_nam": 2024,
   "den_nam": 2024,
   "nams": "2024",
@@ -2163,6 +2523,18 @@
   "station_id": "tanchau",
   "ten_hien_thi": "Tân Châu",
   "tinh": "An Giang",
+  "tu_nam": 1979,
+  "den_nam": 2003,
+  "nams": "1979-2003",
+  "so_gio": 174959,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "tanchau",
+  "ten_hien_thi": "Tân Châu",
+  "tinh": "An Giang",
   "tu_nam": 2013,
   "den_nam": 2013,
   "nams": "2013",
@@ -2271,6 +2643,18 @@
   "station_id": "thudau1",
   "ten_hien_thi": "Thủ Dầu Một",
   "tinh": "Bình Dương",
+  "tu_nam": 1980,
+  "den_nam": 2003,
+  "nams": "1980-2003",
+  "so_gio": 210157,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "thudau1",
+  "ten_hien_thi": "Thủ Dầu Một",
+  "tinh": "Bình Dương",
   "tu_nam": 1981,
   "den_nam": 1981,
   "nams": "1981",
@@ -2355,6 +2739,18 @@
   "station_id": "travinh",
   "ten_hien_thi": "Trà Vinh",
   "tinh": "Trà Vinh",
+  "tu_nam": 1979,
+  "den_nam": 2003,
+  "nams": "1979-2003",
+  "so_gio": 207502,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "travinh",
+  "ten_hien_thi": "Trà Vinh",
+  "tinh": "Trà Vinh",
   "tu_nam": 2022,
   "den_nam": 2022,
   "nams": "2022",
@@ -2391,6 +2787,18 @@
   "station_id": "vamkenh",
   "ten_hien_thi": "Vàm Kinh",
   "tinh": "Tiền Giang",
+  "tu_nam": 1983,
+  "den_nam": 2003,
+  "nams": "1983-2003",
+  "so_gio": 175316,
+  "file_nguon": "(sua nhan gio trong CSDL)",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "vamkenh",
+  "ten_hien_thi": "Vàm Kinh",
+  "tinh": "Tiền Giang",
   "tu_nam": 2022,
   "den_nam": 2022,
   "nams": "2022",
@@ -2408,6 +2816,18 @@
   "nams": "2023",
   "so_gio": 8760,
   "file_nguon": "timeseries_vamkenh.xlsx",
+  "do_chieu": false,
+  "uni_nguon": false
+ },
+ {
+  "station_id": "vamnao",
+  "ten_hien_thi": "Vàm Nao",
+  "tinh": "An Giang",
+  "tu_nam": 1984,
+  "den_nam": 2003,
+  "nams": "1984-2003",
+  "so_gio": 175319,
+  "file_nguon": "(sua nhan gio trong CSDL)",
   "do_chieu": false,
   "uni_nguon": false
  },

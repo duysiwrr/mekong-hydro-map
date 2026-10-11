@@ -139,7 +139,7 @@
   "h_lo_trong": [
    [
     "1979-01-01",
-    "1979-12-31"
+    "1980-01-01"
    ]
   ],
   "q_lo_trong": []
@@ -184,7 +184,7 @@
   "h_lo_trong": [
    [
     "1993-01-01",
-    "1993-01-31"
+    "1993-02-01"
    ]
   ],
   "q_lo_trong": []
@@ -229,7 +229,7 @@
   "h_lo_trong": [
    [
     "1978-01-01",
-    "1978-12-31"
+    "1979-01-01"
    ]
   ],
   "q_lo_trong": []
@@ -374,7 +374,7 @@
   "h_lo_trong": [
    [
     "1981-12-01",
-    "1981-12-31"
+    "1982-01-01"
    ]
   ],
   "q_lo_trong": []
@@ -445,8 +445,8 @@
   "tinh": "Bạc Liêu",
   "song": "Phụng Hiệp",
   "h_tu_ngay": "1984-01-01",
-  "h_den_ngay": "2023-12-31",
-  "h_so_nam": 40.0,
+  "h_den_ngay": "2024-12-31",
+  "h_so_nam": 41.0,
   "h_lap_day_pct": 100.0,
   "q_tu_ngay": null,
   "q_den_ngay": null,
@@ -464,9 +464,9 @@
   "ten_hien_thi": "Rạch Giá",
   "tinh": "Kiên Giang",
   "song": "Kiên",
-  "h_tu_ngay": "1979-01-01",
+  "h_tu_ngay": "1978-01-01",
   "h_den_ngay": "2023-12-31",
-  "h_so_nam": 45.0,
+  "h_so_nam": 46.0,
   "h_lap_day_pct": 100.0,
   "q_tu_ngay": null,
   "q_den_ngay": null,
