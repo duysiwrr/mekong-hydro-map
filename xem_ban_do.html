@@ -308,10 +308,10 @@
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#a0aec0;margin:0 4px 0 10px;vertical-align:middle;"></span>chưa rõ</div>
   </div>
   <div class="nhom">
-    <h3>Nước ngầm</h3>
-    <label><input type="checkbox" data-layers="ngam_pt,ngam_nhan" checked>
-      <span class="swatch" style="background:#0f766e;border-radius:50%"></span>Cụm giếng nước ngầm QTQG (27 cụm · 88 lỗ khoan)</label>
-    <div style="font-size:11px;color:#4a5568;margin:2px 0 0 19px;line-height:1.5;">Chỉ vị trí và độ phủ — không có trị số mực nước. Chấm to = nhiều tầng chứa nước.</div>
+    <h3>Nước ngầm (27 cụm giếng · 88 lỗ)</h3>
+    <label><input type="checkbox" data-layers="ngam_pt" checked>
+      <span class="swatch" style="background:linear-gradient(90deg,#9ad7e8,#4fb3a9,#e3c640,#c4483c,#4b2a7a);"></span>Tầng chứa nước có số liệu</label>
+    <div id="ngam_chu_giai" style="margin:3px 0 0 19px;font-size:11px;color:#4a5568;line-height:1.5"></div>
   </div>
   <div class="nhom">
     <h3>Nền</h3>
@@ -651,17 +651,13 @@ const map = new maplibregl.Map({
       // giu nguyen — muc dich la trung tinh khong phai "noi"). KHONG dung
       // mau bao QA/canh bao vi tri.
       {
-        id: "ngam_pt", type: "circle", source: "nuoc_ngam_src",
-        paint: {
-          "circle-color": "#0f766e",
-          "circle-radius": ["interpolate", ["linear"], ["get", "n_lo"], 1, 5, 6, 10],
-          "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5, "circle-opacity": 0.9
-        }
+        id: "ngam_pt", type: "symbol", source: "nuoc_ngam_src",
+        layout: { "icon-image": ["get", "icon"], "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-size": ["interpolate", ["linear"], ["zoom"], 6, 0.75, 11, 1.1] }
       },
       {
         id: "ngam_nhan", type: "symbol", source: "nuoc_ngam_src", minzoom: 9,
-        layout: { "text-field": ["get", "xa"], "text-size": 11, "text-font": ["Noto Sans Bold"], "text-offset": [0, 1.2], "text-anchor": "top" },
-        paint: { "text-color": "#0f766e", "text-halo-color": "#ffffff", "text-halo-width": 1.5 }
+        layout: { "text-field": ["get", "xa"], "text-size": 11, "text-font": ["Noto Sans Bold"], "text-offset": [0, 2.3], "text-anchor": "top" },
+        paint: { "text-color": "#2d3748", "text-halo-color": "#ffffff", "text-halo-width": 1.5 }
       },
       {
         id: "tram_pt", type: "circle", source: "tram", "source-layer": "stations", minzoom: 4,
@@ -915,26 +911,63 @@ map.on('click', (e) => {
   } else if (f.layer.id === "ngam_pt") {
     html = popupNuocNgamHtml(p);
   }
-  new maplibregl.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+  new maplibregl.Popup(f.layer.id === "ngam_pt" ? { maxWidth: "440px" } : {}).setLngLat(e.lngLat).setHTML(html).addTo(map);
 });
 
 // ===== NUOC NGAM (12/10/2026) — CHI vi tri + do phu (nuoc_ngam_cum.json), KHONG co tri so muc nuoc =====
+// 8 tang chua nuoc, xep NONG -> SAU; mau lien tuc nong (xanh lo) -> sau (tim). Xam = khong co so lieu.
+const NGAM_TANG = [["qh", "#9ad7e8"], ["qp3", "#4fb3a9"], ["qp23", "#8fbf5a"], ["qp1", "#e3c640"],
+                   ["n22", "#f08a3c"], ["n21", "#c4483c"], ["n13", "#8a3a6b"], ["n12", "#4b2a7a"]];
+const NGAM_NAM = [1995, 2018];            // truc thoi gian chung cua thanh bar
+const NGAM_PG = { "ngày": "ngày", "3 ngày/lần": "3 ngày", "tháng": "tháng" };
+function ngamPhuTheoTang(lo) {            // tang -> phu % lon nhat trong cac lo cung tang
+  const m = {}; (lo || []).forEach((x) => { m[x.tang] = Math.max(m[x.tang] || 0, x.phu_pct || 0); }); return m;
+}
+// Bieu tuong cot mini 8 o: moi cot 1 tang (nong -> sau); co so = mau tang, cao theo % phu; khong co = xam thap.
+function veIconNuocNgam(lo) {
+  const dpr = 2, W = 64, H = 38, c = document.createElement("canvas"); c.width = W * dpr; c.height = H * dpr;
+  const g = c.getContext("2d"); g.scale(dpr, dpr);
+  g.fillStyle = "rgba(255,255,255,0.96)"; g.strokeStyle = "#6b7a8c"; g.lineWidth = 1;
+  g.beginPath(); g.roundRect ? g.roundRect(1, 1, W - 2, H - 2, 5) : g.rect(1, 1, W - 2, H - 2); g.fill(); g.stroke();
+  const ph = ngamPhuTheoTang(lo), bw = 5.2, gap = 1.4, x0 = (W - (8 * bw + 7 * gap)) / 2, yb = H - 5, hMax = H - 11;
+  NGAM_TANG.forEach(([k, mau], i) => {
+    const co = ph[k] !== undefined, h = co ? Math.max(5, hMax * Math.min(ph[k], 100) / 100) : 2.5;
+    g.fillStyle = co ? mau : "#d5dbe3"; g.fillRect(x0 + i * (bw + gap), yb - h, bw, h);
+  });
+  return g.getImageData(0, 0, W * dpr, H * dpr);
+}
+function ngamChuGiaiHtml() {
+  return NGAM_TANG.map(([k, m]) => `<span style="display:inline-block;margin-right:5px"><span style="display:inline-block;width:9px;height:9px;background:${m};margin-right:2px;vertical-align:middle"></span>${k}</span>`).join("") +
+    `<br><span style="display:inline-block;width:9px;height:9px;background:#d5dbe3;margin-right:2px;vertical-align:middle"></span>không có số · cột cao = phủ số liệu nhiều`;
+}
+{ const el = document.getElementById("ngam_chu_giai"); if (el) el.innerHTML = ngamChuGiaiHtml(); }
 function popupNuocNgamHtml(p) {
   let lo = p.lo; if (typeof lo === "string") { try { lo = JSON.parse(lo); } catch { lo = []; } }
-  const hang = (lo || []).map((x) => {
-    const lt = (x.lo_trong || []).length;
-    return `<tr><td><b>${x.ma}</b></td><td>${x.tang_ten}</td><td>${x.sau_tu}–${x.sau_den} m</td><td>${x.tu.slice(0, 4)}–${x.den.slice(0, 4)}</td>` +
-      `<td>${x.pg}</td><td>${x.phu_pct}%${x.so_lo_trong ? ` · ${x.so_lo_trong} lỗ trống` : ""}</td></tr>`;
+  lo = lo || [];
+  const [n0, n1] = NGAM_NAM, rong = n1 - n0, mauTang = Object.fromEntries(NGAM_TANG);
+  const hang = lo.map((x) => {
+    const t0 = ngayThanhSoNam(x.tu), t1 = ngayThanhSoNam(x.den) + 1 / 12, mau = mauTang[x.tang] || "#718096";
+    const trai = (t0 - n0) / rong * 100, w = Math.max((t1 - t0) / rong * 100, 1);
+    const lt = (x.lo_trong || []).map(([a, b]) => { const u = (ngayThanhSoNam(a) - n0) / rong * 100, v = (ngayThanhSoNam(b) - ngayThanhSoNam(a)) / rong * 100; return `<i style="position:absolute;left:${u}%;width:${Math.max(v, 0.6)}%;top:0;bottom:0;background:#fff"></i>`; }).join("");
+    return `<tr><td style="white-space:nowrap"><span style="display:inline-block;width:9px;height:9px;background:${mau};margin-right:3px"></span><b>${x.tang}</b></td>` +
+      `<td style="color:#4a5568;white-space:nowrap">${x.ma}</td><td style="white-space:nowrap">${x.sau_tu}–${x.sau_den} m</td>` +
+      `<td style="width:120px"><div style="position:relative;height:8px;background:#edf2f7"><i style="position:absolute;left:${trai}%;width:${w}%;top:0;bottom:0;background:${mau};opacity:${Math.max(0.35, Math.min(1, x.phu_pct / 100 + 0.25))}"></i>${lt}</div></td>` +
+      `<td style="color:#718096;white-space:nowrap">${x.tu.slice(2, 4)}–${x.den.slice(2, 4)} · ${NGAM_PG[x.pg] || x.pg}</td></tr>`;
   }).join("");
-  return `<b>Cụm giếng nước ngầm ${p.id}</b><br>${p.xa}, ${p.huyen}, ${p.tinh}<br>` +
-    `<span style="color:#718096;font-size:11px">${p.n_lo} lỗ khoan quan trắc quốc gia (theo tầng chứa nước, từ nông đến sâu) — chỉ độ phủ, không có trị số</span>` +
-    `<table style="font-size:11px;border-collapse:collapse;margin-top:4px" cellpadding="2"><tr style="color:#718096"><td>Mã</td><td>Tầng</td><td>Đoạn lọc</td><td>Năm</td><td>Số liệu</td><td>Phủ</td></tr>${hang}</table>` +
-    `<div style="color:#718096;font-size:10.5px;margin-top:3px">Phủ = số giá trị / số kỳ lý thuyết giữa ngày đầu và cuối. Chuỗi "tháng" là số theo tháng (ngày 15), không phải số ngày.</div>`;
+  const co = new Set(lo.map((x) => x.tang)), thieu = NGAM_TANG.filter(([k]) => !co.has(k)).map(([k]) => `<span style="background:#e2e8f0;color:#718096;padding:0 4px;margin-right:2px">${k}</span>`).join("");
+  return `<b>${p.xa}</b> · ${p.huyen} · ${p.tinh} <span style="color:#a0aec0;font-size:10px">${p.id}</span>` +
+    `<table style="font-size:11px;border-collapse:collapse;margin-top:4px" cellpadding="2">${hang}` +
+    `<tr style="font-size:9.5px;color:#a0aec0"><td colspan="3"></td><td><div style="display:flex;justify-content:space-between"><span>${n0}</span><span>2005</span><span>${n1 - 1}</span></div></td><td></td></tr></table>` +
+    (thieu ? `<div style="font-size:10.5px;margin-top:3px;color:#718096">Không có số: ${thieu}</div>` : "");
 }
 fetch("./nuoc_ngam_cum.json").then((r) => (r.ok ? r.json() : null)).then((d) => {
   if (!d || !d.cum) return;
-  const feats = d.cum.map((c) => ({ type: "Feature", geometry: { type: "Point", coordinates: [c.lon, c.lat] },
-    properties: { id: c.id, xa: c.xa, huyen: c.huyen, tinh: c.tinh, n_lo: c.n_lo, tang_nong_nhat: c.tang_nong_nhat, lo: c.lo } }));
+  const feats = d.cum.map((c) => {
+    let icon = null;
+    try { icon = "ngam_" + c.id; if (!map.hasImage || !map.hasImage(icon)) map.addImage(icon, veIconNuocNgam(c.lo), { pixelRatio: 2 }); } catch (e) { icon = null; }
+    return { type: "Feature", geometry: { type: "Point", coordinates: [c.lon, c.lat] },
+      properties: { id: c.id, xa: c.xa, huyen: c.huyen, tinh: c.tinh, n_lo: c.n_lo, tang_nong_nhat: c.tang_nong_nhat, icon: icon, lo: c.lo } };
+  });
   const dat = () => { const sr = map.getSource("nuoc_ngam_src"); if (sr && sr.setData) sr.setData({ type: "FeatureCollection", features: feats }); };
   if (map.getSource && map.getSource("nuoc_ngam_src")) dat(); else map.on("load", dat);
 }).catch(() => {});
