@@ -831,6 +831,8 @@ function dinhDangDoPhuThanh(p, tienTo, nhan) {
     (lo.length ? `<div class="lo_txt">⚠ thiếu số liệu: ${moTaLoTrong(lo)}</div>` : "") + `</div>`;
 }
 function popupTramHtml(p) {
+  // 11/10/2026: do phu H/Q lay tu stations_summary.json (sinh truc tiep tu CSDL), de len thuoc tinh trong tile pmtiles (co the cu)
+  if (typeof bthData !== "undefined" && bthData) { const r = bthData.find((x) => x.station_id === p.station_id); if (r) p = Object.assign({}, p, r); }
   return `<b>${p.ten_hien_thi}</b> — trạm quan trắc<br>` +
     `${p.tinh || ""}${p.song ? " · " + p.song : ""}<br>` +
     `<span style="color:#718096;font-size:11px">Giai đoạn có dữ liệu:</span>` +
@@ -914,7 +916,7 @@ map.on('click', (e) => {
   new maplibregl.Popup(f.layer.id === "ngam_pt" ? { maxWidth: "440px" } : {}).setLngLat(e.lngLat).setHTML(html).addTo(map);
 });
 
-// ===== NUOC NGAM (12/10/2026) — CHI vi tri + do phu (nuoc_ngam_cum.json), KHONG co tri so muc nuoc =====
+// ===== NUOC NGAM (11/10/2026) — CHI vi tri + do phu (nuoc_ngam_cum.json), KHONG co tri so muc nuoc =====
 // 8 tang chua nuoc, xep NONG -> SAU; mau lien tuc nong (xanh lo) -> sau (tim). Xam = khong co so lieu.
 const NGAM_TANG = [["qh", "#9ad7e8"], ["qp3", "#4fb3a9"], ["qp23", "#8fbf5a"], ["qp1", "#e3c640"],
                    ["n22", "#f08a3c"], ["n21", "#c4483c"], ["n13", "#8a3a6b"], ["n12", "#4b2a7a"]];
