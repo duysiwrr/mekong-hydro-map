@@ -40,3 +40,6 @@ ghi_chu*.json
 *.rar
 *.mbtiles
 *.hgt
+
+# Du lieu ngoai (HDX COD-AB, OSM pbf) — chi dung de xuat lop, khong commit
+luu_luc_du_lieu/

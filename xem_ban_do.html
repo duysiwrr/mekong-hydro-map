@@ -327,6 +327,17 @@
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#a0aec0;margin:0 4px 0 10px;vertical-align:middle;"></span>chưa rõ</div>
   </div>
   <div class="nhom">
+    <h3>Hành chính · giao thông</h3>
+    <label><input type="checkbox" data-layers="dia_gioi_tinh,dia_gioi_tinh_nhan" checked>
+      <span class="swatch line" style="background:#718096"></span>Ranh giới tỉnh/thành (34 tỉnh mới, 2025)</label>
+    <label><input type="checkbox" data-layers="dia_gioi_xa,dia_gioi_xa_nhan" checked>
+      <span class="swatch line" style="background:#a0aec0"></span>Ranh giới xã/phường (803, 2025)</label>
+    <label><input type="checkbox" data-layers="giao_thong,giao_thong_nhan" checked>
+      <span class="swatch line" style="background:#c0392b"></span>Quốc lộ, cao tốc</label>
+    <div class="cg_hint">tỉnh: HDX COD-AB (valid 25/09/2025, CC-BY-IGO) · xã &amp; giao thông:
+      OpenStreetMap (ODbL) — đã cập nhật sáp nhập theo NĐ 19/2025/QĐ-TTg</div>
+  </div>
+  <div class="nhom">
     <h3>Nước ngầm (27 cụm giếng · 88 lỗ)</h3>
     <label><input type="checkbox" data-layers="ngam_pt" checked>
       <span class="swatch" style="background:linear-gradient(90deg,#9ad7e8,#4fb3a9,#e3c640,#c4483c,#4b2a7a);"></span>Tầng chứa nước có dữ liệu quan trắc</label>
@@ -535,6 +546,19 @@ const map = new maplibregl.Map({
       "song_kenh": { type: "vector", url: "pmtiles://./song_kenh.pmtiles" },
       "tram": { type: "vector", url: "pmtiles://./tram_quan_trac.pmtiles" },
       "nuoc_ngam_src": { type: "geojson", data: { type: "FeatureCollection", features: [] } },
+      // ==== DIA GIOI HANH CHINH (12/10/2026) — Nhom A: 34 tinh/thanh moi theo
+      // Nghi dinh 19/2025/QD-TTg. Nguon HDX COD-AB (valid_on 2025-09-25),
+      // giay phep CC-BY-IGO; don gian hoa tu scripts/xuat_web_dia_gioi.py
+      // (tolerance 0.0015 do, lech dien tich < 0.1%). Chi ten + pcode, KHONG
+      // co tri so do. Ve DUOI moi lop du lieu de khong che khuat.
+      "dia_gioi_tinh_src": { type: "geojson", data: "./dia_gioi_tinh.json" },
+      // Nhom A tiep + Nhom B (12/10/2026) — giao thong bo + xa/phuong, tu OSM
+      // Geofabrik vietnam-latest (ngay 12/10/2026, da cap nhat sap nhap 2025),
+      // giay phep ODbL, sinh bang scripts/xuat_web_osm.py. Chi ten/ref,
+      // KHONG co tri so do. Xa ve ngay TREN tinh, giao thong tren xa, van
+      // DUOI moi lop du lieu thuy van.
+      "dia_gioi_xa_src": { type: "geojson", data: "./dia_gioi_xa.json" },
+      "giao_thong_src": { type: "geojson", data: "./giao_thong.json" },
       "kenh_rach_that_src": { type: "vector", url: "pmtiles://./kenhrach_that.pmtiles" },
       "song_center_src": { type: "vector", url: "pmtiles://./song_center.pmtiles" },
       "mikeb_full_src": { type: "vector", url: "pmtiles://./mikeb_full.pmtiles" },
@@ -566,6 +590,57 @@ const map = new maplibregl.Map({
       { id: "bg", type: "background", paint: { "background-color": "#eef3f7" } },
       { id: "nen_osm", type: "raster", source: "basemap_osm" },
       { id: "nen_esri", type: "raster", source: "basemap_esri" },
+      // Dia gioi tinh (Nhom A) — vien mo + nhan ten, duoi tat ca lop du lieu.
+      {
+        id: "dia_gioi_tinh", type: "line", source: "dia_gioi_tinh_src", minzoom: 5,
+        paint: { "line-color": "#718096",
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 5, 0.8, 9, 1.4, 12, 2],
+                 "line-opacity": 0.85 }
+      },
+      {
+        id: "dia_gioi_tinh_nhan", type: "symbol", source: "dia_gioi_tinh_src", minzoom: 5.5,
+        layout: {
+          "text-field": ["get", "ten"], "text-size": ["interpolate", ["linear"], ["zoom"], 6, 10.5, 10, 13.5],
+          "text-font": ["Noto Sans Regular"], "text-letter-spacing": 0.12
+        },
+        paint: { "text-color": "#2d3748", "text-halo-color": "#eef3f7", "text-halo-width": 1.5 }
+      },
+      // Dia gioi xa/phuong (Nhom B) — net mo nhat + nhan ten, minzoom cao de
+      // khong lam ro mat ban do o zoom thap; ve ngay TREN lop tinh.
+      {
+        id: "dia_gioi_xa", type: "line", source: "dia_gioi_xa_src", minzoom: 7.5,
+        paint: { "line-color": "#a0aec0",
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 7.5, 0.45, 10, 0.9, 12, 1.4],
+                 "line-opacity": 0.75 }
+      },
+      {
+        id: "dia_gioi_xa_nhan", type: "symbol", source: "dia_gioi_xa_src", minzoom: 10.5,
+        layout: {
+          "text-field": ["get", "ten"], "text-size": ["interpolate", ["linear"], ["zoom"], 10.5, 9, 13, 11],
+          "text-font": ["Noto Sans Regular"], "text-letter-spacing": 0.05
+        },
+        paint: { "text-color": "#4a5568", "text-halo-color": "#eef3f7", "text-halo-width": 1.3 }
+      },
+      // Giao thong bo (Nhom A) — cao toc do dam, quoc lo cam nhe; ve TREN dia
+      // gioi, van DUOI moi lop du lieu thuy van. Nhan ten (ref) chi tu zoom 10.
+      {
+        id: "giao_thong", type: "line", source: "giao_thong_src", minzoom: 6,
+        paint: {
+          "line-color": ["case", ["==", ["get", "loai"], "Cao tốc"], "#c0392b", "#dd8a3e"],
+          "line-width": ["interpolate", ["linear"], ["zoom"], 6, 0.7, 9, 1.5, 12, 3],
+          "line-opacity": 0.9 }
+      },
+      {
+        id: "giao_thong_nhan", type: "symbol", source: "giao_thong_src", minzoom: 10,
+        filter: ["!=", ["get", "ref"], ""],
+        layout: {
+          "symbol-placement": "line", "text-field": ["get", "ref"],
+          "text-size": 10.5, "text-font": ["Noto Sans Bold"]
+        },
+        paint: {
+          "text-color": ["case", ["==", ["get", "loai"], "Cao tốc"], "#7f1d1d", "#7b4a12"],
+          "text-halo-color": "#eef3f7", "text-halo-width": 1.2 }
+      },
       {
         id: "kenh_rach_that", type: "line", source: "kenh_rach_that_src",
         "source-layer": "kenhrach_update", minzoom: 8.5,
@@ -803,7 +878,8 @@ quanLyNen();
 const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "kenh_v6", "mikeb_full",
                          "kenh_ks_ca_hai", "kenh_ks_2020", "kenh_ks_2017", "kenh_rach_that", "song_center",
                          "kenh_rong_sc", "kenh_sau_sc", "kenh_rong_kr", "kenh_sau_kr", "tram_pt", "ngam_pt",
-                         "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver"];
+                         "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver",
+                         "dia_gioi_tinh", "dia_gioi_xa", "giao_thong"];
 
 // Checkbox bat/tat lop — 1 checkbox co the dieu khien NHIEU layer id.
 // "nen_ban_do" la NHOM DAC BIET: no khong phai 1 layer ma la cap 2 layer nen
@@ -997,6 +1073,17 @@ map.on('click', (e) => {
     html = popupTramHtml(p);
   } else if (f.layer.id === "ngam_pt") {
     html = popupNuocNgamHtml(p);
+  } else if (f.layer.id === "dia_gioi_tinh") {
+    html = `<b>${p.ten || "(chưa rõ)"}</b> — ranh giới tỉnh/thành (34 tỉnh mới, 2025)<br>` +
+           `nguồn: HDX COD-AB (NĐ 19/2025/QĐ-TTg), CC-BY-IGO`;
+  } else if (f.layer.id === "dia_gioi_xa") {
+    html = `<b>${p.ten || "(chưa rõ tên)"}</b> — ranh giới xã/phường (cấp xã, 2025)<br>` +
+           `nguồn: OpenStreetMap (đã cập nhật sáp nhập theo NĐ 19/2025/QĐ-TTg)`;
+  } else if (f.layer.id === "giao_thong") {
+    html = `<b>${p.ref || p.ten || "(đường chưa rõ tên)"}</b>` +
+           (p.loai ? ` (${p.loai})` : "") +
+           (p.ten && p.ten !== p.ref ? `<br>tên: ${p.ten}` : "") +
+           `<br>nguồn: OpenStreetMap (ODbL)`;
   }
   new maplibregl.Popup(f.layer.id === "ngam_pt" ? { maxWidth: "440px" } : {}).setLngLat(e.lngLat).setHTML(html).addTo(map);
 });
