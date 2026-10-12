@@ -296,8 +296,8 @@
       <span style="display:inline-block;width:20px;height:3px;background:#2b6cb0;vertical-align:middle"></span> cả 2017 và 2020 (748 km)<br>
       <span style="display:inline-block;width:20px;height:3px;background:#6b46c1;vertical-align:middle"></span> chỉ 2020 (340 km)<br>
       <span style="display:inline-block;width:20px;height:0;border-top:3px dashed #dd6b20;vertical-align:middle"></span> chỉ 2017 (19 km)</div>
-    <label><input type="checkbox" data-layers="song_center,song_center_nhan" checked>
-      <span class="swatch line" style="background:#1a365d"></span>Sông, kênh chính</label>
+    <label><input type="checkbox" data-layers="song_center,skc_mike_a,song_center_nhan" checked>
+      <span class="swatch line" style="background:#1a365d"></span>Sông, kênh chính (hợp nhất MIKE-A)</label>
     <label><input type="checkbox" data-layers="kenh_rach_that,kenh_rach_that_nhan">
       <span class="swatch line" style="background:#a0aec0"></span>Kênh rạch nội đồng</label>
     <div class="cg_hint">lớp nặng — chỉ hiện khi phóng to đến mức <b>zoom ≥ 8,5</b>
@@ -328,12 +328,12 @@
   </div>
   <div class="nhom">
     <h3>Hành chính · giao thông</h3>
-    <label><input type="checkbox" data-layers="dia_gioi_tinh,dia_gioi_tinh_nhan" checked>
+    <label><input type="checkbox" data-layers="dia_gioi_tinh,dia_gioi_tinh_nhan,dia_gioi_tinh_nen" checked>
       <span class="swatch line" style="background:#718096"></span>Ranh giới tỉnh/thành (34 tỉnh mới, 2025)</label>
-    <label><input type="checkbox" data-layers="dia_gioi_xa,dia_gioi_xa_nhan">
-      <span class="swatch line" style="background:#a0aec0"></span>Ranh giới xã/phường (803, 2025)</label>
-    <label><input type="checkbox" data-layers="giao_thong,giao_thong_nhan" checked>
-      <span class="swatch line" style="background:#c0392b"></span>Quốc lộ, cao tốc</label>
+    <label><input type="checkbox" data-layers="dia_gioi_xa,dia_gioi_xa_nhan,dia_gioi_xa_nen">
+      <span class="swatch line" style="background:#a0aec0"></span>Ranh giới xã/phường (803, 2025 — kèm màu nền)</label>
+    <label><input type="checkbox" data-layers="giao_thong,giao_thong_nhan,nen_duong_chinh" checked>
+      <span class="swatch line" style="background:#c0392b"></span>Đường chính — cao tốc, quốc lộ, tỉnh lộ</label>
     <div class="cg_hint">tỉnh: HDX COD-AB (valid 25/09/2025, CC-BY-IGO) · xã &amp; giao thông:
       OpenStreetMap (ODbL) — đã cập nhật sáp nhập theo NĐ 19/2025/QĐ-TTg</div>
   </div>
@@ -345,12 +345,10 @@
   </div>
   <div class="nhom">
     <h3>Nền</h3>
-    <label><input type="checkbox" data-layers="dia_gioi_tinh_nen" checked>
-      <span class="swatch" style="background:linear-gradient(90deg,#edf2f7,#f4f1e7,#e9f2f1)"></span>Màu phân biệt tỉnh</label>
     <label><input type="checkbox" data-layers="nen_ban_do" checked>
       <span class="swatch" style="background:#cbd5e0"></span>Nền bản đồ (raster)</label>
-    <label><input type="checkbox" data-layers="nen_duong_chinh,nen_duong_pho" checked>
-      <span class="swatch line" style="background:#aab4c0"></span>Đường giao thông (nền tham chiếu)</label>
+    <label><input type="checkbox" data-layers="nen_duong_pho" checked>
+      <span class="swatch line" style="background:#a9b4bf"></span>Đường địa phương (đường ấp, hẻm)</label>
     <label><input type="checkbox" data-layers="nen_dia_danh_lon,nen_dia_danh_nho,nen_dia_danh_thon" checked>
       <span class="swatch" style="background:#4a5568;border-radius:50%"></span>Địa danh (thành phố, thị xã, xã…)</label>
     <div class="cg_hint" id="ghi_chu_nen"></div>
@@ -528,7 +526,7 @@ const CO_SAU = [">", ["coalesce", ["get", "sau_m"], -1], 0];
 
 // Be rong / do sau tren MANG CO TEN (12/10/2026): gan tu scripts/gan_rong_sau_len_ten.py vao song_center + kenhrach_update.
 function lopRongSau() {
-  const nguon = [["sc", "song_center_src", "song_center", 5], ["kr", "kenh_rach_that_src", "kenhrach_update", 8.5]];
+  const nguon = [["sc", "song_center_src", "song_kenh_chinh", 5], ["kr", "kenh_rach_that_src", "kenhrach_update", 8.5]];
   const out = [];
   for (const [h, src, sl, mz] of nguon) {
     for (const [k, cot, loc, bac, mau, net, vien] of [
@@ -578,7 +576,7 @@ const map = new maplibregl.Map({
       "nen_duong_pho_src": { type: "vector", url: "pmtiles://./nen_duong_pho.pmtiles" },
       "nen_dia_danh_src": { type: "geojson", data: "./nen_dia_danh.json" },
       "kenh_rach_that_src": { type: "vector", url: "pmtiles://./kenhrach_that.pmtiles" },
-      "song_center_src": { type: "vector", url: "pmtiles://./song_center.pmtiles" },
+      "song_center_src": { type: "vector", url: "pmtiles://./song_kenh_chinh.pmtiles" },
       "mikeb_full_src": { type: "vector", url: "pmtiles://./mikeb_full.pmtiles" },
       "ccpo2023_diem_src": { type: "vector", url: "pmtiles://./ccpo2023_diem.pmtiles" },
       "ccpo2023_transect_src": { type: "vector", url: "pmtiles://./ccpo2023_transect.pmtiles" },
@@ -616,8 +614,17 @@ const map = new maplibregl.Map({
       // van nhin du texture nen raster ben duoi.
       {
         id: "dia_gioi_tinh_nen", type: "fill", source: "dia_gioi_tinh_src", minzoom: 5,
-        paint: { "fill-color": ["match", ["get", "pcode"], "VN91", "#edf2f7", "VN24", "#eef3ec", "VN96", "#f4f1e7", "VN92", "#eceff6", "VN04", "#f5efe9", "VN48", "#e9f2f1", "VN66", "#f3ecf2", "VN11", "#edf2f7", "VN75", "#eef3ec", "VN82", "#f4f1e7", "VN52", "#eceff6", "VN01", "#f5efe9", "VN42", "#e9f2f1", "VN31", "#f3ecf2", "VN46", "#edf2f7", "VN33", "#eef3ec", "VN56", "#f4f1e7", "VN12", "#eceff6", "VN68", "#f5efe9", "VN20", "#e9f2f1", "VN15", "#f3ecf2", "VN40", "#edf2f7", "VN37", "#eef3ec", "VN25", "#f4f1e7", "VN51", "#eceff6", "VN22", "#f5efe9", "VN44", "#e9f2f1", "VN14", "#f3ecf2", "VN80", "#edf2f7", "VN19", "#eef3ec", "VN38", "#f4f1e7", "VN79", "#eceff6", "VN08", "#f5efe9", "VN86", "#e9f2f1", "#edf2f7"],
-                 "fill-opacity": 0.78 }
+        paint: { "fill-color": ["match", ["get", "pcode"], "VN91", "#d7e2ee", "VN24", "#dce7d2", "VN96", "#e9dec6", "VN92", "#d9d6e8", "VN04", "#e6d9d1", "VN48", "#cfe2e0", "VN66", "#e2d3e0", "VN11", "#d7e2ee", "VN75", "#dce7d2", "VN82", "#e9dec6", "VN52", "#d9d6e8", "VN01", "#e6d9d1", "VN42", "#cfe2e0", "VN31", "#e2d3e0", "VN46", "#d7e2ee", "VN33", "#dce7d2", "VN56", "#e9dec6", "VN12", "#d9d6e8", "VN68", "#e6d9d1", "VN20", "#cfe2e0", "VN15", "#e2d3e0", "VN40", "#d7e2ee", "VN37", "#dce7d2", "VN25", "#e9dec6", "VN51", "#d9d6e8", "VN22", "#e6d9d1", "VN44", "#cfe2e0", "VN14", "#e2d3e0", "VN80", "#d7e2ee", "VN19", "#dce7d2", "VN38", "#e9dec6", "VN79", "#d9d6e8", "VN08", "#e6d9d1", "VN86", "#cfe2e0", "#d7e2ee"],
+                 "fill-opacity": 0.9 }
+      },
+      // FILL XA (12/10 toi — bat chung checkbox voi ranh gioi xa): cung HUE voi
+      // mau tinh nhung TOI hon (chi so `mt` gan trong xuat_web_osm.py theo
+      // tinh chua xa) — khi ca tinh + xa bat cung luc van phan biet duoc
+      // 2 cap hanh chinh. minzoom 9 = cung luc voi vien xa.
+      {
+        id: "dia_gioi_xa_nen", type: "fill", source: "dia_gioi_xa_src", minzoom: 9,
+        paint: { "fill-color": ["match", ["get", "mt"], 0, "#bccfe4", 1, "#c3d6b4", 2, "#d9c99e", 3, "#c3bdd6", 4, "#d4bfaf", 5, "#aecfc9", 6, "#cdb6c9", "#d7e2ee"],
+                 "fill-opacity": 0.8 }
       },
       // NEN VECTOR: duong tham chieu — GHÉP LIỆN MẠCH trong
       // xuat_web_nen_osm.py (GEOSLineMerge: 59,8k way → chuoi dai, khong con
@@ -626,7 +633,7 @@ const map = new maplibregl.Map({
         id: "nen_duong_chinh", type: "line", source: "nen_duong_chinh_src",
         "source-layer": "nen_duong_chinh", minzoom: 6,
         layout: { "line-cap": "round", "line-join": "round" },
-        paint: { "line-color": "#9aa8b5", "line-opacity": 0.9,
+        paint: { "line-color": "#8fa0af", "line-opacity": 0.9,
                  "line-width": ["interpolate", ["linear"], ["zoom"], 6, 0.7, 9, 1.4, 12, 2.6] }
       },
       {
@@ -736,20 +743,34 @@ const map = new maplibregl.Map({
         },
         paint: { "text-color": "#4a5568", "text-halo-color": "#eef3f7", "text-halo-width": 1.2 }
       },
-      // Song/kenh CHINH (Song_Center, nguon Xuan Ai) — mau xanh dam trung
-      // (deep navy) noi bat khoi kenh_rach_that, kieu ban do thuy van chuan.
+      // SONG/KENH CHINH HOP NHAT (12/10 toi, scripts/xay_song_kenh_chinh_web.py):
+      // duong THAT co ten (song_center — nguon Xuan Ai, uu tien) mau navy DAM
+      // + nhanh MIKE-A khong trung song_center (mang mo hinh mo rong) mau xanh
+      // NHEAT, MOI HON — nen LIEN MACH, khong phu thuoc overlay long dan.
+      // Thuoc tinh cong khai: ten, nguon, dai_km, rong_m, sau_m (KHONG co
+      // id_chuan/flag mo hinh — chi ?noibo moi co lop mo hinh rieng).
       {
         id: "song_center", type: "line", source: "song_center_src",
-        "source-layer": "song_center", minzoom: 4,
-        paint: { "line-color": "#5a7ba6", "line-opacity": 0.7,
-                 "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.5, 8, 0.9, 12, 1.6] }
+        "source-layer": "song_kenh_chinh", minzoom: 4,
+        filter: ["!=", ["get", "nguon"], "mike_a"],
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": "#1a365d", "line-opacity": 0.85,
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.8, 8, 1.3, 12, 2.2] }
+      },
+      {
+        id: "skc_mike_a", type: "line", source: "song_center_src",
+        "source-layer": "song_kenh_chinh", minzoom: 4,
+        filter: ["==", ["get", "nguon"], "mike_a"],
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": "#5b8db8", "line-opacity": 0.55,
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.5, 8, 0.9, 12, 1.4] }
       },
       {
         id: "song_center_nhan", type: "symbol", source: "song_center_src",
-        "source-layer": "song_center", minzoom: 8.5,
-        filter: ["has", "Ten_Song"],
+        "source-layer": "song_kenh_chinh", minzoom: 8.5,
+        filter: ["has", "ten"],
         layout: {
-          "symbol-placement": "line", "text-field": ["get", "Ten_Song"],
+          "symbol-placement": "line", "text-field": ["get", "ten"],
           "text-size": ["interpolate", ["linear"], ["zoom"], 9, 10.5, 13, 13],
           "text-font": ["Noto Sans Bold"], "text-letter-spacing": 0.1
         },
@@ -957,7 +978,7 @@ function chuyenSangOSM(viSao) {
 quanLyNen();
 
 const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "kenh_v6", "mikeb_full",
-                         "kenh_ks_ca_hai", "kenh_ks_2020", "kenh_ks_2017", "kenh_rach_that", "song_center",
+                         "kenh_ks_ca_hai", "kenh_ks_2020", "kenh_ks_2017", "kenh_rach_that", "song_center", "skc_mike_a",
                          "kenh_rong_sc", "kenh_sau_sc", "kenh_rong_kr", "kenh_sau_kr", "tram_pt", "ngam_pt",
                          "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver",
                          "dia_gioi_tinh", "dia_gioi_xa", "giao_thong"];
@@ -1134,10 +1155,13 @@ map.on('click', (e) => {
   } else if (f.layer.id === "kenh_rach_that") {
     html = `<b>${p.Ten || "(chưa có tên)"}</b> (kênh rạch nội đồng ĐBSCL)<br>` +
            `tỉnh: ${p.TenTinh || ""}<br>dài: ${p.C_Dai ? Math.round(p.C_Dai) + " m" : ""}`;
-  } else if (f.layer.id === "song_center") {
-    html = `<b>${p.Ten_Song || "(chưa có tên)"}</b> (sông/kênh chính ĐBSCL)<br>` +
-           `cấp kênh: ${p.Cap_Kenh ?? ""}<br>tỉnh: ${p.TenTinh || ""}` +
-           (p.District ? `<br>huyện: ${p.District}` : "");
+  } else if (f.layer.id === "song_center" || f.layer.id === "skc_mike_a") {
+    html = `<b>${p.ten || "(chưa có tên)"}</b>` +
+           (f.layer.id === "skc_mike_a" ? " (nhánh mạng MIKE-A)" : " (sông/kênh chính ĐBSCL)") +
+           `<br>dài: ${p.dai_km ? p.dai_km + " km" : "?"}` +
+           (p.rong_m ? ` · rộng ~${Math.round(p.rong_m)} m` : "") +
+           (p.sau_m ? ` · sâu ~${p.sau_m} m` : "") +
+           `<br>nguồn: ${f.layer.id === "skc_mike_a" ? "mạng MIKE-A (hợp nhất)" : "Xuân Ai (song_center) — hợp nhất với MIKE-A"}`;
   } else if (f.layer.id === "mikeb_full") {
     html = `<b>${p.ten_mikeb}</b> (mô hình MIKE-B, độc lập với MIKE-A)<br>` +
            `topo: ${p.topo || ""}<br>dài ${p.dai_km} km`;
