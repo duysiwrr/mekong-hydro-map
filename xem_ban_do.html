@@ -87,6 +87,21 @@
 
   #btn_bang_tong_hop { border:none; background:#edf2f7; color:#2d3748; padding:6px 12px;
     border-radius:6px; cursor:pointer; font-size:12.5px; white-space:nowrap; }
+  #btn_mang_sk { border:none; background:#edf2f7; color:#2d3748; padding:6px 12px;
+    border-radius:6px; cursor:pointer; font-size:12.5px; white-space:nowrap; }
+  #msk_box { background:#fff; border-radius:8px; width:min(900px, 94vw); max-height:88vh; overflow:auto;
+    padding:16px 20px; box-shadow:0 4px 24px rgba(0,0,0,.4); }
+  #msk_box h3 { margin:0 0 4px; font-size:17px; }
+  #msk_box .sub { color:#666; font-size:12px; margin-bottom:8px; }
+  #msk_tab button { border:1px solid #cbd5e0; background:#fff; padding:5px 12px; cursor:pointer; font-size:12.5px; }
+  #msk_tab button.on { background:#2b6cb0; color:#fff; border-color:#2b6cb0; }
+  #msk_loc { padding:6px 10px; border:1px solid #cbd5e0; border-radius:6px; width:min(320px,60vw); font-size:13px; margin:0 8px; }
+  #msk_tb { border-collapse:collapse; font-size:12.5px; width:100%; margin-top:8px; }
+  #msk_tb th { text-align:left; padding:4px 8px; border-bottom:2px solid #cbd5e0; position:sticky; top:0; background:#fff; white-space:nowrap; }
+  #msk_tb td { padding:3px 8px; border-bottom:1px solid #edf2f7; }
+  #msk_tb tr.dong:hover { background:#ebf4ff; cursor:pointer; }
+  #msk_tb td.so { text-align:right; font-variant-numeric:tabular-nums; }
+  .msk_chung { color:#b7791f; font-size:11px; }
   #bang_tong_hop_overlay { position:absolute; inset:0; background:rgba(0,0,0,.4);
     z-index:6; display:none; align-items:center; justify-content:center; }
   #bang_tong_hop_box { background:#fff; border-radius:8px; max-width:min(1100px, 94vw);
@@ -183,6 +198,7 @@
   </div>
   <button id="btn_catalog">📚 Bộ CSDL</button>
   <button id="btn_bang_tong_hop">📊 Bảng trạm</button>
+  <button id="btn_mang_sk">🌊 Sông/kênh</button>
 </div>
 <div id="catalog_overlay">
   <div id="catalog_box">
@@ -328,6 +344,17 @@
   </div>
   <div class="ghi_chu">Bấm vào một đối tượng trên bản đồ để xem thông tin.
     Ô <b>🔍</b> phía trên tìm được theo <b>tên trạm, tỉnh hoặc sông</b> (gõ không dấu vẫn ra).</div>
+</div>
+<div id="msk_overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:6;display:none;align-items:center;justify-content:center;">
+  <div id="msk_box">
+    <button id="btn_dong_msk" class="btn_dong_x">Đóng ✕</button>
+    <h3>Mạng sông, kênh rạch ĐBSCL</h3>
+    <div class="sub" id="msk_tong">Đang tải…</div>
+    <div><span id="msk_tab"><button data-t="song" class="on">Sông, kênh chính</button><button data-t="nd">Kênh rạch nội đồng</button></span>
+      <input id="msk_loc" placeholder="Lọc theo tên hoặc tỉnh…" autocomplete="off" aria-label="Lọc sông kênh theo tên hoặc tỉnh"></div>
+    <div class="sub" id="msk_ghi" style="margin-top:6px"></div>
+    <table id="msk_tb"></table>
+  </div>
 </div>
 <div id="bang_tong_hop_overlay">
   <div id="bang_tong_hop_box">
@@ -1400,6 +1427,70 @@ document.getElementById("btn_dong_bang").addEventListener("click", () => {
 document.getElementById("bang_tong_hop_overlay").addEventListener("click", (e) => {
   if (e.target.id === "bang_tong_hop_overlay") e.currentTarget.style.display = "none";
 });
+
+
+// ==================== Bang song/kenh theo DIA DANH (12/10/2026) ====================
+// Nguon: mang_song_kenh.json (scripts/xuat_web_mang_song_kenh.py). Chi ten + hinh hoc, khong tri so do.
+(function () {
+  const ov = document.getElementById("msk_overlay"), tb = document.getElementById("msk_tb");
+  const loc = document.getElementById("msk_loc"), ghi = document.getElementById("msk_ghi");
+  let D = null, tab = "song", sapXep = "km";
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const so = (n) => n.toLocaleString("vi");
+  const MAX = 300;
+  function ve() {
+    if (!D) return;
+    const q = boDau(loc.value.trim());
+    const ds = tab === "song" ? D.song : D.noi_dong;
+    const iT = tab === "song" ? 0 : 0, iTinh = tab === "song" ? 4 : 1, iN = 2, iKm = 3;
+    let kq = ds.filter((r) => !q || boDau(r[iT]).includes(q) || boDau(r[iTinh] || "").includes(q));
+    if (sapXep === "ten") kq = kq.slice().sort((a, b) => a[0].localeCompare(b[0], "vi"));
+    const n = kq.length; kq = kq.slice(0, MAX);
+    const dau = tab === "song"
+      ? `<tr><th data-s='ten'>Tên${sapXep === 'ten' ? ' ▴' : ''}</th><th>Loại</th><th>Tỉnh</th><th>Số đoạn</th><th data-s='km'>Dài (km)${sapXep === 'km' ? ' ▾' : ''}</th></tr>`
+      : `<tr><th data-s='ten'>Tên${sapXep === 'ten' ? ' ▴' : ''}</th><th>Tỉnh</th><th>Số đoạn</th><th data-s='km'>Dài (km)${sapXep === 'km' ? ' ▾' : ''}</th></tr>`;
+    const dong = kq.map((r, i) => tab === "song"
+      ? `<tr class="dong" data-i="${ds.indexOf(r)}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[4] || "—")}</td><td class="so">${so(r[2])}</td><td class="so">${so(r[3])}</td></tr>`
+      : `<tr class="dong" data-i="${ds.indexOf(r)}"><td>${esc(r[0])}${r[5] ? ' <span class="msk_chung">tên chung</span>' : ""}</td><td>${esc(r[1] || "—")}</td><td class="so">${so(r[2])}</td><td class="so">${so(r[3])}</td></tr>`).join("");
+    tb.innerHTML = dau + dong;
+    ghi.textContent = (n > MAX ? `Hiện ${MAX}/${so(n)} dòng đầu — gõ tên để lọc. ` : `${so(n)} dòng. `) +
+      "Bấm một dòng để đến vị trí trên bản đồ." +
+      (tab === "nd" ? ` “Tên chung” = tên xuất hiện từ ${D.tong.nguong_chung} đoạn trở lên (không phải một kênh duy nhất); khung nhìn bao cả các đoạn cùng tên.` : "");
+  }
+  function mo() {
+    ov.style.display = "flex";
+    if (D) return;
+    fetch("./mang_song_kenh.json").then((r) => r.json()).then((d) => {
+      D = d; const t = d.tong;
+      document.getElementById("msk_tong").innerHTML =
+        `Sông, kênh chính: <b>${so(t.song_doan)}</b> đoạn (<b>${so(t.song_doan_co_ten)}</b> đoạn có tên, <b>${so(t.song_ten)}</b> tên) · ${so(t.song_km)} km.<br>` +
+        `Kênh rạch nội đồng: <b>${so(t.nd_doan)}</b> đoạn (<b>${so(t.nd_doan_co_ten)}</b> đoạn có tên, <b>${so(t.nd_ten)}</b> tên) · ${so(t.nd_km)} km.<br>` +
+        `Mỗi đoạn là một đoạn hình học trong dữ liệu; các đoạn cùng tên được gộp thành một dòng. Đoạn chưa có tên không đưa vào bảng.`;
+      ve();
+    }).catch((e) => { document.getElementById("msk_tong").textContent = "Không tải được bảng sông/kênh: " + e.message; });
+  }
+  document.getElementById("btn_mang_sk").addEventListener("click", mo);
+  if (location.hash === "#song_kenh") mo();
+  document.getElementById("btn_dong_msk").addEventListener("click", () => { ov.style.display = "none"; });
+  ov.addEventListener("click", (e) => { if (e.target === ov) ov.style.display = "none"; });
+  loc.addEventListener("input", ve);
+  document.querySelectorAll("#msk_tab button").forEach((b) => b.addEventListener("click", () => {
+    tab = b.dataset.t; document.querySelectorAll("#msk_tab button").forEach((x) => x.classList.toggle("on", x === b)); ve();
+  }));
+  tb.addEventListener("click", (e) => {
+    const th = e.target.closest("th[data-s]");
+    if (th) { sapXep = th.dataset.s; ve(); return; }
+    const tr = e.target.closest("tr.dong"); if (!tr || !D) return;
+    const r = (tab === "song" ? D.song : D.noi_dong)[+tr.dataset.i];
+    const bb = r[tab === "song" ? 5 : 4];
+    if (tab === "nd") { // dam bao lop kenh noi dong dang bat
+      const cb = document.querySelector('[data-layers^="kenh_rach_that"]');
+      if (cb && !cb.checked) { cb.checked = true; cb.dispatchEvent(new Event("change")); }
+    }
+    ov.style.display = "none";
+    map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: 60, maxZoom: 12.5, duration: 600 });
+  });
+})();
 
 // ==================== Danh muc CSDL ====================
 document.getElementById("btn_catalog").addEventListener("click", () => {
