@@ -744,8 +744,8 @@ const map = new maplibregl.Map({
       // khong lam ro mat ban do o zoom thap; ve ngay TREN lop tinh.
       {
         id: "dia_gioi_xa", type: "line", source: "dia_gioi_xa_src", minzoom: 9,
-        layout: { "line-dasharray": [3, 2.5] },
-        paint: { "line-color": "#64748b",
+        paint: { "line-dasharray": [3, 2.5],
+                 "line-color": "#64748b",
                  "line-width": ["interpolate", ["linear"], ["zoom"], 7.5, 0.45, 10, 0.9, 12, 1.4],
                  "line-opacity": 0.75 }
       },
