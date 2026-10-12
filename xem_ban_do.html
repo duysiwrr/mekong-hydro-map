@@ -290,10 +290,12 @@
       các nhánh còn lại chỉ là đoạn kéo dài thêm.</div>
     <label class="chi_noibo"><input type="checkbox" data-layers="mikeb_full">
       <span class="swatch line" style="background:#319795"></span>Mô hình MIKE-B (1.695 nhánh)</label>
-    <label class="chi_noibo"><input type="checkbox" data-layers="kenh_survey2017">
-      <span class="swatch line" style="background:#dd6b20"></span>Khảo sát 2017 (22 nhánh)</label>
-    <label class="chi_noibo"><input type="checkbox" data-layers="kenh_survey2020">
-      <span class="swatch line" style="background:#805ad5"></span>Khảo sát 2020 (46 nhánh)</label>
+    <label><input type="checkbox" data-layers="kenh_ks_vien,kenh_ks_ca_hai,kenh_ks_2020,kenh_ks_2017" checked>
+      <span class="swatch line" style="background:#2b6cb0"></span>Khảo sát lòng dẫn 2017 – 2020</label>
+    <div class="cg_hint" style="line-height:1.7;margin-left:19px">
+      <span style="display:inline-block;width:20px;height:3px;background:#2b6cb0;vertical-align:middle"></span> cả 2017 và 2020 (748 km)<br>
+      <span style="display:inline-block;width:20px;height:3px;background:#6b46c1;vertical-align:middle"></span> chỉ 2020 (340 km)<br>
+      <span style="display:inline-block;width:20px;height:0;border-top:3px dashed #dd6b20;vertical-align:middle"></span> chỉ 2017 (19 km)</div>
     <label><input type="checkbox" data-layers="song_center,song_center_nhan" checked>
       <span class="swatch line" style="background:#1a365d"></span>Sông, kênh chính</label>
     <label><input type="checkbox" data-layers="kenh_rach_that,kenh_rach_that_nhan">
@@ -556,7 +558,7 @@ const map = new maplibregl.Map({
       {
         id: "kenh_rach_that", type: "line", source: "kenh_rach_that_src",
         "source-layer": "kenhrach_update", minzoom: 8.5,
-        paint: { "line-color": "#a0aec0", "line-width": 0.8, "line-opacity": 0.8 }
+        paint: { "line-color": "#b6c0cd", "line-width": 0.7, "line-opacity": 0.7 }
       },
       {
         id: "kenh_rach_that_nhan", type: "symbol", source: "kenh_rach_that_src",
@@ -572,7 +574,8 @@ const map = new maplibregl.Map({
       {
         id: "song_center", type: "line", source: "song_center_src",
         "source-layer": "song_center", minzoom: 4,
-        paint: { "line-color": "#1a365d", "line-width": 1.8, "line-opacity": 0.85 }
+        paint: { "line-color": "#5a7ba6", "line-opacity": 0.7,
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.5, 8, 0.9, 12, 1.6] }
       },
       {
         id: "song_center_nhan", type: "symbol", source: "song_center_src",
@@ -599,17 +602,36 @@ const map = new maplibregl.Map({
           "line-width": ["case", [">", ["get", "so_nguon_doc_lap_xac_nhan"], 0], 2.4, 1.4]
         }
       },
-      // Khao sat 2017 VE TRUOC 2020 trong mang layer -> 2020 luon NAM TREN
-      // khi ca 2 cung bat (theo yeu cau nguoi dung, sua 28/08/2026).
+      // Khao sat long dan 2017/2020 (12/10/2026): 2017 nam gan tron trong 2020 (748/767 km) nen
+      // GOP thanh 1 lop 3 mau: ca hai (dam, vien trang) / chi 2020 / chi 2017 (net dut). Truc song chinh
+      // ve day de noi len khoi luoi kenh noi dong.
       {
-        id: "kenh_survey2017", type: "line", source: "song_kenh", "source-layer": "channels",
-        filter: locKenh("co_survey_2017"), layout: { visibility: "none" },
-        paint: { "line-color": "#dd6b20", "line-width": 4, "line-opacity": 0.85 }
+        id: "kenh_ks_vien", type: "line", source: "song_kenh", "source-layer": "channels",
+        filter: ["any", locKenh("co_survey_2017"), locKenh("co_survey_2020")],
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": "#ffffff", "line-opacity": 0.9,
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 5, 3.2, 9, 5.4, 13, 9] }
       },
       {
-        id: "kenh_survey2020", type: "line", source: "song_kenh", "source-layer": "channels",
-        filter: locKenh("co_survey_2020"), layout: { visibility: "none" },
-        paint: { "line-color": "#805ad5", "line-width": 4, "line-opacity": 0.85 }
+        id: "kenh_ks_2020", type: "line", source: "song_kenh", "source-layer": "channels",
+        filter: ["all", locKenh("co_survey_2020"), ["!=", ["get", "co_survey_2017"], "yes"]],
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": "#6b46c1",
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 5, 1.6, 9, 2.8, 13, 5] }
+      },
+      {
+        id: "kenh_ks_2017", type: "line", source: "song_kenh", "source-layer": "channels",
+        filter: ["all", locKenh("co_survey_2017"), ["!=", ["get", "co_survey_2020"], "yes"]],
+        layout: { "line-cap": "butt", "line-join": "round" },
+        paint: { "line-color": "#dd6b20", "line-dasharray": [2, 1.2],
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 5, 1.6, 9, 2.8, 13, 5] }
+      },
+      {
+        id: "kenh_ks_ca_hai", type: "line", source: "song_kenh", "source-layer": "channels",
+        filter: ["all", locKenh("co_survey_2017"), locKenh("co_survey_2020")],
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": "#2b6cb0",
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 5, 2, 9, 3.4, 13, 6] }
       },
       // ==== Be rong / do sau long dan that (them 28/08/2026) — mac dinh AN,
       // ve TREN cac lop kenh co ban de noi bat khi nguoi dung bat len.
@@ -766,7 +788,7 @@ function chuyenSangOSM(viSao) {
 quanLyNen();
 
 const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "kenh_v6", "mikeb_full",
-                         "kenh_survey2020", "kenh_survey2017", "kenh_rach_that", "song_center",
+                         "kenh_ks_ca_hai", "kenh_ks_2020", "kenh_ks_2017", "kenh_rach_that", "song_center",
                          "kenh_rong", "kenh_sau", "tram_pt", "ngam_pt",
                          "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver"];
 
@@ -919,7 +941,11 @@ map.on('click', (e) => {
       (p.sau_m > 0 ? ` · sâu ~<b>${p.sau_m.toFixed(1)} m</b>` : "") +
       ` (${nguon}${p.n_mat_cat_hinh_hoc ? `, ${p.n_mat_cat_hinh_hoc} mặt cắt` : ""})</span><br>`;
   };
-  if (!NOIBO && f.layer.id.startsWith("kenh") && f.layer.id !== "kenh_rach_that") {
+  if (f.layer.id.startsWith("kenh_ks_")) {
+    const nam = f.layer.id === "kenh_ks_ca_hai" ? "2017 và 2020" : f.layer.id === "kenh_ks_2020" ? "chỉ 2020" : "chỉ 2017";
+    html = `<b>Đoạn khảo sát lòng dẫn</b> (${nam})<br>dài ${p.dai_km} km` +
+           (p.rong_m > 0 ? `<br>bề rộng ~<b>${Math.round(p.rong_m).toLocaleString("vi")} m</b>` + (p.sau_m > 0 ? ` · sâu ~<b>${p.sau_m.toFixed(1)} m</b>` : "") : "");
+  } else if (!NOIBO && f.layer.id.startsWith("kenh") && f.layer.id !== "kenh_rach_that") {
     // Ban cong khai: khong lo ten/nguon luoi mo hinh (MIKE/TELEMAC).
     const ro = p.rong_m > 0 ? `bề rộng ~<b>${Math.round(p.rong_m).toLocaleString("vi")} m</b>` : "chưa có dữ liệu bề rộng";
     const sa = p.sau_m > 0 ? ` · sâu ~<b>${p.sau_m.toFixed(1)} m</b>` : "";
