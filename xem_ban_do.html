@@ -43,6 +43,7 @@
   .swatch { display:inline-block; width:12px; height:12px; flex:0 0 auto; margin-top:2px; }
   .swatch.line { height:3px; margin-top:7px; }
   .ghi_chu { margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0; color:#666; font-size:11.5px; }
+  body:not(.noibo) .chi_noibo { display:none !important; }
   #canh_bao { position:absolute; top:0; left:0; right:0; background:#c53030; color:white;
               padding:10px 14px; font-size:14px; z-index:3; display:none; }
   /* Thong bao loi KI THUAT — doi tu hop do to che goc man hinh thanh "toast"
@@ -187,10 +188,9 @@
   <div id="catalog_box">
     <button class="btn_dong_x" id="btn_dong_catalog">Đóng ✕</button>
     <h2>Bộ cơ sở dữ liệu Mekong Hydro DB</h2>
-    <div class="sub"><b style="color:#2b6cb0">18,50 triệu bản ghi đo theo giờ · 47 trạm</b> —
-      tổng hợp từ nhiều nguồn khảo sát/quan trắc độc lập cho Đồng bằng sông Cửu Long.
-      Trang này thể hiện <b>phạm vi, quy mô và giai đoạn phủ</b> của dữ liệu —
-      <b>không hiển thị trị số đo</b>. Bấm vào bất kỳ đối tượng trên bản đồ để xem mô tả.</div>
+    <div class="sub"><b style="color:#2b6cb0">18,50 triệu bản ghi H/Q theo giờ · 47 trạm</b> —
+      danh mục dữ liệu quan trắc, nước ngầm, mạng sông/kênh và khảo sát lòng dẫn tại Đồng bằng sông Cửu Long.
+      Bản đồ thể hiện vị trí, phạm vi và thời gian có dữ liệu; <b>trị số đo không được công bố</b> trên trang này.</div>
     <div class="sub" style="background:#f7fafc;border-radius:6px;padding:8px 12px;">
       <b>Mực nước (H)</b> 17.401.245 bản ghi · 47 trạm · <b>01/1977 → 12/2024</b><br>
       <b>Lưu lượng (Q)</b> 1.095.763 bản ghi · 5 trạm trục chính · <b>2000 → 2024</b><br>
@@ -201,36 +201,38 @@
       <button class="nut_phu" id="btn_nguon">🗂 Nguồn dữ liệu</button>
     </div>
     <div class="ds_grid">
-      <div class="ds_card"><div class="n">47</div><div class="ten">Trạm quan trắc</div>
-        <div class="mo_ta">Mực nước &amp; lưu lượng theo giờ, một số trạm phủ tới hơn 40
-          năm dữ liệu. Bản đồ chỉ hiện vị trí &amp; độ phủ thời gian.</div>
-        <div class="nguon">nguồn: tổng hợp nội bộ</div></div>
+      <div class="ds_card"><div class="n">47</div><div class="ten">Trạm quan trắc mực nước, lưu lượng</div>
+        <div class="mo_ta">Mực nước và lưu lượng theo giờ; một số trạm có hơn 40 năm dữ liệu.</div>
+        <div class="nguon">nguồn: xem mục "Nguồn dữ liệu"</div></div>
       <div class="ds_card"><div class="n">88</div><div class="ten">Lỗ khoan nước ngầm</div>
         <div class="mo_ta">Quan trắc quốc gia theo 8 tầng chứa nước, 27 cụm giếng. Bản đồ chỉ hiện vị trí,
           mã lỗ khoan, tầng và độ phủ thời gian.</div>
         <div class="nguon">nguồn: Trung tâm Quy hoạch và Điều tra tài nguyên nước quốc gia</div></div>
-      <div class="ds_card"><div class="n">3.009</div><div class="ten">Mạng lưới kênh mô hình (MIKE-A)</div>
+      <div class="ds_card"><div class="n">35.088</div><div class="ten">Kênh rạch nội đồng</div>
+        <div class="mo_ta">Bản đồ kênh rạch chi tiết cấp tỉnh, phần lớn có tên địa phương —
+          độc lập với mạng lưới mô hình hoá.</div>
+        <div class="nguon">nguồn: khảo sát bên thứ ba</div></div>
+      <div class="ds_card"><div class="n">1.350</div><div class="ten">Sông, kênh chính</div>
+        <div class="mo_ta">Trục sông/kênh lớn có tên, dùng để định hướng khi xem bản đồ.</div>
+        <div class="nguon">nguồn: khảo sát bên thứ ba</div></div>
+      <div class="ds_card chi_noibo"><div class="n">1.695</div><div class="ten">Mạng sông/kênh MIKE-B</div>
+        <div class="mo_ta">Bộ mô hình thuỷ lực độc lập thứ 2, dùng đối chiếu chéo với mạng
+          lưới chính khi cần.</div>
+        <div class="nguon">nguồn: khảo sát độc lập</div></div>
+      <div class="ds_card"><div class="n">5.199</div><div class="ten">Điểm đo lòng dẫn CCPO 2023</div>
+        <div class="mo_ta">Điểm đo độ sâu đáy sông, năm đo 2023.</div>
+        <div class="nguon">nguồn: khảo sát CCPO 2023</div></div>
+      <div class="ds_card"><div class="n">57</div><div class="ten">Mặt cắt khảo sát 2023</div>
+        <div class="mo_ta">Mặt cắt đã chọn lọc: 21 trên sông Tiền, 36 trên sông Hậu.</div>
+        <div class="nguon">nguồn: khảo sát CCPO 2023</div></div>
+      <div class="ds_card chi_noibo"><div class="n">3.009</div><div class="ten">Mạng lưới kênh mô hình (MIKE-A)</div>
         <div class="mo_ta">Toàn bộ nhánh sông/kênh trong bộ dữ liệu; 1.847 nhánh đủ điều
           kiện hiển thị trên bản đồ (lớp "Mô hình MIKE-A"), 416 trong số đó có hình học
           mặt cắt chi tiết (lớp "Mô hình TELEMAC 1D"), và 2.277 nhánh trên TOÀN mạng
           (gồm cả nhánh chưa đủ điều kiện hiển thị) có dữ liệu bề rộng/độ sâu
           lòng dẫn thật.</div>
         <div class="nguon">nguồn: mô hình MIKE 11 ĐBSCL</div></div>
-      <div class="ds_card"><div class="n">35.088</div><div class="ten">Kênh rạch nội đồng ĐBSCL</div>
-        <div class="mo_ta">Bản đồ kênh rạch chi tiết cấp tỉnh, phần lớn có tên địa phương —
-          độc lập với mạng lưới mô hình hoá.</div>
-        <div class="nguon">nguồn: khảo sát bên thứ ba</div></div>
-      <div class="ds_card"><div class="n">1.350</div><div class="ten">Sông/kênh chính ĐBSCL</div>
-        <div class="mo_ta">Trục sông/kênh lớn có tên, dùng để định hướng khi xem bản đồ.</div>
-        <div class="nguon">nguồn: khảo sát bên thứ ba</div></div>
-      <div class="ds_card"><div class="n">1.695</div><div class="ten">Mô hình MIKE-B</div>
-        <div class="mo_ta">Bộ mô hình thuỷ lực độc lập thứ 2, dùng đối chiếu chéo với mạng
-          lưới chính khi cần.</div>
-        <div class="nguon">nguồn: khảo sát độc lập</div></div>
-      <div class="ds_card"><div class="n">5.199 + 57</div><div class="ten">Khảo sát CCPO 2023</div>
-        <div class="mo_ta">Điểm đo đáy sông độc lập, mới nhất — 57 mặt cắt đã chọn lọc theo
-          sông Tiền/sông Hậu.</div>
-        <div class="nguon">nguồn: khảo sát CCPO 2023</div></div>
+
     </div>
   </div>
 </div>
@@ -261,51 +263,51 @@
   </div>
   <div class="nhom">
     <h3>Sông · kênh</h3>
-    <label><input type="checkbox" data-layers="kenh" checked>
+    <label class="chi_noibo"><input type="checkbox" data-layers="kenh" checked>
       <span class="swatch line" style="background:#3182ce"></span>Mô hình MIKE-A (1.847 nhánh)</label>
-    <div class="cg_hint">nhánh <b>màu vàng</b> = còn được ít nhất một nguồn khác xác nhận (50 nhánh)</div>
-    <label><input type="checkbox" data-layers="kenh_telemac" checked>
+    <div class="chi_noibo cg_hint">nhánh <b>màu vàng</b> = còn được ít nhất một nguồn khác xác nhận (50 nhánh)</div>
+    <label class="chi_noibo"><input type="checkbox" data-layers="kenh_telemac" checked>
       <span class="swatch line" style="background:#e53e3e"></span>Mô hình TELEMAC 1D (416 nhánh)</label>
-    <label><input type="checkbox" data-layers="kenh_v6">
+    <label class="chi_noibo"><input type="checkbox" data-layers="kenh_v6">
       <span class="swatch line" style="background:#38a169"></span>TELEMAC v6 — thử nghiệm mạng dài (417 nhánh)</label>
-    <div class="cg_hint">bật lớp này để so với TELEMAC 1D: <b>Ba Lai</b> là nhánh mới,
+    <div class="chi_noibo cg_hint">bật lớp này để so với TELEMAC 1D: <b>Ba Lai</b> là nhánh mới,
       các nhánh còn lại chỉ là đoạn kéo dài thêm.</div>
-    <label><input type="checkbox" data-layers="mikeb_full">
+    <label class="chi_noibo"><input type="checkbox" data-layers="mikeb_full">
       <span class="swatch line" style="background:#319795"></span>Mô hình MIKE-B (1.695 nhánh)</label>
-    <label><input type="checkbox" data-layers="kenh_survey2017">
+    <label class="chi_noibo"><input type="checkbox" data-layers="kenh_survey2017">
       <span class="swatch line" style="background:#dd6b20"></span>Khảo sát 2017 (22 nhánh)</label>
-    <label><input type="checkbox" data-layers="kenh_survey2020">
+    <label class="chi_noibo"><input type="checkbox" data-layers="kenh_survey2020">
       <span class="swatch line" style="background:#805ad5"></span>Khảo sát 2020 (46 nhánh)</label>
     <label><input type="checkbox" data-layers="song_center,song_center_nhan" checked>
-      <span class="swatch line" style="background:#1a365d"></span>Sông/kênh chính ĐBSCL (1.350 nhánh)</label>
+      <span class="swatch line" style="background:#1a365d"></span>Sông, kênh chính</label>
     <label><input type="checkbox" data-layers="kenh_rach_that,kenh_rach_that_nhan">
-      <span class="swatch line" style="background:#a0aec0"></span>Kênh rạch nội đồng ĐBSCL (35.088 nhánh)</label>
-    <div class="cg_hint">lớp rất nặng — chỉ hiện khi phóng to đến mức <b>zoom ≥ 8,5</b>
+      <span class="swatch line" style="background:#a0aec0"></span>Kênh rạch nội đồng</label>
+    <div class="cg_hint">lớp nặng — chỉ hiện khi phóng to đến mức <b>zoom ≥ 8,5</b>
       (mặc định tắt để bản đồ mở nhanh).</div>
   </div>
   <div class="nhom">
-    <h3>Lòng dẫn thật</h3>
-    <div class="cg_hint" style="margin:0 0 4px;">Bản đồ vẽ được <b>1.847</b> nhánh;
+    <h3>Lòng dẫn</h3>
+    <div class="chi_noibo cg_hint" style="margin:0 0 4px;">Bản đồ vẽ được <b>1.847</b> nhánh;
       <b>2.277</b> nhánh trong toàn mạng có dữ liệu bề rộng/độ sâu.</div>
     <label><input type="checkbox" data-layers="kenh_rong_case,kenh_rong">
-      <span class="swatch line" style="background:#2171b5"></span>Bề rộng lòng dẫn (9 cấp)</label>
+      <span class="swatch line" style="background:#2171b5"></span>Bề rộng lòng dẫn</label>
     <label><input type="checkbox" data-layers="kenh_sau_case,kenh_sau">
-      <span class="swatch line" style="background:#00838f"></span>Độ sâu lòng dẫn (9 cấp)</label>
+      <span class="swatch line" style="background:#00838f"></span>Độ sâu lòng dẫn</label>
     <div id="chugiai_rongsau" style="display:none;"></div>
   </div>
   <div class="nhom">
     <h3>Khảo sát đáy 2023</h3>
     <label><input type="checkbox" data-layers="ccpo2023_diem">
-      <span class="swatch" style="background:#718096;border-radius:50%"></span>Khảo sát CCPO 2023 (5.199 điểm)</label>
+      <span class="swatch" style="background:#718096;border-radius:50%"></span>Khảo sát lòng dẫn CCPO 2023 (5.199 điểm đo)</label>
     <label><input type="checkbox" data-layers="ccpo2023_tien" checked>
-      <span class="swatch" style="background:#3182ce;border-radius:50%"></span>KSĐH 2023 - Sông Tiền (21)</label>
+      <span class="swatch" style="background:#3182ce;border-radius:50%"></span>Mặt cắt khảo sát 2023 - Sông Tiền (21)</label>
     <label><input type="checkbox" data-layers="ccpo2023_hauriver">
-      <span class="swatch" style="background:#b7791f;border-radius:50%"></span>KSĐH 2023 - Sông Hậu (36)</label>
+      <span class="swatch" style="background:#b7791f;border-radius:50%"></span>Mặt cắt khảo sát 2023 - Sông Hậu (36)</label>
   </div>
   <div class="nhom">
     <h3>Trạm quan trắc</h3>
     <label><input type="checkbox" data-layers="tram_pt,tram_nhan" checked>
-      <span class="swatch" style="background:#c05621;border-radius:50%"></span>Trạm H/Q (47)</label>
+      <span class="swatch" style="background:#c05621;border-radius:50%"></span>Trạm quan trắc mực nước, lưu lượng (47)</label>
     <div style="font-size:11px;color:#4a5568;margin:2px 0 0 19px;line-height:1.9;">
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#c05621;margin-right:4px;vertical-align:middle;"></span>cả H+Q
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ed8936;margin:0 4px 0 10px;vertical-align:middle;"></span>chỉ H
@@ -315,7 +317,7 @@
   <div class="nhom">
     <h3>Nước ngầm (27 cụm giếng · 88 lỗ)</h3>
     <label><input type="checkbox" data-layers="ngam_pt" checked>
-      <span class="swatch" style="background:linear-gradient(90deg,#9ad7e8,#4fb3a9,#e3c640,#c4483c,#4b2a7a);"></span>Tầng chứa nước có số liệu</label>
+      <span class="swatch" style="background:linear-gradient(90deg,#9ad7e8,#4fb3a9,#e3c640,#c4483c,#4b2a7a);"></span>Tầng chứa nước có dữ liệu quan trắc</label>
     <div id="ngam_chu_giai" style="margin:3px 0 0 19px;font-size:11px;color:#4a5568;line-height:1.5"></div>
   </div>
   <div class="nhom">
@@ -343,6 +345,9 @@
 <div id="loi_box"></div>
 <div id="map"></div>
 <script>
+// Che do noi bo (?noibo=1): hien cac luoi mo hinh MIKE/TELEMAC. Ban cong khai: an.
+const NOIBO = new URLSearchParams(location.search).has("noibo");
+if (NOIBO) document.body.classList.add("noibo");
 if (location.protocol === "file:") {
   document.getElementById("canh_bao").style.display = "block";
 }
@@ -561,7 +566,7 @@ const map = new maplibregl.Map({
       },
       {
         id: "kenh", type: "line", source: "song_kenh", "source-layer": "channels",
-        minzoom: 6,
+        minzoom: 6, layout: { visibility: NOIBO ? "visible" : "none" },
         paint: {
           "line-color": ["case", [">", ["get", "so_nguon_doc_lap_xac_nhan"], 0], "#d69e2e", "#3182ce"],
           "line-width": ["case", [">", ["get", "so_nguon_doc_lap_xac_nhan"], 0], 2.4, 1.4]
@@ -636,7 +641,7 @@ const map = new maplibregl.Map({
       // mikeb/kenhrach_that/CCPO...), CHI duoi lop tram H/Q.
       {
         id: "kenh_telemac", type: "line", source: "song_kenh", "source-layer": "channels",
-        minzoom: 6, filter: locKenh("trong_telemac_hien_hanh"),
+        minzoom: 6, filter: locKenh("trong_telemac_hien_hanh"), layout: { visibility: NOIBO ? "visible" : "none" },
         paint: { "line-color": "#e53e3e", "line-width": 1.6, "line-dasharray": [2, 1.5] }
       },
       // kenh_v6 (moi 08/09/2026, theo yeu cau nguoi dung): luoi TELEMAC THU
@@ -887,7 +892,12 @@ map.on('click', (e) => {
       (p.sau_m > 0 ? ` · sâu ~<b>${p.sau_m.toFixed(1)} m</b>` : "") +
       ` (${nguon}${p.n_mat_cat_hinh_hoc ? `, ${p.n_mat_cat_hinh_hoc} mặt cắt` : ""})</span><br>`;
   };
-  if (f.layer.id.startsWith("kenh") && f.layer.id !== "kenh_rach_that") {
+  if (!NOIBO && f.layer.id.startsWith("kenh") && f.layer.id !== "kenh_rach_that") {
+    // Ban cong khai: khong lo ten/nguon luoi mo hinh (MIKE/TELEMAC).
+    const ro = p.rong_m > 0 ? `bề rộng ~<b>${Math.round(p.rong_m).toLocaleString("vi")} m</b>` : "chưa có dữ liệu bề rộng";
+    const sa = p.sau_m > 0 ? ` · sâu ~<b>${p.sau_m.toFixed(1)} m</b>` : "";
+    html = `<b>Đoạn lòng dẫn</b> · dài ${p.dai_km} km<br>${ro}${sa}`;
+  } else if (f.layer.id.startsWith("kenh") && f.layer.id !== "kenh_rach_that") {
     const co = (v) => v === "yes" ? "✓" : "−";
     html = `<b>${p.id_chuan}</b> · dài ${p.dai_km} km<br>` + rongSauHtml() +
            `Tồn tại trong: MIKE-A ✓ · MIKE-B ${co(p.co_mike_b)} · ` +
