@@ -283,34 +283,25 @@
     <button id="btn_thu_panel" title="Thu gọn / mở danh sách lớp">▾</button>
   </div>
   <div class="nhom">
-    <h3>Sông · kênh</h3>
-    <label class="chi_noibo"><input type="checkbox" data-layers="kenh" checked>
-      <span class="swatch line" style="background:#3182ce"></span>Mạng MIKE-A (1.847)</label>
-    <label class="chi_noibo"><input type="checkbox" data-layers="kenh_telemac" checked>
-      <span class="swatch line" style="background:#e53e3e"></span>TELEMAC 1D (416)</label>
-    <label class="chi_noibo"><input type="checkbox" data-layers="kenh_v6">
-      <span class="swatch line" style="background:#38a169"></span>TELEMAC v6 (417)</label>
-    <label class="chi_noibo"><input type="checkbox" data-layers="mikeb_full">
-      <span class="swatch line" style="background:#319795"></span>MIKE-B (1.695)</label>
-    <label><input type="checkbox" data-layers="kenh_ks_vien,kenh_ks_ca_hai,kenh_ks_2020,kenh_ks_2017" checked>
-      <span class="swatch line" style="background:#2b6cb0"></span>Khảo sát lòng dẫn 2017 – 2020</label>
-    <div class="cg_hint" style="line-height:1.7;margin-left:19px">
-      <span style="display:inline-block;width:20px;height:3px;background:#2b6cb0;vertical-align:middle"></span> cả 2017 và 2020 (748 km)<br>
-      <span style="display:inline-block;width:20px;height:3px;background:#6b46c1;vertical-align:middle"></span> chỉ 2020 (340 km)<br>
-      <span style="display:inline-block;width:20px;height:0;border-top:3px dashed #dd6b20;vertical-align:middle"></span> chỉ 2017 (19 km)</div>
+    <h3>🗺 Hành chính</h3>
+    <label><input type="checkbox" data-layers="dia_gioi_tinh,dia_gioi_tinh_nhan,dia_gioi_tinh_nen" checked>
+      <span class="swatch line" style="background:#3d4852"></span>Tỉnh, thành phố (34)</label>
+    <label><input type="checkbox" data-layers="dia_gioi_xa,dia_gioi_xa_nhan,dia_gioi_xa_nen">
+      <span class="swatch line" style="background:#64748b"></span>Xã, phường (803)</label>
+  </div>
+  <div class="nhom">
+    <h3>🛣 Giao thông</h3>
+    <label><input type="checkbox" data-layers="giao_thong,giao_thong_nhan,nen_duong_chinh" checked>
+      <span class="swatch line" style="background:#c0392b"></span>Đường chính (cao tốc, quốc lộ)</label>
+    <label><input type="checkbox" data-layers="nen_duong_pho" checked>
+      <span class="swatch line" style="background:#ecd488"></span>Đường địa phương</label>
+  </div>
+  <div class="nhom">
+    <h3>🌊 Sông · kênh</h3>
     <label><input type="checkbox" data-layers="song_center,song_center_nhan" checked>
       <span class="swatch line" style="background:#1a365d"></span>Sông, kênh chính</label>
     <label><input type="checkbox" data-layers="kenh_rach_that,kenh_rach_that_nhan">
-      <span class="swatch line" style="background:#a0aec0"></span>Kênh rạch nội đồng</label>
-    <div class="cg_hint">lớp nặng — chỉ hiện khi phóng to đến mức <b>zoom ≥ 8,5</b>
-      (mặc định tắt để bản đồ mở nhanh).</div>
-    <label><input type="checkbox" data-layers="ccpo2023_tien,ccpo2023_hauriver,ccpo2023_diem">
-      <span class="swatch" style="background:#3182ce;border-radius:50%"></span>Khảo sát đáy sông 2023 (57 mặt cắt, 5.199 điểm)</label>
-  </div>
-  <div class="nhom">
-    <h3>Lòng dẫn</h3>
-    <div class="chi_noibo cg_hint" style="margin:0 0 4px;">Bản đồ vẽ được <b>1.847</b> nhánh;
-      <b>2.277</b> nhánh trong toàn mạng có dữ liệu bề rộng/độ sâu.</div>
+      <span class="swatch line" style="background:#8fa8bd"></span>Kênh rạch nội đồng</label>
     <label><input type="checkbox" data-layers="kenh_rong_case_sc,kenh_rong_sc,kenh_rong_case_kr,kenh_rong_kr">
       <span class="swatch line" style="background:#2171b5"></span>Bề rộng lòng dẫn</label>
     <label><input type="checkbox" data-layers="kenh_sau_case_sc,kenh_sau_sc,kenh_sau_case_kr,kenh_sau_kr">
@@ -318,7 +309,7 @@
     <div id="chugiai_rongsau" style="display:none;"></div>
   </div>
   <div class="nhom">
-    <h3>Trạm quan trắc</h3>
+    <h3>📍 Quan trắc</h3>
     <label><input type="checkbox" data-layers="tram_pt,tram_nhan" checked>
       <span class="swatch" style="background:#c05621;border-radius:50%"></span>Trạm quan trắc (47)</label>
     <div style="font-size:11px;color:#4a5568;margin:2px 0 0 19px;line-height:1.9;">
@@ -326,28 +317,36 @@
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ed8936;margin:0 4px 0 10px;vertical-align:middle;"></span>chỉ H
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f6ad55;margin:0 4px 0 10px;vertical-align:middle;"></span>chỉ Q
       <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#a0aec0;margin:0 4px 0 10px;vertical-align:middle;"></span>chưa rõ</div>
-  </div>
-  <div class="nhom">
-    <h3>Hành chính · giao thông</h3>
-    <label><input type="checkbox" data-layers="dia_gioi_tinh,dia_gioi_tinh_nhan,dia_gioi_tinh_nen" checked>
-      <span class="swatch line" style="background:#718096"></span>Tỉnh, thành phố (34)</label>
-    <label><input type="checkbox" data-layers="dia_gioi_xa,dia_gioi_xa_nhan,dia_gioi_xa_nen">
-      <span class="swatch line" style="background:#a0aec0"></span>Xã, phường (803)</label>
-    <label><input type="checkbox" data-layers="giao_thong,giao_thong_nhan,nen_duong_chinh" checked>
-      <span class="swatch line" style="background:#c0392b"></span>Đường chính (cao tốc, quốc lộ)</label>
-  </div>
-  <div class="nhom">
-    <h3>Nước ngầm (27 cụm giếng · 88 lỗ)</h3>
-    <label><input type="checkbox" data-layers="ngam_pt" checked>
+    <label style="margin-top:6px"><input type="checkbox" data-layers="ngam_pt" checked>
       <span class="swatch" style="background:linear-gradient(90deg,#9ad7e8,#4fb3a9,#e3c640,#c4483c,#4b2a7a);"></span>Nước ngầm — tầng có số liệu</label>
     <div id="ngam_chu_giai" style="margin:3px 0 0 19px;font-size:11px;color:#4a5568;line-height:1.5"></div>
   </div>
   <div class="nhom">
-    <h3>Nền</h3>
+    <h3>📏 Khảo sát</h3>
+    <label><input type="checkbox" data-layers="kenh_ks_vien,kenh_ks_ca_hai,kenh_ks_2020,kenh_ks_2017" checked>
+      <span class="swatch line" style="background:#6b46c1"></span>Khảo sát lòng dẫn 2017 – 2020</label>
+    <div class="cg_hint" style="line-height:1.7;margin-left:19px">
+      <span style="display:inline-block;width:20px;height:3px;background:#6b46c1;vertical-align:middle"></span> cả 2017 và 2020 (748 km)<br>
+      <span style="display:inline-block;width:20px;height:3px;background:#9257d8;vertical-align:middle"></span> chỉ 2020 (340 km)<br>
+      <span style="display:inline-block;width:20px;height:0;border-top:3px dashed #b794f4;vertical-align:middle"></span> chỉ 2017 (19 km)</div>
+    <label><input type="checkbox" data-layers="ccpo2023_tien,ccpo2023_hauriver,ccpo2023_diem">
+      <span class="swatch" style="background:#9f7aea;border-radius:50%"></span>Đo đáy sông 2023 (57 mặt cắt)</label>
+  </div>
+  <div class="nhom chi_noibo">
+    <h3>🧮 Mô hình (nội bộ)</h3>
+    <label><input type="checkbox" data-layers="kenh" checked>
+      <span class="swatch line" style="background:#3182ce"></span>Mạng MIKE-A (1.847)</label>
+    <label><input type="checkbox" data-layers="kenh_telemac" checked>
+      <span class="swatch line" style="background:#e53e3e"></span>TELEMAC 1D (416)</label>
+    <label><input type="checkbox" data-layers="kenh_v6">
+      <span class="swatch line" style="background:#38a169"></span>TELEMAC v6 (417)</label>
+    <label><input type="checkbox" data-layers="mikeb_full">
+      <span class="swatch line" style="background:#319795"></span>MIKE-B (1.695)</label>
+  </div>
+  <div class="nhom">
+    <h3>🧭 Nền</h3>
     <label><input type="checkbox" data-layers="nen_ban_do" checked>
       <span class="swatch" style="background:#cbd5e0"></span>Nền bản đồ</label>
-    <label><input type="checkbox" data-layers="nen_duong_pho" checked>
-      <span class="swatch line" style="background:#a9b4bf"></span>Đường địa phương</label>
     <label><input type="checkbox" data-layers="nen_dia_danh_lon,nen_dia_danh_nho,nen_dia_danh_thon" checked>
       <span class="swatch" style="background:#4a5568;border-radius:50%"></span>Địa danh</label>
   </div>
@@ -659,15 +658,15 @@ const map = new maplibregl.Map({
         id: "nen_duong_chinh", type: "line", source: "nen_duong_chinh_src",
         "source-layer": "nen_duong_chinh", minzoom: 6,
         layout: { "line-cap": "round", "line-join": "round" },
-        paint: { "line-color": "#8fa0af", "line-opacity": 0.9,
-                 "line-width": ["interpolate", ["linear"], ["zoom"], 6, 0.7, 9, 1.4, 12, 2.6] }
+        paint: { "line-color": "#e0a63c", "line-opacity": 0.95,
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 6, 0.8, 9, 1.4, 12, 2.2] }
       },
       {
         id: "nen_duong_pho", type: "line", source: "nen_duong_pho_src",
         "source-layer": "nen_duong_pho", minzoom: 10,
         layout: { "line-cap": "round", "line-join": "round" },
-        paint: { "line-color": "#a9b4bf", "line-opacity": 0.85,
-                 "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.55, 12, 1.05, 14, 1.7] }
+        paint: { "line-color": "#ecd488", "line-opacity": 0.95,
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.6, 12, 1.0, 14, 1.6] }
       },
       {
         id: "nen_dia_danh_lon", type: "symbol", source: "nen_dia_danh_src", minzoom: 6,
@@ -706,7 +705,7 @@ const map = new maplibregl.Map({
       // Dia gioi tinh (Nhom A) — vien mo + nhan ten, duoi tat ca lop du lieu.
       {
         id: "dia_gioi_tinh", type: "line", source: "dia_gioi_tinh_src", minzoom: 5,
-        paint: { "line-color": "#718096",
+        paint: { "line-color": "#3d4852",
                  "line-width": ["interpolate", ["linear"], ["zoom"], 5, 0.8, 9, 1.4, 12, 2],
                  "line-opacity": 0.85 }
       },
@@ -722,7 +721,8 @@ const map = new maplibregl.Map({
       // khong lam ro mat ban do o zoom thap; ve ngay TREN lop tinh.
       {
         id: "dia_gioi_xa", type: "line", source: "dia_gioi_xa_src", minzoom: 9,
-        paint: { "line-color": "#a0aec0",
+        layout: { "line-dasharray": [3, 2.5] },
+        paint: { "line-color": "#64748b",
                  "line-width": ["interpolate", ["linear"], ["zoom"], 7.5, 0.45, 10, 0.9, 12, 1.4],
                  "line-opacity": 0.75 }
       },
@@ -740,8 +740,8 @@ const map = new maplibregl.Map({
         id: "giao_thong", type: "line", source: "giao_thong_src", minzoom: 6,
         layout: { "line-cap": "round", "line-join": "round" },
         paint: {
-          "line-color": ["case", ["==", ["get", "loai"], "Cao tốc"], "#c0392b", "#dd8a3e"],
-          "line-width": ["interpolate", ["linear"], ["zoom"], 6, 0.7, 9, 1.5, 12, 3],
+          "line-color": ["case", ["==", ["get", "loai"], "Cao tốc"], "#c0392b", "#e07b39"],
+          "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1.0, 9, 1.9, 12, 3.0],
           "line-opacity": 0.9 }
       },
       {
@@ -758,7 +758,7 @@ const map = new maplibregl.Map({
       {
         id: "kenh_rach_that", type: "line", source: "kenh_rach_that_src",
         "source-layer": "kenhrach_update", minzoom: 8.5,
-        paint: { "line-color": "#b6c0cd", "line-width": 0.7, "line-opacity": 0.7 }
+        paint: { "line-color": "#8fa8bd", "line-width": 0.8, "line-opacity": 0.8 }
       },
       {
         id: "kenh_rach_that_nhan", type: "symbol", source: "kenh_rach_that_src",
@@ -821,21 +821,21 @@ const map = new maplibregl.Map({
         id: "kenh_ks_2020", type: "line", source: "song_kenh", "source-layer": "channels",
         filter: ["all", locKenh("co_survey_2020"), ["!=", ["get", "co_survey_2017"], "yes"]],
         layout: { "line-cap": "round", "line-join": "round" },
-        paint: { "line-color": "#6b46c1",
+        paint: { "line-color": "#9257d8",
                  "line-width": ["interpolate", ["linear"], ["zoom"], 5, 1.6, 9, 2.8, 13, 5] }
       },
       {
         id: "kenh_ks_2017", type: "line", source: "song_kenh", "source-layer": "channels",
         filter: ["all", locKenh("co_survey_2017"), ["!=", ["get", "co_survey_2020"], "yes"]],
         layout: { "line-cap": "butt", "line-join": "round" },
-        paint: { "line-color": "#dd6b20", "line-dasharray": [2, 1.2],
+        paint: { "line-color": "#b794f4", "line-dasharray": [2, 1.2],
                  "line-width": ["interpolate", ["linear"], ["zoom"], 5, 1.6, 9, 2.8, 13, 5] }
       },
       {
         id: "kenh_ks_ca_hai", type: "line", source: "song_kenh", "source-layer": "channels",
         filter: ["all", locKenh("co_survey_2017"), locKenh("co_survey_2020")],
         layout: { "line-cap": "round", "line-join": "round" },
-        paint: { "line-color": "#2b6cb0",
+        paint: { "line-color": "#6b46c1",
                  "line-width": ["interpolate", ["linear"], ["zoom"], 5, 2, 9, 3.4, 13, 6] }
       },
       // ==== Be rong / do sau long dan that (them 28/08/2026) — mac dinh AN,
@@ -870,7 +870,7 @@ const map = new maplibregl.Map({
       {
         id: "ccpo2023_diem", type: "circle", source: "ccpo2023_diem_src",
         "source-layer": "diem_tho", minzoom: 8, layout: { visibility: "none" },
-        paint: { "circle-radius": 2, "circle-color": "#718096", "circle-opacity": 0.5 }
+        paint: { "circle-radius": 2, "circle-color": "#a394d1", "circle-opacity": 0.5 }
       },
       {
         id: "ccpo2023_tien", type: "circle", source: "ccpo2023_transect_src",
@@ -878,7 +878,7 @@ const map = new maplibregl.Map({
         filter: ["==", ["get", "nhom"], "tien_chinh"],
         layout: { visibility: "none" },
         paint: {
-          "circle-radius": 6, "circle-color": "#3182ce",
+          "circle-radius": 6, "circle-color": "#6b46c1",
           "circle-stroke-color": "#fff", "circle-stroke-width": 1.5
         }
       },
@@ -888,7 +888,7 @@ const map = new maplibregl.Map({
         filter: ["==", ["get", "nhom"], "hauriver_extra"],
         layout: { visibility: "none" },
         paint: {
-          "circle-radius": 6, "circle-color": "#b7791f",
+          "circle-radius": 6, "circle-color": "#9f7aea",
           "circle-stroke-color": "#fff", "circle-stroke-width": 1.5
         }
       },
@@ -1873,14 +1873,17 @@ document.getElementById("bang_tong_hop_overlay").addEventListener("click", (e) =
     ["Bề rộng / độ sâu lòng dẫn", "Ước theo mặt cắt khảo sát, gắn lên đoạn sông/kênh có tên khi " +
       "trùng vị trí (khớp ≥ 80% chiều dài trong đệm 80 m): sông chính khoảng một nửa số đoạn, " +
       "kênh nội đồng chỉ một phần nhỏ; đoạn còn lại chưa có số."],
-    ["Kênh rạch nội đồng", "35.083 đoạn, nguồn \"Xuân Ai\"; thuộc tính: tên, tỉnh, chiều dài."],
+    ["Kênh rạch nội đồng", "35.083 đoạn, nguồn \"Xuân Ai\"; thuộc tính: tên, tỉnh, chiều dài. " +
+      "Mặc định tắt, hiện từ zoom 8,5 (lớp nặng)."],
     ["Trạm quan trắc", "47 trạm H/Q — bảng tổng hợp gồm giai đoạn phủ, số năm, % lấp đầy " +
       "(không công bố trị số đo)."],
     ["Nước ngầm", "27 cụm / 88 lỗ khoan quan trắc QTQG (1995–2017); chỉ vị trí + tầng chứa nước."],
     ["Khảo sát lòng dẫn 2017–2020", "Đo địa hình mặt cắt: cả 2017 và 2020 (748 km), chỉ 2020 (340 km), " +
       "chỉ 2017 (19 km)."],
-    ["Mạng mô hình (nội bộ — ?noibo=1)", "MIKE-A 1.847 nhánh (vàng = còn ≥ 1 nguồn khác xác nhận, " +
-      "50 nhánh); TELEMAC 1D 416; TELEMAC v6 417 (Ba Lai là nhánh mới, còn lại là đoạn kéo dài); " +
+    ["Đo đáy sông 2023 (CCPO)", "5.199 điểm đo + 57 mặt cắt ứng viên (21 sông Tiền, 36 sông Hậu)."],
+    ["Mạng mô hình (nội bộ — ?noibo=1)", "MIKE-A 1.847 nhánh đủ điều kiện (vàng = còn ≥ 1 nguồn khác " +
+      "xác nhận, 50 nhánh); trên TOÀN mạng 3.009 nhánh có 2.277 nhánh mang bề rộng/độ sâu từ mặt cắt " +
+      "hình học. TELEMAC 1D 416; TELEMAC v6 417 (Ba Lai là nhánh mới, còn lại là đoạn kéo dài); " +
       "MIKE-B 1.695 (đã lọc ô ngập/link)."],
   ];
   const ov = document.getElementById("ghichu_overlay");
