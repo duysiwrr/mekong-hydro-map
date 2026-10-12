@@ -808,7 +808,7 @@ const map = new maplibregl.Map({
       {
         id: "song_center_nhan", type: "symbol", source: "song_center_src",
         "source-layer": "song_kenh_chinh", minzoom: 8.5,
-        filter: ["has", "ten"],
+        filter: ["all", ["has", "ten"], ["!=", ["get", "ten"], ""]],
         layout: {
           "symbol-placement": "line", "text-field": ["get", "ten"],
           "text-size": ["interpolate", ["linear"], ["zoom"], 9, 10.5, 13, 13],
@@ -1195,11 +1195,11 @@ map.on('click', (e) => {
     html = `<b>${p.Ten || "(chưa có tên)"}</b> (kênh rạch nội đồng ĐBSCL)<br>` +
            `tỉnh: ${p.TenTinh || ""}<br>dài: ${p.C_Dai ? Math.round(p.C_Dai) + " m" : ""}`;
   } else if (f.layer.id === "song_center") {
-    html = `<b>${p.ten || "(chưa có tên)"}</b> (sông/kênh chính ĐBSCL — hợp nhất MIKE-A)` +
-           `<br>dài: ${p.dai_km ? p.dai_km + " km" : "?"}` +
-           (p.rong_m ? ` · rộng ~${Math.round(p.rong_m)} m` : "") +
-           (p.sau_m ? ` · sâu ~${p.sau_m} m` : "") +
-           `<br>nguồn: ${p.nguon === "mike_a" ? "mạng MIKE-A (nhánh mở rộng)" : "Xuân Ai (song_center)"}`;
+    html = (p.ten ? `<b>${p.ten}</b><br>` : "") +
+           `Dài: ${p.dai_km ? p.dai_km.toLocaleString("vi") + " km" : "?"}` +
+           (p.rong_m ? ` · Rộng ~${Math.round(p.rong_m).toLocaleString("vi")} m` : "") +
+           (p.sau_m ? ` · Sâu ~${p.sau_m.toLocaleString("vi")} m` : "") +
+           (p.cap ? `<br>Cấp: ${p.cap}` : "");
   } else if (f.layer.id === "mikeb_full") {
     html = `<b>${p.ten_mikeb}</b> (mô hình MIKE-B, độc lập với MIKE-A)<br>` +
            `topo: ${p.topo || ""}<br>dài ${p.dai_km} km`;
@@ -1999,7 +1999,9 @@ document.getElementById("bang_tong_hop_overlay").addEventListener("click", (e) =
     ["Sông, kênh chính (hợp nhất)", "song_center — đường thật có tên, nguồn \"Xuân Ai\" (1.350 đoạn) " +
       "+ nhánh MIKE-A ĐỦ ĐIỀU KIỆN không trùng song_center (1.611 nhánh; đã BỎ link-channel/kênh giả " +
       "theo bộ lọc co_trong_mo_hinh của lớp web MIKE-A cũ). Bề rộng/độ sâu: ưu tiên số khớp khảo sát, " +
-      "bổ sung từ mặt cắt hình học MIKE-A; đã vệ sinh: rộng 2–500 m, sâu ≤ 40 m; phủ ~77–78%."],
+      "bổ sung từ mặt cắt hình học MIKE-A; đã vệ sinh: rộng 2–500 m, sâu ≤ 40 m; phủ ~77–78%. " +
+      "Tên và cấp kênh gán theo mạng kênh rạch có tên chạy dọc theo mạch (độ phủ ≥ 50% chiều dài); " +
+      "mạch không xác định được tên chỉ hiện thông số."],
     ["Bề rộng / độ sâu lòng dẫn", "Ước theo mặt cắt khảo sát, gắn lên đoạn sông/kênh có tên khi " +
       "trùng vị trí (khớp ≥ 80% chiều dài trong đệm 80 m): sông chính khoảng một nửa số đoạn, " +
       "kênh nội đồng chỉ một phần nhỏ; đoạn còn lại chưa có số."],
