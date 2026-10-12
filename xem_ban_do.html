@@ -56,6 +56,9 @@
              max-height:120px; overflow:auto; white-space:pre-wrap; opacity:.94; }
   #loi_dong { position:absolute; top:5px; right:6px; border:none; background:transparent;
               color:#feb2b2; cursor:pointer; font-size:13px; line-height:1; padding:2px 4px; }
+  #goi_y_zoom { position:absolute; bottom:64px; left:10px; background:#ebf8ff; color:#2b6cb0;
+    border:1px solid #90cdf4; padding:8px 14px; border-radius:6px; font-size:12px;
+    z-index:3; display:none; box-shadow:0 2px 8px rgba(43,108,176,.25); }
   .maplibregl-popup-content { font-size:13px; max-width:280px; line-height:1.45; }
 
   /* ===== Thanh tim kiem nang cap (14/09/2026): tim theo ten tram / tinh /
@@ -431,6 +434,7 @@
   Trang chỉ thể hiện phạm vi, quy mô và giai đoạn phủ của dữ liệu, KHÔNG công bố trị số đo ·
   nền bản đồ: <span id="nen_nguon">…</span></div>
 <div id="loi_box"></div>
+<div id="goi_y_zoom"></div>
 <div id="map"></div>
 <script>
 // Che do noi bo (?noibo=1): hien cac luoi mo hinh MIKE/TELEMAC. Ban cong khai: an.
@@ -670,7 +674,7 @@ const map = new maplibregl.Map({
       // tinh chua xa) — khi ca tinh + xa bat cung luc van phan biet duoc
       // 2 cap hanh chinh. minzoom 9 = cung luc voi vien xa.
       {
-        id: "dia_gioi_xa_nen", type: "fill", source: "dia_gioi_xa_src", minzoom: 9,
+        id: "dia_gioi_xa_nen", type: "fill", source: "dia_gioi_xa_src", minzoom: 8,
         paint: { "fill-color": ["match", ["get", "mt"], 0, "#a9c2e0", 1, "#b3cc9e", 2, "#dbc894", 3, "#aca6d6", 4, "#cfb49e", 5, "#93c6c0", 6, "#c9a8bc", "#c9d9ec"],
                  "fill-opacity": 0.85 }
       },
@@ -686,10 +690,10 @@ const map = new maplibregl.Map({
       },
       {
         id: "nen_duong_pho", type: "line", source: "nen_duong_pho_src",
-        "source-layer": "nen_duong_pho", minzoom: 10,
+        "source-layer": "nen_duong_pho", minzoom: 8.5,
         layout: { "line-cap": "round", "line-join": "round" },
         paint: { "line-color": "#ecd488", "line-opacity": 0.95,
-                 "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.6, 12, 1.0, 14, 1.6] }
+                 "line-width": ["interpolate", ["linear"], ["zoom"], 8.5, 0.5, 12, 1.0, 14, 1.6] }
       },
       {
         id: "nen_dia_danh_lon", type: "symbol", source: "nen_dia_danh_src", minzoom: 6,
@@ -743,7 +747,7 @@ const map = new maplibregl.Map({
       // Dia gioi xa/phuong (Nhom B) — net mo nhat + nhan ten, minzoom cao de
       // khong lam ro mat ban do o zoom thap; ve ngay TREN lop tinh.
       {
-        id: "dia_gioi_xa", type: "line", source: "dia_gioi_xa_src", minzoom: 9,
+        id: "dia_gioi_xa", type: "line", source: "dia_gioi_xa_src", minzoom: 7.5,
         paint: { "line-dasharray": [3, 2.5],
                  "line-color": "#64748b",
                  "line-width": ["interpolate", ["linear"], ["zoom"], 7.5, 0.45, 10, 0.9, 12, 1.4],
@@ -980,6 +984,18 @@ map.addControl(new maplibregl.NavigationControl(), "bottom-right");
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: "metric" }), "bottom-right");
 map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
 
+// Goi y zoom khi nguoi dung BAT mot lop co minzoom cao hon muc dang xem
+// (phan hoi 12/10 toi: bat "Xã, phường" / "Đường địa phương" khong thay gi —
+// vi minzoom 9/10 cao hon zoom tong the ~6.5). Thẻ xanh nhỏ, tự ẩn 4,5 s.
+function goiYZoom(minz) {
+  const el = document.getElementById("goi_y_zoom");
+  el.innerHTML = `Lớp này hiện từ zoom <b>${minz.toLocaleString("vi")}</b> — đang ở zoom ` +
+    `${map.getZoom().toFixed(1)}: hãy phóng to để xem.`;
+  el.style.display = "block";
+  clearTimeout(goiYZoom._h);
+  goiYZoom._h = setTimeout(() => { el.style.display = "none"; }, 4500);
+}
+
 // ==== QUAN LY NEN BAN DO + FAILOVER TU DONG (14/09/2026) ====
 // Dem so tile nen Esri tai that bai. Vuot nguong thi AN han lop Esri de nguoi
 // xem thay lop OSM ben duoi thay vi mang trong, va ghi ro dang dung nguon nao
@@ -1040,6 +1056,13 @@ document.querySelectorAll('#panel input[type=checkbox]').forEach((cb) => {
       map.setLayoutProperty(id, 'visibility', v);
     });
     if (cb.dataset.layers.includes("kenh_rong") || cb.dataset.layers.includes("kenh_sau")) capNhatChuGiai();
+    if (cb.checked) {
+      // Bat lop ma minzoom cao hon muc dang xem → goi y zoom (khong thi lop
+      // "an" lam nguoi xem tuong bi loi — phan hoi 12/10 toi).
+      const minz = Math.min(...ids.filter((id) => map.getLayer(id))
+        .map((id) => map.getLayer(id).minzoom ?? 0));
+      if (minz > 0 && map.getZoom() < minz - 0.05) goiYZoom(minz);
+    }
   });
 });
 
