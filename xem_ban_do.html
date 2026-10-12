@@ -302,6 +302,8 @@
       <span class="swatch line" style="background:#a0aec0"></span>Kênh rạch nội đồng</label>
     <div class="cg_hint">lớp nặng — chỉ hiện khi phóng to đến mức <b>zoom ≥ 8,5</b>
       (mặc định tắt để bản đồ mở nhanh).</div>
+    <label><input type="checkbox" data-layers="ccpo2023_tien,ccpo2023_hauriver,ccpo2023_diem">
+      <span class="swatch" style="background:#3182ce;border-radius:50%"></span>Khảo sát đáy sông 2023 (57 mặt cắt, 5.199 điểm)</label>
   </div>
   <div class="nhom">
     <h3>Lòng dẫn</h3>
@@ -312,15 +314,6 @@
     <label><input type="checkbox" data-layers="kenh_sau_case,kenh_sau">
       <span class="swatch line" style="background:#00838f"></span>Độ sâu lòng dẫn</label>
     <div id="chugiai_rongsau" style="display:none;"></div>
-  </div>
-  <div class="nhom">
-    <h3>Khảo sát đáy 2023</h3>
-    <label><input type="checkbox" data-layers="ccpo2023_diem">
-      <span class="swatch" style="background:#718096;border-radius:50%"></span>Khảo sát lòng dẫn CCPO 2023 (5.199 điểm đo)</label>
-    <label><input type="checkbox" data-layers="ccpo2023_tien" checked>
-      <span class="swatch" style="background:#3182ce;border-radius:50%"></span>Mặt cắt khảo sát 2023 - Sông Tiền (21)</label>
-    <label><input type="checkbox" data-layers="ccpo2023_hauriver">
-      <span class="swatch" style="background:#b7791f;border-radius:50%"></span>Mặt cắt khảo sát 2023 - Sông Hậu (36)</label>
   </div>
   <div class="nhom">
     <h3>Trạm quan trắc</h3>
@@ -670,6 +663,7 @@ const map = new maplibregl.Map({
         id: "ccpo2023_tien", type: "circle", source: "ccpo2023_transect_src",
         "source-layer": "transect_ung_vien",
         filter: ["==", ["get", "nhom"], "tien_chinh"],
+        layout: { visibility: "none" },
         paint: {
           "circle-radius": 6, "circle-color": "#3182ce",
           "circle-stroke-color": "#fff", "circle-stroke-width": 1.5
