@@ -309,10 +309,11 @@
     <h3>Lòng dẫn</h3>
     <div class="chi_noibo cg_hint" style="margin:0 0 4px;">Bản đồ vẽ được <b>1.847</b> nhánh;
       <b>2.277</b> nhánh trong toàn mạng có dữ liệu bề rộng/độ sâu.</div>
-    <label><input type="checkbox" data-layers="kenh_rong_case,kenh_rong">
+    <label><input type="checkbox" data-layers="kenh_rong_case_sc,kenh_rong_sc,kenh_rong_case_kr,kenh_rong_kr">
       <span class="swatch line" style="background:#2171b5"></span>Bề rộng lòng dẫn</label>
-    <label><input type="checkbox" data-layers="kenh_sau_case,kenh_sau">
+    <label><input type="checkbox" data-layers="kenh_sau_case_sc,kenh_sau_sc,kenh_sau_case_kr,kenh_sau_kr">
       <span class="swatch line" style="background:#00838f"></span>Độ sâu lòng dẫn</label>
+    <div class="cg_hint" style="margin:2px 0 0">Ước theo mặt cắt khảo sát, gắn lên đoạn sông/kênh có tên khi trùng vị trí: sông chính khoảng một nửa số đoạn, kênh nội đồng chỉ một phần nhỏ; đoạn còn lại chưa có số.</div>
     <div id="chugiai_rongsau" style="display:none;"></div>
   </div>
   <div class="nhom">
@@ -506,6 +507,23 @@ function zoomNhan(stepE) {
 const CO_RONG = [">", ["coalesce", ["get", "rong_m"], -1], 0];
 const CO_SAU = [">", ["coalesce", ["get", "sau_m"], -1], 0];
 
+// Be rong / do sau tren MANG CO TEN (12/10/2026): gan tu scripts/gan_rong_sau_len_ten.py vao song_center + kenhrach_update.
+function lopRongSau() {
+  const nguon = [["sc", "song_center_src", "song_center", 5], ["kr", "kenh_rach_that_src", "kenhrach_update", 8.5]];
+  const out = [];
+  for (const [h, src, sl, mz] of nguon) {
+    for (const [k, cot, loc, bac, mau, net, vien] of [
+      ["rong", "rong_m", CO_RONG, RONG_BAC, RONG_MAU, RONG_NET, "#08306b"],
+      ["sau", "sau_m", CO_SAU, SAU_BAC, SAU_MAU, SAU_NET, "#00363a"]]) {
+      const lay = { visibility: "none", "line-cap": "round", "line-join": "round" };
+      out.push({ id: `kenh_${k}_case_${h}`, type: "line", source: src, "source-layer": sl, minzoom: mz, filter: loc, layout: lay,
+                 paint: { "line-color": vien, "line-width": zoomNhan(["*", 1.7, stepExpr(cot, bac, net)]) } });
+      out.push({ id: `kenh_${k}_${h}`, type: "line", source: src, "source-layer": sl, minzoom: mz, filter: loc, layout: lay,
+                 paint: { "line-color": stepExpr(cot, bac, mau), "line-width": zoomNhan(stepExpr(cot, bac, net)) } });
+    }
+  }
+  return out;
+}
 const map = new maplibregl.Map({
   container: 'map',
   style: {
@@ -654,6 +672,7 @@ const map = new maplibregl.Map({
           "line-width": zoomNhan(stepExpr("sau_m", SAU_BAC, SAU_NET))
         }
       },
+      ...lopRongSau(),
       {
         id: "ccpo2023_diem", type: "circle", source: "ccpo2023_diem_src",
         "source-layer": "diem_tho", minzoom: 8, layout: { visibility: "none" },
@@ -783,7 +802,7 @@ quanLyNen();
 
 const LOP_CLICK_DUOC = ["kenh", "kenh_telemac", "kenh_v6", "mikeb_full",
                          "kenh_ks_ca_hai", "kenh_ks_2020", "kenh_ks_2017", "kenh_rach_that", "song_center",
-                         "kenh_rong", "kenh_sau", "tram_pt", "ngam_pt",
+                         "kenh_rong_sc", "kenh_sau_sc", "kenh_rong_kr", "kenh_sau_kr", "tram_pt", "ngam_pt",
                          "ccpo2023_diem", "ccpo2023_tien", "ccpo2023_hauriver"];
 
 // Checkbox bat/tat lop — 1 checkbox co the dieu khien NHIEU layer id.
@@ -930,12 +949,16 @@ map.on('click', (e) => {
   let html = "";
   const rongSauHtml = () => {
     if (!(p.rong_m > 0)) return "";
-    const nguon = p.nguon_hinh_hoc === "telemac" ? "hình học TELEMAC thật" : "mặt cắt MIKE-A";
+    const nguon = !NOIBO ? "ước theo mặt cắt khảo sát" : p.nguon_hinh_hoc === "telemac" ? "hình học TELEMAC thật" : "mặt cắt MIKE-A";
     return `<span style="color:#718096;font-size:11px">Bề rộng ~<b>${Math.round(p.rong_m).toLocaleString("vi")} m</b>` +
       (p.sau_m > 0 ? ` · sâu ~<b>${p.sau_m.toFixed(1)} m</b>` : "") +
-      ` (${nguon}${p.n_mat_cat_hinh_hoc ? `, ${p.n_mat_cat_hinh_hoc} mặt cắt` : ""})</span><br>`;
+      ` (${nguon}${NOIBO && p.n_mat_cat_hinh_hoc ? `, ${p.n_mat_cat_hinh_hoc} mặt cắt` : ""})</span><br>`;
   };
-  if (f.layer.id.startsWith("kenh_ks_")) {
+  if (/^kenh_(rong|sau)_(sc|kr)$/.test(f.layer.id)) {
+    const ten = p.Ten_Song || p.ten || p.Ten || "(chưa có tên)";
+    html = `<b>${ten}</b> ${f.layer.id.endsWith("_sc") ? "(sông/kênh chính)" : "(kênh rạch nội đồng)"}<br>` +
+           (p.TenTinh ? `tỉnh: ${p.TenTinh}<br>` : "") + (p.dai_km ? `đoạn dài ${p.dai_km} km<br>` : "") + rongSauHtml();
+  } else if (f.layer.id.startsWith("kenh_ks_")) {
     const nam = f.layer.id === "kenh_ks_ca_hai" ? "2017 và 2020" : f.layer.id === "kenh_ks_2020" ? "chỉ 2020" : "chỉ 2017";
     html = `<b>Đoạn khảo sát lòng dẫn</b> (${nam})<br>dài ${p.dai_km} km` +
            (p.rong_m > 0 ? `<br>bề rộng ~<b>${Math.round(p.rong_m).toLocaleString("vi")} m</b>` + (p.sau_m > 0 ? ` · sâu ~<b>${p.sau_m.toFixed(1)} m</b>` : "") : "");
