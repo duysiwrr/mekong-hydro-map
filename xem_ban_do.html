@@ -1172,8 +1172,9 @@ map.on('click', (e) => {
       ` (${nguon}${NOIBO && p.n_mat_cat_hinh_hoc ? `, ${p.n_mat_cat_hinh_hoc} mặt cắt` : ""})</span><br>`;
   };
   if (/^kenh_(rong|sau)_(sc|kr)$/.test(f.layer.id)) {
-    const ten = p.Ten_Song || p.ten || p.Ten || "(chưa có tên)";
-    html = `<b>${ten}</b> ${f.layer.id.endsWith("_sc") ? "(sông/kênh chính)" : "(kênh rạch nội đồng)"}<br>` +
+    const ten = p.Ten_Song || p.ten || p.Ten || "";
+    html = (ten ? `<b>${ten}</b> ` : "") +
+           `<span style="color:#718096;font-size:11px">${f.layer.id.endsWith("_sc") ? "sông/kênh chính" : "kênh nội đồng"}</span><br>` +
            (p.TenTinh ? `tỉnh: ${p.TenTinh}<br>` : "") + (p.dai_km ? `đoạn dài ${p.dai_km} km<br>` : "") + rongSauHtml();
   } else if (f.layer.id.startsWith("kenh_ks_")) {
     const nam = f.layer.id === "kenh_ks_ca_hai" ? "2017 và 2020" : f.layer.id === "kenh_ks_2020" ? "chỉ 2020" : "chỉ 2017";
@@ -1192,8 +1193,9 @@ map.on('click', (e) => {
            `Đang chạy: TELEMAC sản xuất ${co(p.trong_telemac_hien_hanh)} · ` +
            `TELEMAC v6 (thử nghiệm) ${co(p.trong_v6_hlcc_balai)}`;
   } else if (f.layer.id === "kenh_rach_that") {
-    html = `<b>${p.Ten || "(chưa có tên)"}</b> (kênh rạch nội đồng ĐBSCL)<br>` +
-           `tỉnh: ${p.TenTinh || ""}<br>dài: ${p.C_Dai ? Math.round(p.C_Dai) + " m" : ""}`;
+    html = (p.Ten ? `<b>${p.Ten}</b><br>` : "") +
+           `<span style="color:#718096;font-size:11px">kênh rạch nội đồng</span><br>` +
+           `tỉnh: ${p.TenTinh || "—"} · dài: ${p.C_Dai ? Math.round(p.C_Dai).toLocaleString("vi") + " m" : "?"}`;
   } else if (f.layer.id === "song_center") {
     html = (p.ten ? `<b>${p.ten}</b><br>` : "") +
            `Dài: ${p.dai_km ? p.dai_km.toLocaleString("vi") + " km" : "?"}` +
