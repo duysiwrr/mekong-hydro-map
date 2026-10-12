@@ -94,14 +94,14 @@
   #ghichu_box { width:min(720px, 92vw); }
   #msk_box h3, #hc_box h3, #gt_box h3, #ghichu_box h3 { margin:0 0 4px; font-size:17px; }
   #msk_box .sub, #hc_box .sub, #gt_box .sub, #ghichu_box .sub { color:#666; font-size:12px; margin-bottom:8px; }
-  #msk_tab button, #hc_tab button { border:1px solid #cbd5e0; background:#fff; padding:5px 12px; cursor:pointer; font-size:12.5px; }
-  #msk_tab button.on, #hc_tab button.on { background:#2b6cb0; color:#fff; border-color:#2b6cb0; }
-  #msk_loc, #hc_loc, #gt_loc { padding:6px 10px; border:1px solid #cbd5e0; border-radius:6px; width:min(320px,60vw); font-size:13px; margin:0 8px; }
-  #msk_tb, #hc_tb, #gt_tb { border-collapse:collapse; font-size:12.5px; width:100%; margin-top:8px; }
-  #msk_tb th, #hc_tb th, #gt_tb th { text-align:left; padding:4px 8px; border-bottom:2px solid #cbd5e0; position:sticky; top:0; background:#fff; white-space:nowrap; }
-  #msk_tb td, #hc_tb td, #gt_tb td { padding:3px 8px; border-bottom:1px solid #edf2f7; }
-  #msk_tb tr.dong:hover, #hc_tb tr.dong:hover, #gt_tb tr.dong:hover { background:#ebf4ff; cursor:pointer; }
-  #msk_tb td.so, #hc_tb td.so, #gt_tb td.so { text-align:right; font-variant-numeric:tabular-nums; }
+  #msk_tab button, #hc_tab button, #nn_tab button { border:1px solid #cbd5e0; background:#fff; padding:5px 12px; cursor:pointer; font-size:12.5px; }
+  #msk_tab button.on, #hc_tab button.on, #nn_tab button.on { background:#2b6cb0; color:#fff; border-color:#2b6cb0; }
+  #msk_loc, #hc_loc, #gt_loc, #nn_loc, #ks_loc { padding:6px 10px; border:1px solid #cbd5e0; border-radius:6px; width:min(320px,60vw); font-size:13px; margin:0 8px; }
+  #msk_tb, #hc_tb, #gt_tb, #nn_tb, #ks_tb { border-collapse:collapse; font-size:12.5px; width:100%; margin-top:8px; }
+  #msk_tb th, #hc_tb th, #gt_tb th, #nn_tb th, #ks_tb th { text-align:left; padding:4px 8px; border-bottom:2px solid #cbd5e0; position:sticky; top:0; background:#fff; white-space:nowrap; }
+  #msk_tb td, #hc_tb td, #gt_tb td, #nn_tb td, #ks_tb td { padding:3px 8px; border-bottom:1px solid #edf2f7; }
+  #msk_tb tr.dong:hover, #hc_tb tr.dong:hover, #gt_tb tr.dong:hover, #nn_tb tr.dong:hover, #ks_tb tr.dong:hover { background:#ebf4ff; cursor:pointer; }
+  #msk_tb td.so, #hc_tb td.so, #gt_tb td.so, #nn_tb td.so, #ks_tb td.so { text-align:right; font-variant-numeric:tabular-nums; }
   #ghichu_box .ds_card { margin-top:8px; }
   .msk_chung { color:#b7791f; font-size:11px; }
   #bang_tong_hop_overlay { position:absolute; inset:0; background:rgba(0,0,0,.4);
@@ -204,6 +204,8 @@
   <button id="btn_hc">🏛 Hành chính</button>
   <button id="btn_gt">🛣 Giao thông</button>
   <button id="btn_ghichu">📝 Ghi chú</button>
+  <button id="btn_nuocngam">💧 Nước ngầm</button>
+  <button id="btn_khaosat">📏 Khảo sát</button>
 </div>
 <div id="catalog_overlay">
   <div id="catalog_box">
@@ -392,6 +394,27 @@
     <div class="sub">Nguồn, giấy phép và phương pháp của từng nhóm lớp — chi tiết đầy đủ,
       không đưa vào bảng lớp để giữ bản đồ gọn.</div>
     <div id="ghichu_content"></div>
+  </div>
+</div>
+<div id="nn_overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:6;display:none;align-items:center;justify-content:center;">
+  <div id="nn_box">
+    <button id="btn_dong_nn" class="btn_dong_x">Đóng ✕</button>
+    <h3>💧 Nước ngầm — 27 cụm, 88 lỗ khoan</h3>
+    <div class="sub" id="nn_tong">Đang tải…</div>
+    <div><span id="nn_tab"><button data-t="cum" class="on">Cụm (27)</button><button data-t="lo">Lỗ khoan (88)</button></span>
+      <input id="nn_loc" placeholder="Lọc theo mã/tỉnh/tầng…" autocomplete="off" aria-label="Lọc nước ngầm"></div>
+    <div class="sub" id="nn_ghi" style="margin-top:6px"></div>
+    <table id="nn_tb"></table>
+  </div>
+</div>
+<div id="ks_overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:6;display:none;align-items:center;justify-content:center;">
+  <div id="ks_box">
+    <button id="btn_dong_ks" class="btn_dong_x">Đóng ✕</button>
+    <h3>📏 Khảo sát lòng dẫn</h3>
+    <div class="sub" id="ks_tong">Đang tải…</div>
+    <input id="ks_loc" placeholder="Lọc theo vùng…" autocomplete="off" aria-label="Lọc khảo sát theo vùng">
+    <div class="sub" id="ks_ghi" style="margin-top:6px"></div>
+    <table id="ks_tb"></table>
   </div>
 </div>
 <div id="bang_tong_hop_overlay">
@@ -1739,6 +1762,113 @@ document.getElementById("bang_tong_hop_overlay").addEventListener("click", (e) =
     }
     ov.style.display = "none";
     map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: 60, maxZoom: 12.5, duration: 600 });
+  });
+})();
+
+// ==================== Bang NUOC NGAM (12/10/2026) ====================
+// Nguon: nuoc_ngam_cum.json (da co san — 27 cum/88 lo). Chi vi tri + do phu,
+// KHONG tri so muc nuoc. Tab Cụm / Lỗ khoan; bấm dòng để đến vị trí.
+(function () {
+  const ov = document.getElementById("nn_overlay"), tb = document.getElementById("nn_tb");
+  const loc = document.getElementById("nn_loc"), ghi = document.getElementById("nn_ghi");
+  let D = null, tab = "cum";
+  const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const so = (n) => n.toLocaleString("vi");
+  const MAX = 300;
+  const tangTen = (c) => { const l = (c.lo || []).find((x) => x.tang === c.tang_nong_nhat); return l ? l.tang_ten : (c.tang_nong_nhat || "").toUpperCase(); };
+  function ve() {
+    if (!D) return;
+    const q = boDau(loc.value.trim());
+    if (tab === "cum") {
+      const kq = D.cum.filter((c) => !q || boDau(c.id).includes(q) || boDau(c.tinh).includes(q) ||
+        boDau(tangTen(c)).includes(q));
+      tb.innerHTML = `<tr><th>Mã cụm</th><th>Tỉnh</th><th>Xã / huyện</th><th>Tầng nông nhất</th><th>Số lỗ</th></tr>` +
+        kq.slice(0, MAX).map((c) => `<tr class="dong" data-i="${D.cum.indexOf(c)}"><td>${esc(c.id)}</td><td>${esc(c.tinh)}</td><td>${esc(c.xa || "—")} / ${esc(c.huyen || "—")}</td><td>${esc(tangTen(c))}</td><td class="so">${so(c.n_lo)}</td></tr>`).join("");
+      ghi.textContent = `${so(kq.length)} cụm — bấm một dòng để đến vị trí trên bản đồ.`;
+    } else {
+      const tatCa = [];
+      D.cum.forEach((c) => (c.lo || []).forEach((l) => tatCa.push({ c, l })));
+      const kq = tatCa.filter(({ c, l }) => !q || boDau(l.ma).includes(q) || boDau(c.id).includes(q) ||
+        boDau(c.tinh).includes(q) || boDau(l.tang_ten).includes(q));
+      tb.innerHTML = `<tr><th>Mã lỗ</th><th>Cụm</th><th>Tầng</th><th>Sâu (m)</th><th>Giai đoạn</th><th>Phủ</th></tr>` +
+        kq.slice(0, MAX).map(({ c, l }) => `<tr class="dong" data-i="${D.cum.indexOf(c)}"><td>${esc(l.ma)}</td><td>${esc(c.id)}</td><td>${esc(l.tang_ten)}</td><td class="so">${l.sau_tu}–${l.sau_den}</td><td>${esc(l.tu)} → ${esc(l.den)}</td><td class="so">${l.phu_pct}%</td></tr>`).join("");
+      ghi.textContent = `${so(kq.length)} lỗ — "Phủ" = tỷ lệ giờ có số liệu trong giai đoạn; bấm để đến cụm.`;
+    }
+  }
+  function mo() {
+    ov.style.display = "flex";
+    if (D) return;
+    fetch("./nuoc_ngam_cum.json").then((r) => r.json()).then((d) => {
+      D = d;
+      document.getElementById("nn_tong").innerHTML =
+        `<b>${so(D.n_cum)} cụm</b> · <b>${so(D.n_lo)} lỗ khoan</b> quan trắc QTQG (1995–2017) — ` +
+        `chỉ vị trí, tầng chứa nước và độ phủ; không công bố trị số mực nước.`;
+      ve();
+    }).catch((e) => { document.getElementById("nn_tong").textContent = "Không tải được bảng nước ngầm: " + e.message; });
+  }
+  document.getElementById("btn_nuocngam").addEventListener("click", mo);
+  if (location.hash === "#nuoc_ngam") mo();
+  document.getElementById("btn_dong_nn").addEventListener("click", () => { ov.style.display = "none"; });
+  ov.addEventListener("click", (e) => { if (e.target === ov) ov.style.display = "none"; });
+  loc.addEventListener("input", ve);
+  document.querySelectorAll("#nn_tab button").forEach((b) => b.addEventListener("click", () => {
+    tab = b.dataset.t; document.querySelectorAll("#nn_tab button").forEach((x) => x.classList.toggle("on", x === b)); ve();
+  }));
+  tb.addEventListener("click", (e) => {
+    const tr = e.target.closest("tr.dong"); if (!tr || !D) return;
+    const c = D.cum[+tr.dataset.i];
+    if (!c) return;
+    const cb = document.querySelector('[data-layers^="ngam_pt"]');
+    if (cb && !cb.checked) { cb.checked = true; cb.dispatchEvent(new Event("change")); }
+    ov.style.display = "none";
+    map.flyTo({ center: [c.lon, c.lat], zoom: Math.max(map.getZoom(), 11), duration: 600 });
+  });
+})();
+
+// ==================== Bang KHAO SAT (12/10/2026) ====================
+// Nguon: khao_sat_bang.json (scripts/xuat_web_khao_sat_bang.py) — 57 mặt cắt
+// CCPO 2023 + tổng hợp khảo sát lòng dẫn 2017/2020 (chiều dài trong UTM).
+(function () {
+  const ov = document.getElementById("ks_overlay"), tb = document.getElementById("ks_tb");
+  const loc = document.getElementById("ks_loc"), ghi = document.getElementById("ks_ghi");
+  let D = null;
+  const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const so = (n) => n.toLocaleString("vi");
+  function ve() {
+    if (!D) return;
+    const q = boDau(loc.value.trim());
+    const kq = D.mat_cat.filter((r) => !q || boDau(r[0]).includes(q) || boDau(r[1]).includes(q));
+    tb.innerHTML = `<tr><th>Vùng</th><th>Sông</th><th>Rộng điểm đo (m)</th><th>Số điểm</th></tr>` +
+      kq.map((r) => `<tr class="dong" data-i="${D.mat_cat.indexOf(r)}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="so">${so(r[2])}</td><td class="so">${so(r[3])}</td></tr>`).join("");
+    ghi.textContent = `${so(kq.length)} mặt cắt — bấm một dòng để đến vị trí trên bản đồ.`;
+  }
+  function mo() {
+    ov.style.display = "flex";
+    if (D) return;
+    fetch("./khao_sat_bang.json").then((r) => r.json()).then((d) => {
+      D = d;
+      const k = d.ks;
+      document.getElementById("ks_tong").innerHTML =
+        `Khảo sát lòng dẫn 2017–2020: cả hai năm <b>${so(k.ca_hai.km)} km</b> (${so(k.ca_hai.n)} nhánh) · ` +
+        `chỉ 2020 <b>${so(k.chi_2020.km)} km</b> · chỉ 2017 <b>${so(k.chi_2017.km)} km</b>. ` +
+        `Bên dưới: <b>${so(d.mat_cat.length)} mặt cắt</b> CCPO 2023.`;
+      ve();
+    }).catch((e) => { document.getElementById("ks_tong").textContent = "Không tải được bảng khảo sát: " + e.message; });
+  }
+  document.getElementById("btn_khaosat").addEventListener("click", mo);
+  if (location.hash === "#khao_sat") mo();
+  document.getElementById("btn_dong_ks").addEventListener("click", () => { ov.style.display = "none"; });
+  ov.addEventListener("click", (e) => { if (e.target === ov) ov.style.display = "none"; });
+  loc.addEventListener("input", ve);
+  tb.addEventListener("click", (e) => {
+    const tr = e.target.closest("tr.dong"); if (!tr || !D) return;
+    const r = D.mat_cat[+tr.dataset.i];
+    const bb = r[4];
+    if (!bb) return;
+    const cb = document.querySelector('[data-layers^="ccpo2023"]');
+    if (cb && !cb.checked) { cb.checked = true; cb.dispatchEvent(new Event("change")); }
+    ov.style.display = "none";
+    map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: 60, maxZoom: 13, duration: 600 });
   });
 })();
 
